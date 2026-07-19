@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Tech Helper — Services Section Proof of Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/renderers/CSS3DRenderer.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; background: #000; font-family: 'Inter', sans-serif; overflow: hidden; }
+
+  #stage { position: relative; width: 100%; height: 100vh; }
+  #webgl-layer, #css3d-layer { position: absolute; inset: 0; }
+  #css3d-layer { pointer-events: none; }
+
+  .hud {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 44px; pointer-events: none;
+  }
+  .hud .logo { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; color: #fff; text-transform: uppercase; letter-spacing: 0.3px; pointer-events: auto; }
+  .hud .logo-mark { width: 30px; height: 30px; border-radius: 8px; background: #00c6ff; box-shadow: 0 0 20px rgba(0,198,255,0.6); }
+  .hud .logo span.dim { color: #7d8492; }
+  .hud .nav-links { display: flex; gap: 36px; font-size: 14px; color: #fff; font-weight: 600; pointer-events: auto; opacity: 0.85; }
+  .hud .contact { padding: 11px 24px; border-radius: 999px; background: #00c6ff; color: #fff; font-size: 13px; font-weight: 700; pointer-events: auto; box-shadow: 0 0 20px rgba(0,198,255,0.4); }
+
+  .back-btn {
+    position: absolute; top: 26px; left: 44px; z-index: 60;
+    display: flex; align-items: center; gap: 9px;
+    padding: 12px 22px 12px 16px; border-radius: 999px;
+    background: rgba(10,11,13,0.7); border: 1px solid rgba(255,255,255,0.16);
+    backdrop-filter: blur(8px);
+    color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.2px;
+    cursor: pointer; font-family: inherit;
+    opacity: 0; pointer-events: none;
+    transform: translateX(-8px);
+    transition: opacity .3s ease, transform .3s ease, border-color .2s ease;
+  }
+  .back-btn.visible { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .back-btn:hover { border-color: rgba(0,198,255,0.5); }
+  .back-btn svg { width: 16px; height: 16px; stroke: #00c6ff; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+  .hint {
+    position: absolute; bottom: 32px; left: 0; right: 0; text-align: center;
+    font-size: 12px; color: #4d5360; letter-spacing: 1px; text-transform: uppercase;
+    pointer-events: none; z-index: 50;
+  }
+
+  /* ---------- shared card shell ---------- */
+  .card3d {
+    border-radius: 28px;
+    background: linear-gradient(180deg, #0c0e12, #06070a);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 80px rgba(0,198,255,0.12), 0 40px 100px rgba(0,0,0,0.6);
+    pointer-events: auto;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ---------- menu card (ring position 0 / default view) ---------- */
+  .card3d.menu-card {
+    width: min(1180px, 88vw); height: min(740px, 84vh);
+    padding: 64px 72px;
+    justify-content: center;
+  }
+  .menu-card .eyebrow { font-size: 13px; letter-spacing: 3.5px; color: #00c6ff; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; }
+  .menu-card h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-transform: uppercase; font-size: clamp(32px, 3.6vw, 50px); color: #fff; letter-spacing: -0.5px; margin-bottom: 42px; }
+
+  .service-list { display: flex; flex-direction: column; }
+  .service-row {
+    display: flex; align-items: center; gap: 24px;
+    padding: 22px 8px; border-top: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer; background: none; border-left: none; border-right: none; border-bottom: none;
+    text-align: left; font-family: inherit; width: 100%;
+    transition: background .2s ease, padding-left .2s ease;
+  }
+  .service-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .service-row:hover { background: rgba(0,198,255,0.06); padding-left: 18px; }
+  .service-row .icon-badge {
+    width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+    background: #00c6ff; box-shadow: 0 0 22px rgba(0,198,255,0.55);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .service-row .icon-badge svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .service-row .text { flex: 1; }
+  .service-row h3 { font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .service-row p { font-size: 14px; color: #9aa0ab; }
+  .service-row .arrow { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; }
+  .service-row .arrow svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; }
+
+  /* ---------- individual service cards (ring positions 1-4) ---------- */
+  .card3d.service-card {
+    width: min(1000px, 80vw); height: min(660px, 78vh);
+    padding: 60px;
+    justify-content: center;
+  }
+  .service-card .icon-badge {
+    width: 72px; height: 72px; border-radius: 18px;
+    background: #00c6ff; box-shadow: 0 0 30px rgba(0,198,255,0.6);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 30px;
+  }
+  .service-card .icon-badge svg { width: 34px; height: 34px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .service-card .kicker { font-size: 13px; letter-spacing: 3px; color: #00c6ff; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; }
+  .service-card h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px, 3vw, 42px); font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: 20px; max-width: 640px; }
+  .service-card p { font-size: 17px; line-height: 1.65; color: #9aa0ab; max-width: 560px; margin-bottom: 36px; }
+  .service-card .cta {
+    display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
+    padding: 15px 30px; border-radius: 999px; background: #00c6ff; color: #fff;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 0 30px rgba(0,198,255,0.5);
+  }
+  .service-card .cta svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.4; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="webgl-layer"></div>
+  <div id="css3d-layer"></div>
+
+  <div class="hud">
+    <div class="logo"><div class="logo-mark"></div>TECH <span class="dim">HELPER</span></div>
+    <div class="nav-links"><span>Agents</span><span>Automations</span><span>AI Hub</span></div>
+    <div class="contact">Contact Us</div>
+  </div>
+
+  <button class="back-btn" id="backBtn">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    Back to services
+  </button>
+
+  <div class="hint" id="hint">Section 2 proof of concept — click a service to fly in</div>
+</div>
+
+<script>
+  const SERVICES = [
+    {
+      kicker: 'Agents',
+      title: 'AI Receptionist',
+      desc: 'Answers every call, qualifies the lead, and books the appointment — 24/7, without a script.',
+      icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    },
+    {
+      kicker: 'Agents',
+      title: 'AI Messaging Agent',
+      desc: 'Follows up on every lead by text automatically, so nobody goes cold waiting on a reply.',
+      icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    },
+    {
+      kicker: 'Automations',
+      title: 'Review & Referral',
+      desc: 'Requests reviews and referrals automatically after every job, without you lifting a finger.',
+      icon: '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>',
+    },
+    {
+      kicker: 'Automations',
+      title: 'Appointment Reminders',
+      desc: 'Cuts no-shows with automatic text and email reminders before every scheduled appointment.',
+      icon: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    },
+  ];
+
+  const N = SERVICES.length + 1; // +1 for the menu card at ring position 0
+  const R = 900;
+  let activeIndex = 0;
+  let angle = 0;
+  let isAnimating = false;
+
+  /* ---------- shared camera + two renderers ---------- */
+  const stage = document.getElementById('stage');
+  const camera = new THREE.PerspectiveCamera(50, stage.clientWidth / stage.clientHeight, 1, 8000);
+
+  const webglScene = new THREE.Scene();
+  const webglRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  webglRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  document.getElementById('webgl-layer').appendChild(webglRenderer.domElement);
+
+  const cssScene = new THREE.Scene();
+  const cssRenderer = new THREE.CSS3DRenderer();
+  document.getElementById('css3d-layer').appendChild(cssRenderer.domElement);
+
+  function sizeRenderers() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    webglRenderer.setSize(w, h);
+    cssRenderer.setSize(w, h);
+  }
+  sizeRenderers();
+  window.addEventListener('resize', sizeRenderers);
+
+  /* ---------- ambient particle field ---------- */
+  function makeSprite() {
+    const c = document.createElement('canvas'); c.width = 64; c.height = 64;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.35,'rgba(255,255,255,0.9)'); g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  }
+  const sprite = makeSprite();
+  const DUST = 450;
+  const dustGeo = new THREE.BufferGeometry();
+  const dustPos = new Float32Array(DUST * 3);
+  for (let i = 0; i < DUST; i++) {
+    dustPos[i*3] = (Math.random()*2-1) * 3200;
+    dustPos[i*3+1] = (Math.random()*2-1) * 1500;
+    dustPos[i*3+2] = (Math.random()*2-1) * 3200;
+  }
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+  const dustMat = new THREE.PointsMaterial({ size: 6, map: sprite, color: 0x66b8ff, transparent: true, opacity: 0.45, depthWrite: false, blending: THREE.AdditiveBlending });
+  webglScene.add(new THREE.Points(dustGeo, dustMat));
+
+  const anchorGeo = new THREE.SphereGeometry(7, 16, 16);
+  const anchorMat = new THREE.MeshBasicMaterial({ color: 0x00c6ff });
+  for (let i = 0; i < N; i++) {
+    const a = i * (Math.PI * 2 / N);
+    const m = new THREE.Mesh(anchorGeo, anchorMat);
+    m.position.set(R * Math.sin(a), -420, R * Math.cos(a));
+    webglScene.add(m);
+  }
+
+  /* ---------- build cards ---------- */
+  function iconSvg(icon) { return '<svg viewBox="0 0 24 24">' + icon + '</svg>'; }
+
+  function buildMenuCard() {
+    const el = document.createElement('div');
+    el.className = 'card3d menu-card';
+    const rows = SERVICES.map((s, i) => (
+      '<button class="service-row" data-index="' + (i + 1) + '">' +
+        '<div class="icon-badge">' + iconSvg(s.icon) + '</div>' +
+        '<div class="text"><h3>' + s.title + '</h3><p>' + s.desc + '</p></div>' +
+        '<div class="arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>' +
+      '</button>'
+    )).join('');
+    el.innerHTML =
+      '<div class="eyebrow">What we build</div>' +
+      '<h1>Our services</h1>' +
+      '<div class="service-list">' + rows + '</div>';
+    return el;
+  }
+
+  function buildServiceCard(service) {
+    const el = document.createElement('div');
+    el.className = 'card3d service-card';
+    el.innerHTML =
+      '<div class="icon-badge">' + iconSvg(service.icon) + '</div>' +
+      '<div class="kicker">' + service.kicker + '</div>' +
+      '<h2>' + service.title + '</h2>' +
+      '<p>' + service.desc + '</p>' +
+      '<div class="cta">Explore ' + service.title + ' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>';
+    return el;
+  }
+
+  const cardObjects = [];
+  for (let i = 0; i < N; i++) {
+    const a = i * (Math.PI * 2 / N);
+    const el = i === 0 ? buildMenuCard() : buildServiceCard(SERVICES[i - 1]);
+    const obj = new THREE.CSS3DObject(el);
+    obj.position.set(R * Math.sin(a), 0, R * Math.cos(a));
+    obj.rotation.y = a;
+    cssScene.add(obj);
+    cardObjects.push(obj);
+  }
+
+  /* delegated listener — the CSS3DRenderer only inserts these row elements
+     into the document on its first render() call (next animation frame),
+     so binding directly to them here (before that happens) would silently
+     attach to nothing. Listening on a stable ancestor sidesteps that. */
+  document.getElementById('css3d-layer').addEventListener('click', (e) => {
+    const row = e.target.closest('.service-row');
+    if (row) goToIndex(parseInt(row.dataset.index, 10));
+  });
+
+  /* ---------- camera rig ---------- */
+  const camState = { zoom: 0 };
+
+  function updateCamera() {
+    const closeR = R + 900, closeY = 30;
+    const wideR = R + 1900, wideY = 700;
+    const radius = closeR + (wideR - closeR) * camState.zoom;
+    const y = closeY + (wideY - closeY) * camState.zoom;
+
+    camera.position.set(radius * Math.sin(angle), y, radius * Math.cos(angle));
+
+    const focusTarget = new THREE.Vector3(R * Math.sin(angle), 0, R * Math.cos(angle));
+    const wideTarget = new THREE.Vector3(0, -320, 0);
+    const lookTarget = focusTarget.clone().lerp(wideTarget, camState.zoom);
+    camera.lookAt(lookTarget);
+  }
+  updateCamera();
+
+  const backBtn = document.getElementById('backBtn');
+  const hint = document.getElementById('hint');
+
+  function angleFor(idx) { return idx * (Math.PI * 2 / N); }
+
+  function goToIndex(targetIdx) {
+    if (isAnimating || targetIdx === activeIndex) return;
+    isAnimating = true;
+
+    const targetAngle = angleFor(targetIdx);
+    let diff = (targetAngle - angle) % (Math.PI * 2);
+    if (diff > Math.PI) diff -= Math.PI * 2;
+    if (diff < -Math.PI) diff += Math.PI * 2;
+    const finalAngle = angle + diff;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        isAnimating = false;
+        activeIndex = targetIdx;
+        backBtn.classList.toggle('visible', activeIndex !== 0);
+        hint.style.opacity = activeIndex === 0 ? '1' : '0';
+      },
+    });
+
+    tl.to(camState, { zoom: 1, duration: 0.9, ease: 'power2.inOut', onUpdate: updateCamera })
+      .to({ a: angle }, {
+        a: finalAngle, duration: 1.15, ease: 'power2.inOut',
+        onUpdate: function () { angle = this.targets()[0].a; updateCamera(); },
+      })
+      .to(camState, {
+        zoom: 0, duration: 0.9, ease: 'power2.inOut', onUpdate: updateCamera,
+        onComplete: () => { angle = finalAngle; updateCamera(); },
+      });
+  }
+
+  backBtn.addEventListener('click', () => goToIndex(0));
+
+  function animate() {
+    requestAnimationFrame(animate);
+    webglRenderer.render(webglScene, camera);
+    cssRenderer.render(cssScene, camera);
+  }
+  animate();
+</script>
+
+</body>
+</html>

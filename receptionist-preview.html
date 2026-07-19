@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Tech Helper — AI Receptionist Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; background: #000; font-family: 'Inter', sans-serif; }
+
+  .page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(ellipse 60% 50% at 18% 30%, rgba(0,198,255,0.10), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 70%, rgba(0,198,255,0.08), transparent 60%),
+      #000;
+    overflow: hidden;
+  }
+
+  /* ---------- NAV (matches hero) ---------- */
+  .nav { position: relative; z-index: 30; display: flex; align-items: center; justify-content: space-between; padding: 18px 56px; flex-shrink: 0; }
+  .logo { display: flex; align-items: center; gap: 11px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: 0.3px; color: #ffffff; text-transform: uppercase; }
+  .logo-mark { width: 34px; height: 34px; border-radius: 9px; background: #00c6ff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #ffffff; box-shadow: 0 0 24px rgba(0,198,255,0.65); }
+  .logo span.dim { color: #ffffff; font-weight: 700; opacity: 0.55; }
+  .nav-links { display: flex; align-items: center; gap: 42px; font-size: 15px; color: #ffffff; letter-spacing: 0.2px; font-weight: 600; }
+  .nav-links a { color: inherit; text-decoration: none; opacity: 0.85; transition: opacity .2s ease, text-shadow .2s ease; }
+  .nav-links a:hover { opacity: 1; text-shadow: 0 0 16px rgba(0,198,255,0.9); }
+  .cta-pill {
+    padding: 13px 30px; border-radius: 999px; background: #00c6ff; border: 1px solid rgba(255,255,255,0.16);
+    color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 0.3px; text-decoration: none;
+    box-shadow: 0 0 30px rgba(0,198,255,0.5), 0 6px 20px rgba(0,198,255,0.35);
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .cta-pill:hover { background: #33d1ff; transform: translateY(-2px); }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.05fr 0.85fr;
+    align-items: center;
+    gap: 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 56px 32px;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 13px; letter-spacing: 3.5px; color: #00c6ff; font-weight: 700;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #00c6ff; box-shadow: 0 0 10px 3px rgba(0,198,255,0.8); }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(36px, 4.6vw, 60px);
+    line-height: 1.06;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(0,198,255,0.35), 0 4px 24px rgba(0,0,0,0.8);
+    margin-bottom: 18px;
+  }
+
+  .subtext { font-size: 17px; font-weight: 500; line-height: 1.55; color: #ffffff; opacity: 0.92; max-width: 520px; margin-bottom: 30px; }
+
+  .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-bottom: 32px; }
+  .feature .icon-badge {
+    width: 52px; height: 52px; border-radius: 13px;
+    background: #00c6ff; box-shadow: 0 0 20px rgba(0,198,255,0.55);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .feature .icon-badge svg { width: 24px; height: 24px; stroke: #ffffff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .feature h3 { font-family: 'Space Grotesk', sans-serif; font-size: 16.5px; font-weight: 700; color: #ffffff; margin-bottom: 7px; letter-spacing: -0.2px; }
+  .feature p { font-size: 14px; line-height: 1.5; color: #ffffff; opacity: 0.7; }
+
+  .call-cta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .call-cta .arrow {
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .call-cta .arrow svg { width: 20px; height: 20px; stroke: #ffffff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .call-cta-text p.label { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.3px; }
+  .call-cta-text p.sub { font-size: 14px; color: #ffffff; opacity: 0.65; margin-top: 2px; }
+
+  .call-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 20px;
+    padding: 17px 34px; border-radius: 999px;
+    background: #00c6ff; color: #ffffff;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.2px;
+    text-decoration: none;
+    box-shadow: 0 0 34px rgba(0,198,255,0.5), 0 10px 28px rgba(0,198,255,0.4);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .call-btn:hover { transform: translateY(-2px); box-shadow: 0 0 46px rgba(0,198,255,0.7), 0 12px 34px rgba(0,198,255,0.5); }
+  .call-btn svg { width: 18px; height: 18px; stroke: #ffffff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- PHONE MOCKUP ---------- */
+  .phone-stage { position: relative; display: flex; align-items: center; justify-content: center; height: 100%; }
+
+  .pulse-ring {
+    position: absolute;
+    width: 348px; height: 668px;
+    border-radius: 58px;
+    border: 1.5px solid rgba(0,198,255,0.5);
+    animation: pulseRing 3s ease-out infinite;
+  }
+  .pulse-ring.r2 { animation-delay: 1s; }
+  .pulse-ring.r3 { animation-delay: 2s; }
+  @keyframes pulseRing {
+    0%   { transform: scale(0.96); opacity: 0.7; }
+    80%  { transform: scale(1.14); opacity: 0; }
+    100% { transform: scale(1.14); opacity: 0; }
+  }
+
+  .phone-frame {
+    position: relative;
+    width: 325px;
+    height: 655px;
+    border-radius: 50px;
+    background: linear-gradient(160deg, #2a2c30, #0a0b0c);
+    padding: 13px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06), 0 0 60px rgba(0,198,255,0.15);
+    animation: phoneFloat 6s ease-in-out infinite;
+  }
+  @keyframes phoneFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .phone-screen {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 39px;
+    background: linear-gradient(180deg, #060a14 0%, #030507 100%);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .notch {
+    width: 104px; height: 30px; background: #000; border-radius: 999px;
+    margin-top: 13px; flex-shrink: 0;
+  }
+  .status-row {
+    position: absolute; top: 18px; left: 28px; right: 28px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 600; color: #ffffff;
+  }
+  .status-row .icons { display: flex; align-items: center; gap: 5px; }
+  .status-row svg { width: 15px; height: 15px; fill: #ffffff; }
+
+  .avatar {
+    margin-top: 34px;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: #00c6ff; box-shadow: 0 0 26px rgba(0,198,255,0.65);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; color: #ffffff;
+    flex-shrink: 0;
+  }
+  .call-label { margin-top: 14px; font-size: 13px; color: #8a90a0; letter-spacing: 0.5px; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+  .call-title { font-family: 'Space Grotesk', sans-serif; font-size: 25px; font-weight: 700; color: #ffffff; margin-top: 8px; }
+
+  .call-number {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #00c6ff;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    animation: numberPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes numberPulse {
+    0%, 100% { text-shadow: 0 0 12px rgba(0,198,255,0.5); transform: scale(1); }
+    50%      { text-shadow: 0 0 26px rgba(0,198,255,0.95), 0 0 46px rgba(0,198,255,0.5); transform: scale(1.045); }
+  }
+
+  .wave-circle {
+    margin-top: 30px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,198,255,0.55);
+    box-shadow: 0 0 30px rgba(0,198,255,0.35), inset 0 0 30px rgba(0,198,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .wave-circle .bar { width: 4px; border-radius: 3px; background: #00c6ff; box-shadow: 0 0 8px rgba(0,198,255,0.8); animation: barPulse 1.1s ease-in-out infinite; }
+  .wave-circle .bar:nth-child(1) { height: 14px; animation-delay: 0.0s; }
+  .wave-circle .bar:nth-child(2) { height: 30px; animation-delay: 0.1s; }
+  .wave-circle .bar:nth-child(3) { height: 46px; animation-delay: 0.2s; }
+  .wave-circle .bar:nth-child(4) { height: 58px; animation-delay: 0.3s; }
+  .wave-circle .bar:nth-child(5) { height: 40px; animation-delay: 0.4s; }
+  .wave-circle .bar:nth-child(6) { height: 52px; animation-delay: 0.5s; }
+  .wave-circle .bar:nth-child(7) { height: 26px; animation-delay: 0.6s; }
+  .wave-circle .bar:nth-child(8) { height: 16px; animation-delay: 0.7s; }
+  @keyframes barPulse {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+    50%      { transform: scaleY(1); opacity: 1; }
+  }
+
+  .ai-status { margin-top: 24px; text-align: center; }
+  .ai-status .a { font-size: 14px; font-weight: 600; color: #ffffff; opacity: 0.9; }
+  .ai-status .b { font-size: 13px; color: #ffffff; opacity: 0.55; margin-top: 4px; }
+
+  .call-actions { margin-top: 34px; margin-bottom: 30px; display: flex; align-items: center; gap: 28px; }
+  .call-actions .action { display: flex; flex-direction: column; align-items: center; gap: 9px; text-decoration: none; }
+  .call-actions .circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08); border: none; outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .call-actions .circle svg { width: 21px; height: 21px; stroke: #ffffff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .call-actions .circle {
+    cursor: pointer; padding: 0; font-family: inherit;
+    transition: background .2s ease, box-shadow .2s ease, transform .15s ease;
+  }
+  .call-actions .circle:active { transform: scale(0.92); }
+  .call-actions .circle.answer {
+    background: #00c6ff;
+    box-shadow: 0 0 24px rgba(0,198,255,0.7);
+  }
+  .call-actions .circle.end {
+    background: #ff3b30;
+    box-shadow: 0 0 24px rgba(255,59,48,0.55);
+  }
+  .call-actions .circle.end svg { transform: rotate(135deg); }
+  .call-actions .label { font-size: 11px; color: #ffffff; opacity: 0.6; text-decoration: none; }
+
+  .home-indicator {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 4px; border-radius: 3px; background: rgba(255,255,255,0.35);
+  }
+
+  @media (max-width: 980px) {
+    .wrap { grid-template-columns: 1fr; padding: 20px 24px 70px; }
+    .features { grid-template-columns: 1fr; }
+    .phone-stage { margin-top: 40px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="nav">
+    <div class="logo"><div class="logo-mark">AI</div>TECH <span class="dim">HELPER</span></div>
+    <div class="nav-links"><a href="#">Agents</a><a href="#">Automations</a><a href="#">AI Hub</a></div>
+    <a href="#" class="cta-pill">Contact Us</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="content">
+      <span class="eyebrow">AI Receptionist</span>
+      <h1>The AI Receptionist that never misses a call</h1>
+      <p class="subtext">Call the number below and hear it qualify a lead, answer questions, and book an appointment — live.</p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <h3>Answers every call, 24/7</h3>
+          <p>No voicemail, no missed leads — ever.</p>
+        </div>
+        <div class="feature">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <h3>Qualifies & books automatically</h3>
+          <p>Asks the right questions, then puts it straight on your calendar.</p>
+        </div>
+        <div class="feature">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <h3>Handles FAQs instantly</h3>
+          <p>Pricing, hours, service area — whatever they usually ask.</p>
+        </div>
+        <div class="feature">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <h3>Every call in your dashboard</h3>
+          <p>Recorded, transcribed, and logged the moment it ends.</p>
+        </div>
+      </div>
+
+      <div class="call-cta">
+        <div class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div class="call-cta-text">
+          <p class="label">Call our AI Receptionist</p>
+          <p class="sub">Talk to it like a real caller.</p>
+        </div>
+      </div>
+
+      <a href="tel:+15722204756" class="call-btn" onclick="startCall()">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call +1 (572) 220-4756
+      </a>
+    </div>
+
+    <div class="phone-stage">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring r2"></div>
+      <div class="pulse-ring r3"></div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="status-row">
+            <span>9:41</span>
+            <div class="icons">
+              <svg viewBox="0 0 20 12"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="3" width="3" height="9" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+              <svg viewBox="0 0 20 14"><path d="M10 11.5a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8zM6.3 8.2a5.2 5.2 0 0 1 7.4 0l-1.5 1.5a3.1 3.1 0 0 0-4.4 0L6.3 8.2zM3 5a9.4 9.4 0 0 1 14 0L15.5 6.5a7.2 7.2 0 0 0-11 0L3 5z"/></svg>
+              <svg viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="#fff" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1.5"/><rect x="22.5" y="4" width="1.8" height="4" rx="0.8"/></svg>
+            </div>
+          </div>
+          <div class="notch"></div>
+
+          <div class="avatar">AI</div>
+          <div class="call-label" id="callLabel">Tap to call</div>
+          <div class="call-title">AI Receptionist</div>
+          <a href="tel:+15722204756" class="call-number" id="callNumber" onclick="startCall()">+1 572-220-4756</a>
+
+          <div class="wave-circle">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          </div>
+
+          <div class="ai-status">
+            <div class="a">AI is answering…</div>
+            <div class="b">How can I help you today?</div>
+          </div>
+
+          <div class="call-actions">
+            <div class="action">
+              <div class="circle"><svg viewBox="0 0 24 24"><path d="M1 1l22 22M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V5a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2M19 10v2a7 7 0 0 1-.11 1.23"/><path d="M12 19v3"/></svg></div>
+              <div class="label">Mute</div>
+            </div>
+            <div class="action">
+              <button type="button" class="circle answer" id="centerCircle" onclick="toggleCenter()">
+                <svg id="centerIcon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+              <div class="label" id="centerLabel">Call</div>
+            </div>
+            <div class="action">
+              <div class="circle"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div>
+              <div class="label">Speaker</div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let seconds = 0;
+  let connected = false;
+  let ticking = false;
+  const label = document.getElementById('callLabel');
+  const centerCircle = document.getElementById('centerCircle');
+  const centerLabel = document.getElementById('centerLabel');
+  const pulseRings = document.querySelectorAll('.pulse-ring');
+  const callNumber = document.getElementById('callNumber');
+
+  function setPulses(playing) {
+    pulseRings.forEach(r => r.style.animationPlayState = playing ? 'running' : 'paused');
+    if (playing) { pulseRings.forEach(r => r.style.opacity = ''); }
+    else { pulseRings.forEach(r => r.style.opacity = '0'); }
+    callNumber.style.animationPlayState = playing ? 'running' : 'paused';
+  }
+
+  function startCall() {
+    if (connected) return;
+    connected = true;
+    seconds = 0;
+    label.textContent = '00:00';
+    centerCircle.classList.remove('answer');
+    centerCircle.classList.add('end');
+    centerLabel.textContent = 'End';
+    setPulses(false);
+    if (!ticking) {
+      ticking = true;
+      setInterval(() => {
+        if (!connected) return;
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
+        label.textContent = m + ':' + s;
+      }, 1000);
+    }
+  }
+
+  function endCall() {
+    connected = false;
+    seconds = 0;
+    label.textContent = 'Tap to call';
+    centerCircle.classList.remove('end');
+    centerCircle.classList.add('answer');
+    centerLabel.textContent = 'Call';
+    setPulses(true);
+  }
+
+  function toggleCenter() {
+    if (connected) {
+      endCall();
+    } else {
+      window.location.href = 'tel:+15722204756';
+      startCall();
+    }
+  }
+</script>
+
+</body>
+</html>

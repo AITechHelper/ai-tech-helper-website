@@ -1,0 +1,1172 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 100%;
+  background: #000;
+  font-family: 'Inter', sans-serif;
+}
+
+/* =========================================================
+   SHARED NAV (used on every page)
+   ========================================================= */
+.nav {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 56px;
+  flex-shrink: 0;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #00c6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: 0 0 24px rgba(0, 198, 255, 0.65);
+}
+.logo span.dim {
+  color: #ffffff;
+  font-weight: 700;
+  opacity: 0.55;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  font-size: 15px;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+}
+.nav-links a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+}
+.nav-links a:hover {
+  opacity: 1;
+  color: #ffffff;
+  text-shadow: 0 0 16px rgba(0, 198, 255, 0.9);
+}
+.cta-pill {
+  padding: 13px 30px;
+  border-radius: 999px;
+  background: #00c6ff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  box-shadow: 0 0 30px rgba(0, 198, 255, 0.5), 0 6px 20px rgba(0, 198, 255, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.cta-pill:hover {
+  background: #33d1ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(0, 198, 255, 0.7), 0 8px 24px rgba(0, 198, 255, 0.45);
+}
+
+/* =========================================================
+   SHARED EYEBROW LABEL
+   ========================================================= */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  letter-spacing: 3.5px;
+  color: #00c6ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00c6ff;
+  box-shadow: 0 0 10px 3px rgba(0, 198, 255, 0.8);
+}
+
+/* =========================================================
+   HOMEPAGE — hero (data orb) + scroll-pin transition
+   ========================================================= */
+#warp-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #cfe0ff 28%, #6f8fff 55%, #000 100%);
+}
+
+#logo-reveal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(340px, 40vw);
+  transform: translate(-50%, -50%) scale(0.5);
+  z-index: 101;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 40px rgba(0, 102, 255, 0.6));
+}
+
+.pin-wrapper {
+  position: relative;
+  height: 190vh;
+  background: #000;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#orb-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+#orb-canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.copy {
+  position: relative;
+  z-index: 20;
+  text-align: center;
+  padding: 0 24px;
+  margin-top: auto;
+  margin-bottom: auto;
+  pointer-events: none;
+}
+.copy > * {
+  pointer-events: auto;
+}
+
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(38px, 6.2vw, 82px);
+  line-height: 1.08;
+  letter-spacing: -0.5px;
+  max-width: 980px;
+  margin: 0 auto 26px;
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #ffffff 40%,
+    #eaf2ff 46%,
+    #6fa8ff 50%,
+    #eaf2ff 54%,
+    #ffffff 60%,
+    #ffffff 100%
+  );
+  background-size: 240% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(0, 198, 255, 0.4), 0 4px 30px rgba(0, 0, 0, 0.9);
+}
+@keyframes shine {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+.subtext {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #ffffff;
+  max-width: 580px;
+  margin: 0 auto 42px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 19px 40px;
+  border-radius: 999px;
+  background: #00c6ff;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  box-shadow: 0 0 40px rgba(0, 198, 255, 0.55), 0 10px 34px rgba(0, 198, 255, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn-primary:hover {
+  background: #33d1ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 55px rgba(0, 198, 255, 0.75), 0 14px 40px rgba(0, 198, 255, 0.55);
+}
+.btn-ghost {
+  padding: 19px 36px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: #00c6ff;
+  background: rgba(0, 198, 255, 0.08);
+  box-shadow: 0 0 30px rgba(0, 198, 255, 0.35);
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.scroll-cue span {
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  color: #838a99;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.scroll-cue .pill {
+  width: 20px;
+  height: 32px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  position: relative;
+}
+.scroll-cue .pill::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 3px;
+  height: 6px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: #00c6ff;
+  box-shadow: 0 0 8px rgba(0, 198, 255, 0.8);
+  animation: scrollDot 1.8s ease-in-out infinite;
+}
+@keyframes scrollDot {
+  0% {
+    top: 6px;
+    opacity: 1;
+  }
+  70% {
+    top: 16px;
+    opacity: 0.2;
+  }
+  71% {
+    top: 6px;
+    opacity: 0;
+  }
+  100% {
+    top: 6px;
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   HOMEPAGE — services carousel (3D ring, click-driven)
+   ========================================================= */
+#stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+}
+#webgl-layer,
+#css3d-layer,
+#flat-layer {
+  position: absolute;
+  inset: 0;
+}
+#css3d-layer {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+#flat-layer {
+  z-index: 20;
+}
+
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 44px;
+  pointer-events: none;
+}
+.hud .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  pointer-events: auto;
+}
+.hud .logo-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #00c6ff;
+  box-shadow: 0 0 20px rgba(0, 198, 255, 0.6);
+}
+.hud .logo span.dim {
+  color: #7d8492;
+}
+.hud .nav-links {
+  display: flex;
+  gap: 36px;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+  pointer-events: auto;
+  opacity: 0.85;
+}
+.hud .contact {
+  padding: 11px 24px;
+  border-radius: 999px;
+  background: #00c6ff;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: auto;
+  box-shadow: 0 0 20px rgba(0, 198, 255, 0.4);
+}
+
+.back-btn {
+  position: absolute;
+  top: 104px;
+  left: 44px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 22px 12px 16px;
+  border-radius: 999px;
+  background: rgba(10, 11, 13, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  font-family: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.2s ease;
+}
+.back-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+.back-btn:hover {
+  border-color: rgba(0, 198, 255, 0.5);
+}
+.back-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: #00c6ff;
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hint {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #4d5360;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* ---- shared card shell ---- */
+.card3d {
+  border-radius: 28px;
+  background: linear-gradient(180deg, #0c0e12, #06070a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 80px rgba(0, 198, 255, 0.12), 0 40px 100px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* menu card (ring position 0) — sized smaller than the viewport on purpose:
+   this is the version that flies around the ring during a transition, and
+   needs a gap between it and its neighbors so corners don't touch. The
+   flat resting version below goes full screen instead. */
+.card3d.menu-card {
+  width: min(1180px, 88vw);
+  height: min(740px, 84vh);
+  padding: 64px 72px;
+  justify-content: center;
+}
+.menu-card .eyebrow {
+  font-size: 13px;
+  letter-spacing: 3.5px;
+  color: #00c6ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.menu-card h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(32px, 3.6vw, 50px);
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 42px;
+}
+
+.service-list {
+  display: flex;
+  flex-direction: column;
+}
+.service-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+  transition: background 0.2s ease, padding-left 0.2s ease;
+}
+.service-row:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.service-row:hover {
+  background: rgba(0, 198, 255, 0.06);
+  padding-left: 18px;
+}
+.service-row .icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  flex-shrink: 0;
+  background: #00c6ff;
+  box-shadow: 0 0 22px rgba(0, 198, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.service-row .icon-badge svg {
+  width: 24px;
+  height: 24px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.service-row .text {
+  flex: 1;
+}
+.service-row h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.service-row p {
+  font-size: 14px;
+  color: #9aa0ab;
+}
+.service-row .arrow {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.service-row .arrow svg {
+  width: 15px;
+  height: 15px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2.2;
+}
+
+/* individual service cards (ring positions 1-N) */
+.card3d.service-card {
+  width: min(1000px, 80vw);
+  height: min(660px, 78vh);
+  padding: 60px;
+  justify-content: center;
+}
+.service-card .icon-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: #00c6ff;
+  box-shadow: 0 0 30px rgba(0, 198, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.service-card .icon-badge svg {
+  width: 34px;
+  height: 34px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.service-card .kicker {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #00c6ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.service-card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  max-width: 640px;
+}
+.service-card p {
+  font-size: 17px;
+  line-height: 1.65;
+  color: #9aa0ab;
+  max-width: 560px;
+  margin-bottom: 36px;
+}
+.service-card .cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  padding: 15px 30px;
+  border-radius: 999px;
+  background: #00c6ff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 0 30px rgba(0, 198, 255, 0.5);
+}
+.service-card .cta svg {
+  width: 16px;
+  height: 16px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2.4;
+}
+
+/* flat, undistorted full-screen resting state — the CSS3D ring is a
+   3D-projected plane, so it only ever looks pixel-perfect when the camera
+   is dead-on at an exact distance (good for the fly-through, bad for
+   reading text). Once a transition lands on the menu, we swap to a real
+   flat DOM panel (same flexbox card markup) that always fills the screen
+   cleanly. Individual service cards redirect to their own page instead
+   of ever showing a flat resting state. */
+.card3d.flat {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+.card3d.flat.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.flat.menu-card,
+.flat.service-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.flat.menu-card {
+  padding: 130px 110px;
+}
+.flat.service-card {
+  padding: 110px 120px;
+}
+
+@media (max-width: 720px) {
+  .nav-links {
+    display: none;
+  }
+  .hud .nav-links {
+    display: none;
+  }
+}
+
+/* =========================================================
+   AI RECEPTIONIST PAGE (and future agent/package pages)
+   ========================================================= */
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse 60% 50% at 18% 30%, rgba(0, 198, 255, 0.1), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(0, 198, 255, 0.08), transparent 60%), #000;
+  overflow: hidden;
+}
+
+.wrap {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.05fr 0.85fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 56px 32px;
+}
+
+/* the hero's h1 (above) uses the animated shine-gradient treatment.
+   Interior pages like /ai-receptionist use plain white h1s at a smaller
+   scale instead — scoped under .page to win over the bare h1 rule. */
+.page h1 {
+  font-size: clamp(36px, 4.6vw, 60px);
+  color: #ffffff;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  animation: none;
+  text-shadow: 0 0 30px rgba(0, 198, 255, 0.35), 0 4px 24px rgba(0, 0, 0, 0.8);
+  margin-bottom: 18px;
+  max-width: none;
+}
+
+.subtext-page {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: #ffffff;
+  opacity: 0.92;
+  max-width: 520px;
+  margin-bottom: 30px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin-bottom: 32px;
+}
+.feature .icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  background: #00c6ff;
+  box-shadow: 0 0 20px rgba(0, 198, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.feature .icon-badge svg {
+  width: 24px;
+  height: 24px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.feature h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 7px;
+  letter-spacing: -0.2px;
+}
+.feature p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+.call-cta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.call-cta .arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.call-cta .arrow svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.call-cta-text p.label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.call-cta-text p.sub {
+  font-size: 14px;
+  color: #ffffff;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+.call-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 17px 34px;
+  border-radius: 999px;
+  background: #00c6ff;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  box-shadow: 0 0 34px rgba(0, 198, 255, 0.5), 0 10px 28px rgba(0, 198, 255, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.call-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 46px rgba(0, 198, 255, 0.7), 0 12px 34px rgba(0, 198, 255, 0.5);
+}
+.call-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- phone mockup ---- */
+.phone-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 348px;
+  height: 668px;
+  border-radius: 58px;
+  border: 1.5px solid rgba(0, 198, 255, 0.5);
+  animation: pulseRing 3s ease-out infinite;
+}
+.pulse-ring.r2 {
+  animation-delay: 1s;
+}
+.pulse-ring.r3 {
+  animation-delay: 2s;
+}
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+  80% {
+    transform: scale(1.14);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.14);
+    opacity: 0;
+  }
+}
+
+.phone-frame {
+  position: relative;
+  width: 325px;
+  height: 655px;
+  border-radius: 50px;
+  background: linear-gradient(160deg, #2a2c30, #0a0b0c);
+  padding: 13px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 60px rgba(0, 198, 255, 0.15);
+  animation: phoneFloat 6s ease-in-out infinite;
+}
+@keyframes phoneFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 39px;
+  background: linear-gradient(180deg, #060a14 0%, #030507 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.notch {
+  width: 104px;
+  height: 30px;
+  background: #000;
+  border-radius: 999px;
+  margin-top: 13px;
+  flex-shrink: 0;
+}
+.status-row {
+  position: absolute;
+  top: 18px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.status-row .icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.status-row svg {
+  width: 15px;
+  height: 15px;
+  fill: #ffffff;
+}
+
+.avatar {
+  margin-top: 34px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #00c6ff;
+  box-shadow: 0 0 26px rgba(0, 198, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+.call-label {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #8a90a0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.call-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 8px;
+}
+
+.call-number {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #00c6ff;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  animation: numberPulse 2.2s ease-in-out infinite;
+}
+@keyframes numberPulse {
+  0%,
+  100% {
+    text-shadow: 0 0 12px rgba(0, 198, 255, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 26px rgba(0, 198, 255, 0.95), 0 0 46px rgba(0, 198, 255, 0.5);
+    transform: scale(1.045);
+  }
+}
+
+.wave-circle {
+  margin-top: 30px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 198, 255, 0.55);
+  box-shadow: 0 0 30px rgba(0, 198, 255, 0.35), inset 0 0 30px rgba(0, 198, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.wave-circle .bar {
+  width: 4px;
+  border-radius: 3px;
+  background: #00c6ff;
+  box-shadow: 0 0 8px rgba(0, 198, 255, 0.8);
+  animation: barPulse 1.1s ease-in-out infinite;
+}
+.wave-circle .bar:nth-child(1) {
+  height: 14px;
+  animation-delay: 0s;
+}
+.wave-circle .bar:nth-child(2) {
+  height: 30px;
+  animation-delay: 0.1s;
+}
+.wave-circle .bar:nth-child(3) {
+  height: 46px;
+  animation-delay: 0.2s;
+}
+.wave-circle .bar:nth-child(4) {
+  height: 58px;
+  animation-delay: 0.3s;
+}
+.wave-circle .bar:nth-child(5) {
+  height: 40px;
+  animation-delay: 0.4s;
+}
+.wave-circle .bar:nth-child(6) {
+  height: 52px;
+  animation-delay: 0.5s;
+}
+.wave-circle .bar:nth-child(7) {
+  height: 26px;
+  animation-delay: 0.6s;
+}
+.wave-circle .bar:nth-child(8) {
+  height: 16px;
+  animation-delay: 0.7s;
+}
+@keyframes barPulse {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.ai-status {
+  margin-top: 24px;
+  text-align: center;
+}
+.ai-status .a {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  opacity: 0.9;
+}
+.ai-status .b {
+  font-size: 13px;
+  color: #ffffff;
+  opacity: 0.55;
+  margin-top: 4px;
+}
+
+.call-actions {
+  margin-top: 34px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.call-actions .action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+.call-actions .circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+.call-actions .circle svg {
+  width: 21px;
+  height: 21px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.call-actions .circle:active {
+  transform: scale(0.92);
+}
+.call-actions .circle.answer {
+  background: #00c6ff;
+  box-shadow: 0 0 24px rgba(0, 198, 255, 0.7);
+}
+.call-actions .circle.end {
+  background: #ff3b30;
+  box-shadow: 0 0 24px rgba(255, 59, 48, 0.55);
+}
+.call-actions .circle.end svg {
+  transform: rotate(135deg);
+}
+.call-actions .label {
+  font-size: 11px;
+  color: #ffffff;
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 980px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    padding: 20px 24px 70px;
+  }
+  .features {
+    grid-template-columns: 1fr;
+  }
+  .phone-stage {
+    margin-top: 40px;
+  }
+}
