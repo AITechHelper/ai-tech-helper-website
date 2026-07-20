@@ -467,6 +467,12 @@ h1 {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Ring cards face radially outward, so at any moment about half of them
+     have their backs to the camera — and a CSS 3D element viewed from behind
+     renders mirrored, which made card text read backwards mid-rotation.
+     Hiding backfaces means a card is simply invisible once it turns away. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* menu card (ring position 0) — sized smaller than the viewport on purpose:
@@ -678,6 +684,51 @@ h1 {
 }
 .flat.service-card {
   padding: 110px 120px;
+}
+
+/* =========================================================
+   live page preview on a ring card
+   ========================================================= */
+.card3d.preview-card {
+  /* matches .card3d.service-card so the ring stays evenly spaced */
+  width: min(1000px, 80vw);
+  height: min(660px, 78vh);
+  padding: 0;
+  position: relative;
+}
+
+/* The real page, rendered at a fixed desktop design frame (PREVIEW_W x
+   PREVIEW_H in HeroCarousel.tsx) and scaled to fit the card by
+   layoutPreviews(). Decorative — it must never take a click, or a tap on the
+   scaled-down card would fire the real page's CTAs. */
+.page-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Inside that fixed frame, viewport units would resolve against the real
+   browser viewport and wreck the composition. Pin the two rules on this page
+   that use them to the values they take at the design frame's width. */
+.page-preview .page {
+  min-height: 100%;
+  height: 100%;
+}
+.page-preview .page h1 {
+  font-size: 60px;
+}
+
+/* a service whose page doesn't exist yet — reads like the CTA, isn't a link */
+.service-card .cta.cta-soon {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #9aa0ab;
+  box-shadow: none;
+  cursor: default;
 }
 
 @media (max-width: 720px) {

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import ReceptionistPageView from "@/components/ReceptionistPageView";
 
 declare global {
   interface Window {
@@ -10,12 +12,26 @@ declare global {
   }
 }
 
+/**
+ * `page` is the component that renders the service's destination route, or
+ * null when that page hasn't been built yet. It does double duty:
+ *
+ *  - non-null  → the ring card renders a live, scaled-down preview of the
+ *                real page, and clicking through navigates to `href`.
+ *  - null      → the ring card falls back to a summary card marked "Coming
+ *                soon", and clicking never navigates. Without this the
+ *                carousel sent visitors to a 404 at the end of a 3s animation.
+ *
+ * To wire up a new service: build its page, export a view component the same
+ * way /ai-receptionist does, and set `page` here.
+ */
 const SERVICES = [
   {
     kicker: "AI Agent",
     title: "Receptionist",
     desc: "Answers every call, qualifies the lead, and books the appointment — 24/7, live on your calendar.",
     href: "/ai-receptionist",
+    page: ReceptionistPageView,
     icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
   },
   {
@@ -23,6 +39,7 @@ const SERVICES = [
     title: "Receptionist+",
     desc: "Adds instant replies across SMS, website chat, Instagram, Facebook, and WhatsApp — nobody goes cold.",
     href: "/receptionist-plus",
+    page: null,
     icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
   },
   {
@@ -30,9 +47,16 @@ const SERVICES = [
     title: "Receptionist Max",
     desc: "The full automation layer — contracts, reminders, reviews, and follow-up — running behind the scenes.",
     href: "/receptionist-max",
+    page: null,
     icon: '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>',
   },
 ];
+
+/* The preview renders at a fixed desktop design frame and is then scaled to
+   fit the card, so it looks identical regardless of the visitor's viewport.
+   A viewport-relative layout inside a 3D-projected plane reflows unusably. */
+const PREVIEW_W = 1440;
+const PREVIEW_H = 900;
 
 export default function HeroCarousel() {
   useEffect(() => {
@@ -393,6 +417,15 @@ export default function HeroCarousel() {
     function buildServiceCard(service: (typeof SERVICES)[number]) {
       const el = document.createElement("div");
       el.className = "card3d service-card";
+      // Only link out when the destination page actually exists.
+      const action = service.page
+        ? '<a class="cta" href="' +
+          service.href +
+          '">Explore ' +
+          service.title +
+          ' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>'
+        : '<span class="cta cta-soon">Coming soon</span>';
+
       el.innerHTML =
         '<div class="icon-badge">' +
         iconSvg(service.icon) +
@@ -406,18 +439,60 @@ export default function HeroCarousel() {
         "<p>" +
         service.desc +
         "</p>" +
-        '<a class="cta" href="' +
-        service.href +
-        '">Explore ' +
-        service.title +
-        ' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>';
+        action;
       return el;
     }
+
+    /* A ring card showing a live, scaled-down render of the service's real
+       page. Mounted through its own React root: the card element belongs to
+       CSS3DRenderer's DOM tree, not React's, so it can't be a child of this
+       component's returned JSX. */
+    const previewRoots: Root[] = [];
+    const previewFrames: HTMLElement[] = [];
+
+    function buildPreviewCard(service: (typeof SERVICES)[number]) {
+      const Page = service.page!;
+      const el = document.createElement("div");
+      el.className = "card3d preview-card";
+
+      const frame = document.createElement("div");
+      frame.className = "page-preview";
+      frame.style.width = PREVIEW_W + "px";
+      frame.style.height = PREVIEW_H + "px";
+      el.appendChild(frame);
+
+      const root = createRoot(frame);
+      root.render(<Page interactive={false} />);
+      previewRoots.push(root);
+      previewFrames.push(frame);
+      return el;
+    }
+
+    function layoutPreviews() {
+      previewFrames.forEach((frame) => {
+        const card = frame.parentElement;
+        if (!card || !card.clientWidth) return;
+        const s = Math.min(card.clientWidth / PREVIEW_W, card.clientHeight / PREVIEW_H);
+        frame.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+      });
+    }
+    window.addEventListener("resize", layoutPreviews);
+    cleanups.push(() => window.removeEventListener("resize", layoutPreviews));
+
+    // React complains if a root is unmounted while it is already rendering,
+    // which is exactly what happens when this effect's cleanup runs.
+    cleanups.push(() => previewRoots.forEach((r) => queueMicrotask(() => r.unmount())));
 
     const cardObjects: any[] = [];
     for (let i = 0; i < N; i++) {
       const a = i * ((Math.PI * 2) / N);
-      const el = i === 0 ? buildMenuCard() : buildServiceCard(SERVICES[i - 1]);
+      let el: HTMLElement;
+      if (i === 0) {
+        el = buildMenuCard();
+      } else {
+        const svc = SERVICES[i - 1];
+        el = svc.page ? buildPreviewCard(svc) : buildServiceCard(svc);
+      }
       const obj = new THREE.CSS3DObject(el);
       obj.position.set(R * Math.sin(a), 0, R * Math.cos(a));
       obj.rotation.y = a;
@@ -507,8 +582,15 @@ export default function HeroCarousel() {
             hint.style.opacity = "1";
             css3dLayerEl.style.opacity = "0";
             showFlat(0);
-          } else {
+          } else if (SERVICES[targetIdx - 1].page) {
             window.location.href = SERVICES[targetIdx - 1].href;
+          } else {
+            // No page for this service yet, so there is nowhere to send the
+            // visitor. Rest on its flat card instead of navigating to a 404.
+            backBtn.classList.add("visible");
+            hint.style.opacity = "0";
+            css3dLayerEl.style.opacity = "0";
+            showFlat(targetIdx);
           }
         },
       });
@@ -545,10 +627,18 @@ export default function HeroCarousel() {
     cleanups.push(() => backBtn.removeEventListener("click", onBackClick));
 
     let carouselRaf = 0;
+    let previewsLaidOut = false;
     function animateCarousel() {
       carouselRaf = requestAnimationFrame(animateCarousel);
       webglRenderer.render(webglScene, camera);
       cssRenderer.render(cssScene, camera);
+
+      // Cards only get their size once CSS3DRenderer has put them in the DOM,
+      // so the preview scale can't be computed until after the first render.
+      if (!previewsLaidOut && previewFrames.some((f) => f.parentElement?.clientWidth)) {
+        previewsLaidOut = true;
+        layoutPreviews();
+      }
     }
     animateCarousel();
     cleanups.push(() => cancelAnimationFrame(carouselRaf));

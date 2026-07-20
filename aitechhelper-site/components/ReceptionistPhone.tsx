@@ -5,12 +5,20 @@ import { useEffect, useRef } from "react";
 const PHONE_NUMBER = "+15722204756";
 const PHONE_DISPLAY = "+1 572-220-4756";
 
-export default function ReceptionistPhone() {
+/**
+ * `interactive` is false when this renders inside the homepage carousel's 3D
+ * preview card. That copy is decorative, so it skips the call handlers and
+ * omits element ids — otherwise a tap on the scaled-down card would dial the
+ * business, and its ids would collide with the real page's.
+ */
+export default function ReceptionistPhone({ interactive = true }: { interactive?: boolean }) {
   const connectedRef = useRef(false);
   const secondsRef = useRef(0);
   const tickingRef = useRef(false);
 
   useEffect(() => {
+    if (!interactive) return;
+
     const label = document.getElementById("callLabel")!;
     const centerCircle = document.getElementById("centerCircle")!;
     const centerLabel = document.getElementById("centerLabel")!;
@@ -75,7 +83,7 @@ export default function ReceptionistPhone() {
       callBtnEls.forEach((el) => el.removeEventListener("click", startCall));
       centerCircle.removeEventListener("click", toggleCenter);
     };
-  }, []);
+  }, [interactive]);
 
   return (
     <div className="phone-stage">
@@ -107,15 +115,14 @@ export default function ReceptionistPhone() {
           <div className="notch" />
 
           <div className="avatar">AI</div>
-          <div className="call-label" id="callLabel">
+          <div className="call-label" {...(interactive ? { id: "callLabel" } : {})}>
             Tap to call
           </div>
           <div className="call-title">AI Receptionist</div>
           <a
             href={`tel:${PHONE_NUMBER}`}
             className="call-number"
-            id="callNumber"
-            data-start-call="true"
+            {...(interactive ? { id: "callNumber", "data-start-call": "true" } : {})}
           >
             {PHONE_DISPLAY}
           </a>
@@ -148,12 +155,16 @@ export default function ReceptionistPhone() {
               <div className="label">Mute</div>
             </div>
             <div className="action">
-              <button type="button" className="circle answer" id="centerCircle">
-                <svg id="centerIcon" viewBox="0 0 24 24">
+              <button
+                type="button"
+                className="circle answer"
+                {...(interactive ? { id: "centerCircle" } : {})}
+              >
+                <svg viewBox="0 0 24 24">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
               </button>
-              <div className="label" id="centerLabel">
+              <div className="label" {...(interactive ? { id: "centerLabel" } : {})}>
                 Call
               </div>
             </div>
