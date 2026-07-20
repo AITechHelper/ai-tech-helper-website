@@ -118,7 +118,7 @@ export default function ReceptionistPhone({ interactive = true }: { interactive?
           <div className="call-label" {...(interactive ? { id: "callLabel" } : {})}>
             Tap to call
           </div>
-          <div className="call-title">AI Receptionist</div>
+          <div className="call-title">Your Receptionist</div>
           <a
             href={`tel:${PHONE_NUMBER}`}
             className="call-number"
@@ -139,7 +139,7 @@ export default function ReceptionistPhone({ interactive = true }: { interactive?
           </div>
 
           <div className="ai-status">
-            <div className="a">AI is answering…</div>
+            <div className="a">Answering now…</div>
             <div className="b">How can I help you today?</div>
           </div>
 

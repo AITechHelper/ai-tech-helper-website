@@ -2,55 +2,33 @@
 
 import { useEffect } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import ReceptionistPageView from "@/components/ReceptionistPageView";
+import * as THREE from "three";
+import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ServicesMenu from "@/components/ServicesMenu";
+import TierPageView from "@/components/TierPageView";
+import { TIERS } from "@/lib/tiers";
 
-declare global {
-  interface Window {
-    THREE: any;
-    gsap: any;
-    ScrollTrigger: any;
-  }
-}
+/* The ring's service cards, derived from the same tier definitions the pages
+   render — so a copy change in lib/tiers.tsx updates the card, the page, and
+   the card's live preview together. Icons stay as raw path strings because
+   buildServiceCard still assembles its markup with innerHTML. */
+const RING_ICONS: Record<string, string> = {
+  bronze:
+    '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  silver: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  gold: '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>',
+};
 
-/**
- * `page` is the component that renders the service's destination route, or
- * null when that page hasn't been built yet. It does double duty:
- *
- *  - non-null  → the ring card renders a live, scaled-down preview of the
- *                real page, and clicking through navigates to `href`.
- *  - null      → the ring card falls back to a summary card marked "Coming
- *                soon", and clicking never navigates. Without this the
- *                carousel sent visitors to a 404 at the end of a 3s animation.
- *
- * To wire up a new service: build its page, export a view component the same
- * way /ai-receptionist does, and set `page` here.
- */
-const SERVICES = [
-  {
-    kicker: "AI Agent",
-    title: "Receptionist",
-    desc: "Answers every call, qualifies the lead, and books the appointment — 24/7, live on your calendar.",
-    href: "/ai-receptionist",
-    page: ReceptionistPageView,
-    icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
-  },
-  {
-    kicker: "AI Agents",
-    title: "Receptionist+",
-    desc: "Adds instant replies across SMS, website chat, Instagram, Facebook, and WhatsApp — nobody goes cold.",
-    href: "/receptionist-plus",
-    page: null,
-    icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-  },
-  {
-    kicker: "Complete Package",
-    title: "Receptionist Max",
-    desc: "The full automation layer — contracts, reminders, reviews, and follow-up — running behind the scenes.",
-    href: "/receptionist-max",
-    page: null,
-    icon: '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>',
-  },
-];
+const SERVICES = TIERS.map((tier) => ({
+  kicker: tier.cardKicker,
+  title: tier.name,
+  desc: tier.cardDesc,
+  href: "/" + tier.slug,
+  tier,
+  icon: RING_ICONS[tier.slug],
+}));
 
 /* The preview renders at a fixed desktop design frame and is then scaled to
    fit the card, so it looks identical regardless of the visitor's viewport.
@@ -58,12 +36,12 @@ const SERVICES = [
 const PREVIEW_W = 1440;
 const PREVIEW_H = 900;
 
+const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
+
 export default function HeroCarousel() {
   useEffect(() => {
-    if (!window.THREE || !window.gsap || !window.ScrollTrigger) return;
-    const THREE = window.THREE;
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
+    // Registered here rather than at module scope: this file is imported
+    // during SSR too, and ScrollTrigger needs a real window.
     gsap.registerPlugin(ScrollTrigger);
 
     // Track everything that needs tearing down on unmount (important in
@@ -75,6 +53,8 @@ export default function HeroCarousel() {
        PART 1 — HERO: data orb + scroll-pin zoom transition
        ========================================================= */
     const wrap = document.getElementById("orb-canvas-wrap")!;
+    // Needed by the hero's scroll handler below as well as the carousel setup.
+    const stageEl = document.getElementById("stage")!;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     wrap.appendChild(renderer.domElement);
@@ -240,7 +220,7 @@ export default function HeroCarousel() {
       const t = clock.getElapsedTime();
 
       const posAttr = geo.attributes.position;
-      const arr = posAttr.array;
+      const arr = posAttr.array as Float32Array;
       for (let i = 0; i < COUNT; i++) {
         const amp = 0.05 + 0.05 * Math.min(1, Math.abs(baseDir[i * 3 + 1]) * 1.4);
         const r = radii[i] * (1 + amp * Math.sin(t * 0.6 + phases[i]));
@@ -252,11 +232,12 @@ export default function HeroCarousel() {
 
       const bob = Math.sin(t * ((Math.PI * 2) / 7)) * 0.12;
       orb.position.y = bob;
-      orb.rotation.y = t * (0.12 + scrollProgress * 1.6);
+      // Slow, patient drift at rest; still winds up as you fly into the core.
+      orb.rotation.y = t * (0.06 + scrollProgress * 1.0);
       orb.rotation.x = Math.sin(t * 0.15) * 0.08;
 
       const fieldAttr = fieldGeo.attributes.position;
-      const farr = fieldAttr.array;
+      const farr = fieldAttr.array as Float32Array;
       for (let i = 0; i < FIELD_COUNT; i++) {
         farr[i * 3] = fieldBase[i * 3] + Math.sin(t * 0.12 + fieldPhase[i]) * 0.12;
         farr[i * 3 + 1] = fieldBase[i * 3 + 1] + Math.sin(t * 0.18 + fieldPhase[i] * 1.3) * 0.18;
@@ -285,23 +266,23 @@ export default function HeroCarousel() {
       pin: ".hero",
       scrub: 1,
       onUpdate: (self: any) => {
-        scrollProgress = self.progress;
-        gsap.set("#copy", {
-          opacity: 1 - Math.min(1, self.progress / 0.45),
-          y: -self.progress * 60,
-          scale: 1 - self.progress * 0.08,
-        });
-        gsap.set("#nav", { opacity: 1 - Math.min(1, self.progress / 0.35) });
-        const flash = Math.max(0, (self.progress - 0.72) / 0.26);
-        gsap.set("#warp-flash", { opacity: Math.min(1, flash) });
+        const p = self.progress;
+        scrollProgress = p;
 
-        const appear = Math.max(0, Math.min(1, (self.progress - 0.65) / 0.2));
-        const holdFade = self.progress > 0.9 ? Math.max(0, 1 - (self.progress - 0.9) / 0.1) : 1;
-        const logoOpacity = appear * holdFade;
-        gsap.set("#logo-reveal", {
-          opacity: logoOpacity,
-          scale: 0.5 + appear * 0.65,
+        gsap.set("#copy", {
+          opacity: 1 - Math.min(1, p / 0.45),
+          y: -p * 60,
+          scale: 1 - p * 0.08,
         });
+        gsap.set("#nav", { opacity: 1 - Math.min(1, p / 0.35) });
+
+        // Services rise out of nothing as the core is reached, landing fully
+        // opaque exactly at the end of the journey. No vertical movement — the
+        // whole point is that it should feel like arriving, not scrolling.
+        const stageIn = clamp01((p - 0.72) / 0.28);
+        gsap.set("#stage", { opacity: stageIn });
+        // Don't let an invisible stage swallow clicks meant for the hero.
+        stageEl.style.pointerEvents = stageIn > 0.99 ? "auto" : "none";
       },
     });
     cleanups.push(() => pinTrigger.kill());
@@ -315,8 +296,12 @@ export default function HeroCarousel() {
     let angle = 0;
     let isAnimating = false;
 
-    const stage = document.getElementById("stage")!;
-    const camera = new THREE.PerspectiveCamera(50, stage.clientWidth / stage.clientHeight, 1, 8000);
+    const camera = new THREE.PerspectiveCamera(
+      50,
+      stageEl.clientWidth / stageEl.clientHeight,
+      1,
+      8000
+    );
 
     const webglScene = new THREE.Scene();
     const webglRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -324,12 +309,12 @@ export default function HeroCarousel() {
     document.getElementById("webgl-layer")!.appendChild(webglRenderer.domElement);
 
     const cssScene = new THREE.Scene();
-    const cssRenderer = new THREE.CSS3DRenderer();
+    const cssRenderer = new CSS3DRenderer();
     document.getElementById("css3d-layer")!.appendChild(cssRenderer.domElement);
 
     function sizeRenderers() {
-      const w = stage.clientWidth,
-        h = stage.clientHeight;
+      const w = stageEl.clientWidth,
+        h = stageEl.clientHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       webglRenderer.setSize(w, h);
@@ -367,11 +352,56 @@ export default function HeroCarousel() {
       map: sprite,
       color: 0x66b8ff,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.6,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
     webglScene.add(new THREE.Points(dustGeo, dustMat));
+
+    /* A smaller echo of the hero's orb, parked at the centre of the ring so
+       the middle of the stage reads as the thing the cards are orbiting
+       rather than as empty space. It lives in the WebGL layer, which paints
+       under the CSS3D cards, so it always sits behind them. */
+    const RING_ORB_COUNT = 2600;
+    const RING_ORB_R = 250;
+    const ringOrbPos = new Float32Array(RING_ORB_COUNT * 3);
+    const ringOrbDir = new Float32Array(RING_ORB_COUNT * 3);
+    const ringOrbPhase = new Float32Array(RING_ORB_COUNT);
+    const ringGolden = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < RING_ORB_COUNT; i++) {
+      const y = 1 - (i / (RING_ORB_COUNT - 1)) * 2;
+      const r = Math.sqrt(1 - y * y);
+      const th = ringGolden * i;
+      const ux = Math.cos(th) * r;
+      const uz = Math.sin(th) * r;
+      ringOrbDir[i * 3] = ux;
+      ringOrbDir[i * 3 + 1] = y;
+      ringOrbDir[i * 3 + 2] = uz;
+      ringOrbPhase[i] = Math.random() * Math.PI * 2;
+      ringOrbPos[i * 3] = ux * RING_ORB_R;
+      ringOrbPos[i * 3 + 1] = y * RING_ORB_R;
+      ringOrbPos[i * 3 + 2] = uz * RING_ORB_R;
+    }
+    const ringOrbGeo = new THREE.BufferGeometry();
+    ringOrbGeo.setAttribute("position", new THREE.BufferAttribute(ringOrbPos, 3));
+    const ringOrbMat = new THREE.PointsMaterial({
+      size: 8,
+      map: sprite,
+      color: 0x7fd4ff,
+      transparent: true,
+      opacity: 0.75,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    });
+    const ringOrb = new THREE.Points(ringOrbGeo, ringOrbMat);
+    webglScene.add(ringOrb);
+    cleanups.push(() => {
+      ringOrbGeo.dispose();
+      ringOrbMat.dispose();
+    });
+
+    const carouselClock = new THREE.Clock();
 
     const anchorGeo = new THREE.SphereGeometry(7, 16, 16);
     const anchorMat = new THREE.MeshBasicMaterial({ color: 0x00c6ff });
@@ -386,45 +416,27 @@ export default function HeroCarousel() {
       return '<svg viewBox="0 0 24 24">' + icon + "</svg>";
     }
 
+    /* Rendered through React so the menu and the comparison matrix read from
+       lib/tiers.tsx directly. Clicks are still handled by delegation on the
+       layer, so the rows keep working exactly as when this was innerHTML. */
     function buildMenuCard() {
       const el = document.createElement("div");
       el.className = "card3d menu-card";
-      const rows = SERVICES.map(
-        (s, i) =>
-          '<button class="service-row" data-index="' +
-          (i + 1) +
-          '">' +
-          '<div class="icon-badge">' +
-          iconSvg(s.icon) +
-          "</div>" +
-          '<div class="text"><h3>' +
-          s.title +
-          "</h3><p>" +
-          s.desc +
-          "</p></div>" +
-          '<div class="arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>' +
-          "</button>"
-      ).join("");
-      el.innerHTML =
-        '<div class="eyebrow">What we build</div>' +
-        "<h1>Our services</h1>" +
-        '<div class="service-list">' +
-        rows +
-        "</div>";
+      const root = createRoot(el);
+      root.render(<ServicesMenu />);
+      previewRoots.push(root);
       return el;
     }
 
     function buildServiceCard(service: (typeof SERVICES)[number]) {
       const el = document.createElement("div");
       el.className = "card3d service-card";
-      // Only link out when the destination page actually exists.
-      const action = service.page
-        ? '<a class="cta" href="' +
-          service.href +
-          '">Explore ' +
-          service.title +
-          ' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>'
-        : '<span class="cta cta-soon">Coming soon</span>';
+      const action =
+        '<a class="cta" href="' +
+        service.href +
+        '">Explore ' +
+        service.title +
+        ' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>';
 
       el.innerHTML =
         '<div class="icon-badge">' +
@@ -451,7 +463,6 @@ export default function HeroCarousel() {
     const previewFrames: HTMLElement[] = [];
 
     function buildPreviewCard(service: (typeof SERVICES)[number]) {
-      const Page = service.page!;
       const el = document.createElement("div");
       el.className = "card3d preview-card";
 
@@ -462,7 +473,7 @@ export default function HeroCarousel() {
       el.appendChild(frame);
 
       const root = createRoot(frame);
-      root.render(<Page interactive={false} />);
+      root.render(<TierPageView tier={service.tier} interactive={false} />);
       previewRoots.push(root);
       previewFrames.push(frame);
       return el;
@@ -486,14 +497,8 @@ export default function HeroCarousel() {
     const cardObjects: any[] = [];
     for (let i = 0; i < N; i++) {
       const a = i * ((Math.PI * 2) / N);
-      let el: HTMLElement;
-      if (i === 0) {
-        el = buildMenuCard();
-      } else {
-        const svc = SERVICES[i - 1];
-        el = svc.page ? buildPreviewCard(svc) : buildServiceCard(svc);
-      }
-      const obj = new THREE.CSS3DObject(el);
+      const el = i === 0 ? buildMenuCard() : buildPreviewCard(SERVICES[i - 1]);
+      const obj = new CSS3DObject(el);
       obj.position.set(R * Math.sin(a), 0, R * Math.cos(a));
       obj.rotation.y = a;
       cssScene.add(obj);
@@ -582,15 +587,8 @@ export default function HeroCarousel() {
             hint.style.opacity = "1";
             css3dLayerEl.style.opacity = "0";
             showFlat(0);
-          } else if (SERVICES[targetIdx - 1].page) {
-            window.location.href = SERVICES[targetIdx - 1].href;
           } else {
-            // No page for this service yet, so there is nowhere to send the
-            // visitor. Rest on its flat card instead of navigating to a 404.
-            backBtn.classList.add("visible");
-            hint.style.opacity = "0";
-            css3dLayerEl.style.opacity = "0";
-            showFlat(targetIdx);
+            window.location.href = SERVICES[targetIdx - 1].href;
           }
         },
       });
@@ -630,6 +628,19 @@ export default function HeroCarousel() {
     let previewsLaidOut = false;
     function animateCarousel() {
       carouselRaf = requestAnimationFrame(animateCarousel);
+
+      // Slow drift and a gentle breathe, matching the hero orb's character.
+      const ct = carouselClock.getElapsedTime();
+      ringOrb.rotation.y = ct * 0.06;
+      const rp = ringOrbGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < RING_ORB_COUNT; i++) {
+        const rr = RING_ORB_R * (1 + 0.06 * Math.sin(ct * 0.5 + ringOrbPhase[i]));
+        rp[i * 3] = ringOrbDir[i * 3] * rr;
+        rp[i * 3 + 1] = ringOrbDir[i * 3 + 1] * rr;
+        rp[i * 3 + 2] = ringOrbDir[i * 3 + 2] * rr;
+      }
+      ringOrbGeo.attributes.position.needsUpdate = true;
+
       webglRenderer.render(webglScene, camera);
       cssRenderer.render(cssScene, camera);
 
@@ -644,20 +655,54 @@ export default function HeroCarousel() {
     cleanups.push(() => cancelAnimationFrame(carouselRaf));
     cleanups.push(() => webglRenderer.dispose());
 
-    gsap.set("#stage", { opacity: 0.001 });
-    const stageTrigger = ScrollTrigger.create({
-      trigger: "#stage",
-      start: "top 95%",
-      end: "top 25%",
-      scrub: 1,
-      onUpdate: (self: any) => {
-        gsap.set("#warp-flash", {
-          opacity: Math.max(0, 1 - self.progress) * (scrollProgress >= 0.98 ? 1 : 0),
-        });
-        gsap.set("#stage", { opacity: self.progress });
-      },
-    });
-    cleanups.push(() => stageTrigger.kill());
+    /* Arriving on /#stage — from a package page's "Back to services" button or
+       the nav — should land on the carousel rather than replay the whole
+       intro. A normal anchor jump can't do it: #stage is position:fixed, so
+       it's always at the top of the viewport and scrolling "to" it is a no-op,
+       leaving the visitor at the hero with the stage still at opacity 0.
+       Jumping to the end of the pin runway drives the pin progress to 1, which
+       is what actually reveals the stage. */
+    /* A package page's back button also passes ?from=<slug>. That card is
+       where the visitor "is", so rather than dropping them on the menu we park
+       the ring on it — zoomed in, exactly as they left it — and then play the
+       same zoom-out-and-spin that the in-stage back button uses. The animation
+       can't run across the page load itself (following a link is a real
+       navigation), so it plays on arrival instead. */
+    const returnSlug = new URLSearchParams(window.location.search).get("from");
+    const returnIdx = SERVICES.findIndex((s) => s.tier.slug === returnSlug) + 1;
+
+    if (window.location.hash === "#stage" || returnIdx > 0) {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        // Pinning inserts spacers, so the document isn't its final height
+        // until ScrollTrigger has measured.
+        ScrollTrigger.refresh();
+        window.scrollTo(0, document.documentElement.scrollHeight);
+
+        if (returnIdx > 0) {
+          activeIndex = returnIdx;
+          angle = angleFor(returnIdx);
+          camState.zoom = 0;
+          updateCamera();
+          showFlat(-1);
+          css3dLayerEl.style.opacity = "1";
+          hint.style.opacity = "0";
+
+          // Drop the query so a refresh doesn't replay the return trip.
+          history.replaceState({}, "", "/#stage");
+
+          requestAnimationFrame(() => {
+            if (cancelled) return;
+            // The stage is now scrolled into place and holding the card the
+            // visitor arrived from, so it's safe to reveal — the hero stays
+            // covered behind it from here on.
+            gsap.set("#stage", { opacity: 1 });
+            document.documentElement.removeAttribute("data-returning");
+            goToIndex(0);
+          });
+        }
+      });
+    }
 
     return () => {
       cancelled = true;
@@ -671,9 +716,6 @@ export default function HeroCarousel() {
 
   return (
     <>
-      <div id="warp-flash" />
-      <img id="logo-reveal" src="/assets/logo.png" alt="AI Tech Helper" />
-
       <div className="pin-wrapper">
         <section className="hero">
           <div id="orb-canvas-wrap" />
@@ -685,7 +727,7 @@ export default function HeroCarousel() {
             <div className="nav-links">
               <a href="#">Agents</a>
               <a href="#">Automations</a>
-              <a href="#">AI Hub</a>
+              <a href="/ai-hub">AI Hub</a>
             </div>
             <a href="#" className="cta-pill">
               Contact Us
@@ -729,7 +771,7 @@ export default function HeroCarousel() {
           <div className="nav-links">
             <span>Agents</span>
             <span>Automations</span>
-            <span>AI Hub</span>
+            <a href="/ai-hub">AI Hub</a>
           </div>
           <div className="contact">Contact Us</div>
         </div>

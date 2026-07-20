@@ -6,3 +6,6 @@ out/
 .env*.local
 npm-debug.log*
 next-env.d.ts
+
+# typescript incremental build cache
+tsconfig.tsbuildinfo
