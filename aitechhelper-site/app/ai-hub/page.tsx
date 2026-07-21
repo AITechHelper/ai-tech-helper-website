@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatDate, getPosts } from "@/lib/wp";
+import { formatDate, getPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "The AI Hub — AI Tech Helper",
@@ -8,8 +8,8 @@ export const metadata: Metadata = {
     "A weekly briefing on the AI news that actually matters — new tools, real launches, and what they mean, in plain English.",
 };
 
-export default async function AiHubPage() {
-  const posts = await getPosts();
+export default function AiHubPage() {
+  const posts = getPosts();
   const [featured, ...rest] = posts;
 
   return (
@@ -59,7 +59,7 @@ export default async function AiHubPage() {
           {rest.length > 0 && (
             <div className="hub-grid">
               {rest.map((post) => (
-                <Link href={`/ai-hub/${post.slug}`} className="hub-card" key={post.id}>
+                <Link href={`/ai-hub/${post.slug}`} className="hub-card" key={post.slug}>
                   <div className="hub-card-media">
                     {post.image && <img src={post.image} alt={post.imageAlt} />}
                   </div>

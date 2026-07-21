@@ -1,23 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatDate, getPost, getPosts, readingTime } from "@/lib/wp";
+import { formatDate, getPost, getPosts, readingTime } from "@/lib/posts";
 
-// Pre-render the issues we know about at build time; let any newer slug render
-// on first request and then cache (see revalidate in lib/wp).
-export const dynamicParams = true;
+// Every issue is a file in the repo, so all slugs are known at build time.
+export const dynamicParams = false;
 
-export async function generateStaticParams() {
-  const posts = await getPosts();
-  return posts.map((p) => ({ slug: p.slug }));
+export function generateStaticParams() {
+  return getPosts().map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const post = await getPost(params.slug);
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const post = getPost(params.slug);
   if (!post) return { title: "The AI Hub — AI Tech Helper" };
   return {
     title: `${post.title} — The AI Hub`,
@@ -26,8 +20,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function AiHubPost({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug);
+export default function AiHubPost({ params }: { params: { slug: string } }) {
+  const post = getPost(params.slug);
   if (!post) notFound();
 
   return (
