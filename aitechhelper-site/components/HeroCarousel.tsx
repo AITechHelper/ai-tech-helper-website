@@ -318,9 +318,9 @@ export default function HeroCarousel() {
         // the remaining scroll just finishes the flight into the core.
         /* Held back from where it used to start (0.34) to give the orb a long
            stretch of runway to swell and burn out on its own — the hero copy
-           has cleared by 0.32, the orb owns the screen until it dissolves at
-           0.76, and the services resolve into the space it leaves. */
-        stageIn = clamp01((p - 0.52) / 0.26);
+           has cleared by 0.32, the orb is still swelling as the services begin
+           to resolve at 0.46, and it dissolves out from behind them by 0.76. */
+        stageIn = clamp01((p - 0.46) / 0.26);
         gsap.set("#stage", { opacity: stageIn });
         // Don't let a half-faded stage swallow clicks meant for the hero.
         stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";
