@@ -74,20 +74,57 @@ body {
 .cta-pill {
   padding: 13px 30px;
   border-radius: 999px;
-  background: #00c6ff;
+  background: linear-gradient(140deg, #6fe0ff -10%, #00c6ff 55%, #00a3d9 120%);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #ffffff;
+  color: #04141c;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.3px;
   text-decoration: none;
-  box-shadow: 0 0 30px rgba(0, 198, 255, 0.5), 0 6px 20px rgba(0, 198, 255, 0.35);
+  box-shadow: 0 10px 26px rgba(0, 198, 255, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .cta-pill:hover {
-  background: #33d1ff;
+  filter: brightness(1.08);
   transform: translateY(-2px);
-  box-shadow: 0 0 40px rgba(0, 198, 255, 0.7), 0 8px 24px rgba(0, 198, 255, 0.45);
+  box-shadow: 0 14px 34px rgba(0, 198, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* =========================================================
+   ACCENT TOKENS
+   =========================================================
+   One accent, inherited. Brand cyan is the default everywhere; a package page
+   swaps it for the metal its tier is named after, so /gold reads gold from the
+   eyebrow to the call button — the same two stops its card on the services
+   menu uses. Chrome that belongs to the brand rather than to the section (the
+   logo and the nav's Contact pill) stays cyan on every page, which is what
+   holds the site together across the three metals.
+
+   --m1  the light stop (text, icons, rules)
+   --m2  the dark stop (gradient ends)
+   --glow  the same hue as bare RGB, for rgba() glows and tints */
+:root {
+  --m1: #00c6ff;
+  --m2: #0088cc;
+  --glow: 0, 198, 255;
+}
+.tier-card--bronze,
+.page--bronze {
+  --m1: #ffb27a;
+  --m2: #b8642a;
+  --glow: 255, 148, 78;
+}
+.tier-card--silver,
+.page--silver {
+  --m1: #eef4ff;
+  --m2: #8da0bf;
+  --glow: 185, 208, 245;
+}
+.tier-card--gold,
+.page--gold {
+  --m1: #ffe293;
+  --m2: #d09a16;
+  --glow: 255, 198, 62;
 }
 
 /* =========================================================
@@ -99,7 +136,7 @@ body {
   gap: 9px;
   font-size: 13px;
   letter-spacing: 3.5px;
-  color: #00c6ff;
+  color: var(--m1);
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 16px;
@@ -109,8 +146,8 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #00c6ff;
-  box-shadow: 0 0 10px 3px rgba(0, 198, 255, 0.8);
+  background: var(--m1);
+  box-shadow: 0 0 10px 3px rgba(var(--glow), 0.8);
 }
 
 /* =========================================================
@@ -225,19 +262,19 @@ h1 {
 .btn-primary {
   padding: 19px 40px;
   border-radius: 999px;
-  background: #00c6ff;
-  color: #ffffff;
+  background: linear-gradient(140deg, #6fe0ff -10%, #00c6ff 55%, #00a3d9 120%);
+  color: #04141c;
   font-weight: 700;
   font-size: 16px;
   letter-spacing: 0.2px;
   text-decoration: none;
-  box-shadow: 0 0 40px rgba(0, 198, 255, 0.55), 0 10px 34px rgba(0, 198, 255, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 198, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .btn-primary:hover {
-  background: #33d1ff;
+  filter: brightness(1.08);
   transform: translateY(-2px);
-  box-shadow: 0 0 55px rgba(0, 198, 255, 0.75), 0 14px 40px rgba(0, 198, 255, 0.55);
+  box-shadow: 0 16px 40px rgba(0, 198, 255, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 .btn-ghost {
   padding: 19px 36px;
@@ -395,12 +432,12 @@ h1 {
 .hud .contact {
   padding: 11px 24px;
   border-radius: 999px;
-  background: #00c6ff;
-  color: #fff;
+  background: linear-gradient(140deg, #6fe0ff -10%, #00c6ff 55%, #00a3d9 120%);
+  color: #04141c;
   font-size: 13px;
   font-weight: 700;
   pointer-events: auto;
-  box-shadow: 0 0 20px rgba(0, 198, 255, 0.4);
+  box-shadow: 0 8px 22px rgba(0, 198, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .back-btn {
@@ -549,22 +586,6 @@ h1 {
   margin: 0 auto;
   /* Room for the featured card to scale up and glow without being clipped. */
   padding: 10px clamp(6px, 1vw, 18px) 18px;
-}
-
-.tier-card--bronze {
-  --m1: #ffb27a;
-  --m2: #b8642a;
-  --glow: 255, 148, 78;
-}
-.tier-card--silver {
-  --m1: #eef4ff;
-  --m2: #8da0bf;
-  --glow: 185, 208, 245;
-}
-.tier-card--gold {
-  --m1: #ffe293;
-  --m2: #d09a16;
-  --glow: 255, 198, 62;
 }
 
 .tier-card {
@@ -1143,7 +1164,7 @@ h1 {
   padding: 30px 30px 26px;
   background: linear-gradient(180deg, #0c0e12, #06070a);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 60px rgba(0, 198, 255, 0.12), 0 30px 80px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 70px rgba(var(--glow), 0.1), 0 30px 80px rgba(0, 0, 0, 0.6);
 }
 .stack-head {
   display: flex;
@@ -1164,7 +1185,7 @@ h1 {
   font-weight: 700;
   letter-spacing: 1.6px;
   text-transform: uppercase;
-  color: #00c6ff;
+  color: var(--m1);
 }
 .stack-list {
   list-style: none;
@@ -1188,7 +1209,7 @@ h1 {
   height: 16px;
   margin-top: 2px;
   flex: none;
-  stroke: #00c6ff;
+  stroke: var(--m1);
   fill: none;
   stroke-width: 2.6;
   stroke-linecap: round;
@@ -1203,8 +1224,8 @@ h1 {
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: #00c6ff;
-  background: rgba(0, 198, 255, 0.12);
+  color: var(--m1);
+  background: rgba(var(--glow), 0.13);
   border-radius: 999px;
   padding: 4px 9px;
   align-self: center;
@@ -1235,8 +1256,10 @@ h1 {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(ellipse 60% 50% at 18% 30%, rgba(0, 198, 255, 0.1), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(0, 198, 255, 0.08), transparent 60%), #000;
+  /* Two soft washes of the page's accent over black. Kept low — the light
+     should read as the room the content sits in, not as a colour field. */
+  background: radial-gradient(ellipse 60% 50% at 18% 30%, rgba(var(--glow), 0.08), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--glow), 0.06), transparent 60%), #000;
   overflow: hidden;
 }
 
@@ -1277,14 +1300,31 @@ h1 {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .band-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 2.8px;
   text-transform: uppercase;
-  color: #00c6ff;
+  color: var(--m1);
   margin-bottom: 40px;
   text-align: center;
+}
+/* Short rules either side, the same mark the package cards use above their
+   feature lists — one detail repeated is what makes two screens read as one
+   site. */
+.band-label::before,
+.band-label::after {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--glow), 0.7));
+}
+.band-label::after {
+  background: linear-gradient(90deg, rgba(var(--glow), 0.7), transparent);
 }
 
 /* the hero's h1 (above) uses the animated shine-gradient treatment.
@@ -1301,7 +1341,7 @@ h1 {
   -webkit-background-clip: initial;
   background-clip: initial;
   animation: none;
-  text-shadow: 0 0 26px rgba(0, 198, 255, 0.28), 0 4px 24px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 34px rgba(var(--glow), 0.16), 0 4px 24px rgba(0, 0, 0, 0.8);
   margin-bottom: 24px;
   max-width: 900px;
 }
@@ -1337,7 +1377,7 @@ h1 {
 }
 .page-back:hover {
   background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(0, 198, 255, 0.5);
+  border-color: rgba(var(--glow), 0.5);
   color: #ffffff;
 }
 .page-back svg {
@@ -1368,23 +1408,26 @@ h1 {
   text-align: center;
   gap: 22px;
 }
-/* Softer than the hero's badges. Four of these plus the call button at full
-   strength made the column read as busy rather than accented. */
+/* Outlined rather than filled. Four solid badges shouted as loudly as the one
+   button that actually matters; tinted glass with the accent on the stroke
+   keeps them legible and lets the call button stay the only solid mark on the
+   page. */
 .feature .icon-badge {
-  width: 66px;
-  height: 66px;
+  width: 58px;
+  height: 58px;
   flex: none;
-  border-radius: 18px;
-  background: #00c6ff;
-  box-shadow: 0 0 22px rgba(0, 198, 255, 0.25);
+  border-radius: 17px;
+  background: rgba(var(--glow), 0.09);
+  border: 1px solid rgba(var(--glow), 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .feature .icon-badge svg {
-  width: 31px;
-  height: 31px;
-  stroke: #ffffff;
+  width: 27px;
+  height: 27px;
+  stroke: var(--m1);
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
@@ -1417,6 +1460,9 @@ h1 {
   max-width: 460px;
 }
 
+/* The page's primary action, and the same object as the "Explore <tier>"
+   button on the services menu: poured metal, dark type, one glow. Landing on
+   /gold from the Gold card should feel like the button came with you. */
 .call-btn {
   display: inline-flex;
   align-items: center;
@@ -1424,25 +1470,26 @@ h1 {
   margin-top: 0;
   padding: 17px 34px;
   border-radius: 999px;
-  background: #00c6ff;
-  color: #ffffff;
+  background: linear-gradient(140deg, #fff -30%, var(--m1) 30%, var(--m2) 120%);
+  color: #0a0b0f;
   font-weight: 700;
   font-size: 15px;
   letter-spacing: 0.2px;
   text-decoration: none;
-  /* This is now the only strong glow on the page, so it reads as the single
+  /* This is the only strong glow on the page, so it reads as the single
      primary action rather than competing with four icon badges. */
-  box-shadow: 0 0 26px rgba(0, 198, 255, 0.38), 0 10px 24px rgba(0, 198, 255, 0.26);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 14px 34px rgba(var(--glow), 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 .call-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 46px rgba(0, 198, 255, 0.7), 0 12px 34px rgba(0, 198, 255, 0.5);
+  filter: brightness(1.08);
+  box-shadow: 0 18px 46px rgba(var(--glow), 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 .call-btn svg {
   width: 18px;
   height: 18px;
-  stroke: #ffffff;
+  stroke: #0a0b0f;
   fill: none;
   stroke-width: 2.2;
   stroke-linecap: round;
@@ -1462,7 +1509,7 @@ h1 {
   width: 348px;
   height: 668px;
   border-radius: 58px;
-  border: 1.5px solid rgba(0, 198, 255, 0.5);
+  border: 1.5px solid rgba(var(--glow), 0.5);
   animation: pulseRing 3s ease-out infinite;
 }
 .pulse-ring.r2 {
@@ -1494,7 +1541,7 @@ h1 {
   background: linear-gradient(160deg, #2a2c30, #0a0b0c);
   padding: 13px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 0 60px rgba(0, 198, 255, 0.15);
+    0 0 60px rgba(var(--glow), 0.15);
   animation: phoneFloat 6s ease-in-out infinite;
 }
 @keyframes phoneFloat {
@@ -1553,15 +1600,15 @@ h1 {
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: #00c6ff;
-  box-shadow: 0 0 26px rgba(0, 198, 255, 0.65);
+  background: var(--m1);
+  box-shadow: 0 0 26px rgba(var(--glow), 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   font-size: 17px;
-  color: #ffffff;
+  color: #0a0b0f;
   flex-shrink: 0;
 }
 .call-label {
@@ -1585,7 +1632,7 @@ h1 {
   margin-top: 8px;
   font-size: 20px;
   font-weight: 700;
-  color: #00c6ff;
+  color: var(--m1);
   text-decoration: none;
   letter-spacing: 0.3px;
   animation: numberPulse 2.2s ease-in-out infinite;
@@ -1593,11 +1640,11 @@ h1 {
 @keyframes numberPulse {
   0%,
   100% {
-    text-shadow: 0 0 12px rgba(0, 198, 255, 0.5);
+    text-shadow: 0 0 12px rgba(var(--glow), 0.5);
     transform: scale(1);
   }
   50% {
-    text-shadow: 0 0 26px rgba(0, 198, 255, 0.95), 0 0 46px rgba(0, 198, 255, 0.5);
+    text-shadow: 0 0 26px rgba(var(--glow), 0.95), 0 0 46px rgba(var(--glow), 0.5);
     transform: scale(1.045);
   }
 }
@@ -1607,8 +1654,8 @@ h1 {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 198, 255, 0.55);
-  box-shadow: 0 0 30px rgba(0, 198, 255, 0.35), inset 0 0 30px rgba(0, 198, 255, 0.12);
+  border: 2px solid rgba(var(--glow), 0.55);
+  box-shadow: 0 0 30px rgba(var(--glow), 0.35), inset 0 0 30px rgba(var(--glow), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1618,8 +1665,8 @@ h1 {
 .wave-circle .bar {
   width: 4px;
   border-radius: 3px;
-  background: #00c6ff;
-  box-shadow: 0 0 8px rgba(0, 198, 255, 0.8);
+  background: var(--m1);
+  box-shadow: 0 0 8px rgba(var(--glow), 0.8);
   animation: barPulse 1.1s ease-in-out infinite;
 }
 .wave-circle .bar:nth-child(1) {
@@ -1725,9 +1772,12 @@ h1 {
 .call-actions .circle:active {
   transform: scale(0.92);
 }
+.call-actions .circle.answer svg {
+  stroke: #0a0b0f;
+}
 .call-actions .circle.answer {
-  background: #00c6ff;
-  box-shadow: 0 0 24px rgba(0, 198, 255, 0.7);
+  background: linear-gradient(140deg, #fff -40%, var(--m1) 34%, var(--m2) 130%);
+  box-shadow: 0 0 24px rgba(var(--glow), 0.7);
 }
 .call-actions .circle.end {
   background: #ff3b30;

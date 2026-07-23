@@ -246,6 +246,21 @@ export default function HeroCarousel() {
       orb.rotation.y = t * (0.06 + scrollProgress * 1.0);
       orb.rotation.x = Math.sin(t * 0.15) * 0.08;
 
+      /* The orb swells as you fall into it and then burns out, instead of
+         being quietly covered by the stage while it's still small. The camera
+         flight alone wasn't enough — by the time the services had faded up it
+         had only closed half the distance. Growing the sphere itself on top of
+         the approach is what makes the core feel like it's rushing at you. */
+      const swell = 1 + Math.pow(scrollProgress, 1.4) * 2.2;
+      orb.scale.setScalar(swell);
+      field.scale.setScalar(1 + Math.pow(scrollProgress, 1.4) * 0.5);
+
+      // Burns out just before the stage finishes covering it, so the last
+      // thing seen is the orb dissolving rather than a hard hand-off.
+      const dissolve = 1 - clamp01((scrollProgress - 0.44) / 0.26);
+      mat.opacity = dissolve;
+      fieldMat.opacity = 0.85 * dissolve;
+
       const fieldAttr = fieldGeo.attributes.position;
       const farr = fieldAttr.array as Float32Array;
       for (let i = 0; i < FIELD_COUNT; i++) {
@@ -255,7 +270,7 @@ export default function HeroCarousel() {
       fieldAttr.needsUpdate = true;
       field.rotation.y = t * 0.015;
 
-      const eased = Math.pow(scrollProgress, 1.6);
+      const eased = Math.pow(scrollProgress, 1.35);
       const spiralAngle = scrollProgress * Math.PI * 3;
       const spiralR = 1.3 * (1 - scrollProgress);
       heroCamera.position.x = Math.sin(spiralAngle) * spiralR;
@@ -292,7 +307,11 @@ export default function HeroCarousel() {
         // cleared and are fully readable well before the runway ends, so a
         // visitor sees what the site sells without scrolling to the bottom;
         // the remaining scroll just finishes the flight into the core.
-        stageIn = clamp01((p - 0.34) / 0.3);
+        /* Held back from where it used to start (0.34) to give the orb a
+           stretch of runway to swell and burn out on its own — the hero copy
+           has cleared by 0.32, the orb owns the screen until it dissolves at
+           0.70, and the services resolve into the space it leaves. */
+        stageIn = clamp01((p - 0.44) / 0.28);
         gsap.set("#stage", { opacity: stageIn });
         // Don't let a half-faded stage swallow clicks meant for the hero.
         stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";

@@ -24,7 +24,10 @@ export default function TierPageView({
   interactive?: boolean;
 }) {
   return (
-    <div className="page">
+    /* The tier modifier carries the metal accent tokens (--m1/--m2/--glow),
+       so everything inside inherits the colour of the package being read
+       rather than the brand cyan. */
+    <div className={`page page--${tier.slug}`}>
       <nav className="nav">
         <div className="logo">
           <div className="logo-mark">AI</div>TECH <span className="dim">HELPER</span>
