@@ -215,8 +215,18 @@ export default function HeroCarousel() {
     let scrollProgress = 0;
     let heroRaf = 0;
 
+    /* How far the services stage has faded in over the hero, 0..1. Both render
+       loops read it so neither one burns a frame on something the visitor
+       can't see: for most of the scroll exactly one of the two scenes is
+       actually on screen, and rendering both is what makes the transition
+       stutter. */
+    let stageIn = 0;
+
     function animateHero() {
       heroRaf = requestAnimationFrame(animateHero);
+      // Fully covered by the stage — nothing here can be seen, so skip the
+      // 9,000-point rebuild and the draw entirely.
+      if (stageIn >= 1) return;
       const t = clock.getElapsedTime();
 
       const posAttr = geo.attributes.position;
@@ -270,19 +280,22 @@ export default function HeroCarousel() {
         scrollProgress = p;
 
         gsap.set("#copy", {
-          opacity: 1 - Math.min(1, p / 0.45),
+          opacity: 1 - Math.min(1, p / 0.32),
           y: -p * 60,
           scale: 1 - p * 0.08,
         });
-        gsap.set("#nav", { opacity: 1 - Math.min(1, p / 0.35) });
+        gsap.set("#nav", { opacity: 1 - Math.min(1, p / 0.28) });
 
-        // Services rise out of nothing as the core is reached, landing fully
-        // opaque exactly at the end of the journey. No vertical movement — the
-        // whole point is that it should feel like arriving, not scrolling.
-        const stageIn = clamp01((p - 0.72) / 0.28);
+        // Services rise out of nothing as the core is reached. No vertical
+        // movement — the whole point is that it should feel like arriving,
+        // not scrolling. They start resolving as soon as the hero copy has
+        // cleared and are fully readable well before the runway ends, so a
+        // visitor sees what the site sells without scrolling to the bottom;
+        // the remaining scroll just finishes the flight into the core.
+        stageIn = clamp01((p - 0.34) / 0.3);
         gsap.set("#stage", { opacity: stageIn });
-        // Don't let an invisible stage swallow clicks meant for the hero.
-        stageEl.style.pointerEvents = stageIn > 0.99 ? "auto" : "none";
+        // Don't let a half-faded stage swallow clicks meant for the hero.
+        stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";
       },
     });
     cleanups.push(() => pinTrigger.kill());
@@ -506,6 +519,19 @@ export default function HeroCarousel() {
     }
 
     const css3dLayerEl = document.getElementById("css3d-layer")!;
+
+    /* The ring is only on screen during a transition; the resting menu is the
+       flat DOM panel. Mirroring that visibility in a flag lets the render loop
+       skip the CSS3D pass, which is what keeps scrolling smooth. */
+    let css3dVisible = false;
+    // ...but the cards need one pass to land in the DOM before their size can
+    // be measured, or the first transition shows unscaled previews.
+    let cssWarmupFrames = 5;
+    function setCss3dVisible(v: boolean) {
+      css3dVisible = v;
+      css3dLayerEl.style.opacity = v ? "1" : "0";
+    }
+
     function onCss3dClick(e: MouseEvent) {
       const row = (e.target as HTMLElement).closest(".service-row") as HTMLElement | null;
       if (row) goToIndex(parseInt(row.dataset.index || "0", 10));
@@ -569,7 +595,7 @@ export default function HeroCarousel() {
       if (isAnimating || targetIdx === activeIndex) return;
       isAnimating = true;
       showFlat(-1);
-      css3dLayerEl.style.opacity = "1";
+      setCss3dVisible(true);
 
       const targetAngle = angleFor(targetIdx);
       let diff = (targetAngle - angle) % (Math.PI * 2);
@@ -585,7 +611,7 @@ export default function HeroCarousel() {
           if (targetIdx === 0) {
             backBtn.classList.remove("visible");
             hint.style.opacity = "1";
-            css3dLayerEl.style.opacity = "0";
+            setCss3dVisible(false);
             showFlat(0);
           } else {
             window.location.href = SERVICES[targetIdx - 1].href;
@@ -629,20 +655,34 @@ export default function HeroCarousel() {
     function animateCarousel() {
       carouselRaf = requestAnimationFrame(animateCarousel);
 
+      // Still behind an opaque hero: the stage is invisible, so don't draw it.
+      if (stageIn <= 0) return;
+
       // Slow drift and a gentle breathe, matching the hero orb's character.
+      // Held still while the stage is mid-fade — during those frames the hero
+      // is drawing too, and a breathe nobody can make out isn't worth the
+      // second CPU pass over the buffer.
       const ct = carouselClock.getElapsedTime();
       ringOrb.rotation.y = ct * 0.06;
-      const rp = ringOrbGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < RING_ORB_COUNT; i++) {
-        const rr = RING_ORB_R * (1 + 0.06 * Math.sin(ct * 0.5 + ringOrbPhase[i]));
-        rp[i * 3] = ringOrbDir[i * 3] * rr;
-        rp[i * 3 + 1] = ringOrbDir[i * 3 + 1] * rr;
-        rp[i * 3 + 2] = ringOrbDir[i * 3 + 2] * rr;
+      if (stageIn >= 1) {
+        const rp = ringOrbGeo.attributes.position.array as Float32Array;
+        for (let i = 0; i < RING_ORB_COUNT; i++) {
+          const rr = RING_ORB_R * (1 + 0.06 * Math.sin(ct * 0.5 + ringOrbPhase[i]));
+          rp[i * 3] = ringOrbDir[i * 3] * rr;
+          rp[i * 3 + 1] = ringOrbDir[i * 3 + 1] * rr;
+          rp[i * 3 + 2] = ringOrbDir[i * 3 + 2] * rr;
+        }
+        ringOrbGeo.attributes.position.needsUpdate = true;
       }
-      ringOrbGeo.attributes.position.needsUpdate = true;
 
       webglRenderer.render(webglScene, camera);
-      cssRenderer.render(cssScene, camera);
+      // The ring holds three full page previews. Re-projecting that much DOM
+      // every frame is the single most expensive thing on the page, and it's
+      // hidden at rest — only pay for it while the ring is actually showing.
+      if (css3dVisible || cssWarmupFrames > 0) {
+        cssRenderer.render(cssScene, camera);
+        if (!css3dVisible) cssWarmupFrames--;
+      }
 
       // Cards only get their size once CSS3DRenderer has put them in the DOM,
       // so the preview scale can't be computed until after the first render.
@@ -680,12 +720,16 @@ export default function HeroCarousel() {
         window.scrollTo(0, document.documentElement.scrollHeight);
 
         if (returnIdx > 0) {
+          // The scrub means the pin's onUpdate hasn't caught up to the jump
+          // yet, and the stage is about to be revealed by hand below — so tell
+          // the render loops it's on screen rather than waiting for them.
+          stageIn = 1;
           activeIndex = returnIdx;
           angle = angleFor(returnIdx);
           camState.zoom = 0;
           updateCamera();
           showFlat(-1);
-          css3dLayerEl.style.opacity = "1";
+          setCss3dVisible(true);
           hint.style.opacity = "0";
 
           // Drop the query so a refresh doesn't replay the return trip.

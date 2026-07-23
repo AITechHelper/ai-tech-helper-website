@@ -329,6 +329,10 @@ h1 {
   opacity: 0;
   z-index: 40;
   pointer-events: none;
+  /* Its opacity is driven every frame of the scroll-in. Without a promise
+     that only opacity changes, the browser repaints this whole subtree — two
+     canvases and the full services panel — on each of those frames. */
+  will-change: opacity;
 }
 #webgl-layer,
 #css3d-layer,
@@ -481,9 +485,9 @@ h1 {
    needs a gap between it and its neighbors so corners don't touch. The
    flat resting version below goes full screen instead. */
 .card3d.menu-card {
-  width: min(1180px, 88vw);
-  height: min(740px, 84vh);
-  padding: 64px 72px;
+  width: min(1280px, 90vw);
+  height: min(820px, 86vh);
+  padding: clamp(32px, 4vh, 54px) clamp(32px, 3.2vw, 54px);
   justify-content: center;
 }
 .menu-card .eyebrow {
@@ -503,152 +507,462 @@ h1 {
   letter-spacing: -0.5px;
 }
 .menu-head {
-  margin-bottom: 34px;
-}
-
-/* Navigation on the left, the at-a-glance comparison on the right. */
-.menu-split {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 48px;
-  align-items: start;
-}
-
-.service-list {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+  margin-bottom: clamp(18px, 2.6vh, 34px);
+}
+.menu-sub {
+  margin-top: 12px;
+  max-width: 640px;
+  font-size: clamp(14px, 1.1vw, 16.5px);
+  line-height: 1.55;
+  color: #98a0ad;
 }
 
-/* ---- comparison matrix ---- */
-.compare {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  padding: 6px 20px 14px;
-  background: rgba(255, 255, 255, 0.02);
-}
-.compare-row {
+/* =========================================================
+   the three package cards
+   =========================================================
+   Each card is a button: HeroCarousel delegates clicks on
+   `.service-row[data-index]` to spin the ring to that service. Everything
+   inside is a <span> so the markup stays valid inside a button.
+
+   The metal each package is named after is the card's whole identity — the
+   rim light, the icon, the ticks, and the CTA all come from the same two
+   stops, so the three read as one family without any of them looking alike. */
+.tier-grid {
   display: grid;
-  grid-template-columns: 1fr repeat(3, 58px);
-  align-items: center;
-  gap: 8px;
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 1.8vw, 30px);
+  align-items: stretch;
+  /* The grid takes whatever height the menu card has left, so the packages
+     fill the stage instead of floating as three small tiles in a lot of
+     black. The cap stops them stretching to billboard height on a tall
+     monitor; the min keeps the copy from crushing on a short one. */
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1420px;
+  min-height: 470px;
+  max-height: 760px;
+  margin: 0 auto;
+  /* Room for the featured card to scale up and glow without being clipped. */
+  padding: 10px clamp(6px, 1vw, 18px) 18px;
 }
-.compare-row:last-child {
-  border-bottom: none;
+
+.tier-card--bronze {
+  --m1: #ffb27a;
+  --m2: #b8642a;
+  --glow: 255, 148, 78;
 }
-.compare-row > span:not(.compare-label) {
+.tier-card--silver {
+  --m1: #eef4ff;
+  --m2: #8da0bf;
+  --glow: 185, 208, 245;
+}
+.tier-card--gold {
+  --m1: #ffe293;
+  --m2: #d09a16;
+  --glow: 255, 198, 62;
+}
+
+.tier-card {
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.compare-head {
-  padding: 12px 0 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-.compare-head span {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-.compare-label {
-  font-size: 13.5px;
-  line-height: 1.35;
-  color: #9aa0ab;
-}
-.compare .tick {
-  width: 17px;
-  height: 17px;
-  stroke: #00c6ff;
-  fill: none;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-/* An explicit "not included" marker — an empty cell reads as an oversight. */
-.compare .dash {
-  display: block;
-  width: 11px;
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.18);
-}
-.service-row {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 22px 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  background: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  padding: clamp(30px, 3.4vh, 44px) clamp(24px, 2.1vw, 36px) clamp(26px, 2.8vh, 34px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 26px;
+  /* Four stacked layers make the panel read as lit metal rather than a flat
+     tint: a bloom of the tier's colour at the top, a cool counter-light in the
+     bottom corner, a glass sheet over the whole face, and a near-black base so
+     the copy on top keeps its contrast. */
+  background: radial-gradient(120% 62% at 50% -6%, rgba(var(--glow), 0.26), transparent 70%),
+    radial-gradient(80% 55% at 8% 106%, rgba(var(--glow), 0.09), transparent 72%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.014) 42%,
+      rgba(255, 255, 255, 0.035)),
+    linear-gradient(180deg, #0d1016, #08090d);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 24px 60px rgba(0, 0, 0, 0.5);
   text-align: left;
   font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  isolation: isolate;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease,
+    box-shadow 0.32s ease;
+}
+/* The rim light along the top edge — the tell that this is a metal panel. */
+.tier-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--m1), transparent);
+  opacity: 0.9;
+}
+/* A pool of the tier's colour bleeding up from the floor of the card, behind
+   the CTA — it's what stops the lower half going dead. */
+.tier-card::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -46%;
+  width: 118%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--glow), 0.16), transparent 62%);
+  opacity: 0.75;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+  z-index: -1;
+}
+.tier-card:hover::after {
+  opacity: 1;
+}
+
+/* The polish sweep: a hard band of light that travels across the face on
+   hover, the way a highlight runs over a turned metal surface. */
+.tier-sheen {
+  position: absolute;
+  inset: -40% -70%;
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.1) 47%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 53%,
+    transparent 58%
+  );
+  opacity: 0;
+  transform: translateX(-55%);
+  pointer-events: none;
+  transition: transform 0.95s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.35s ease;
+}
+.tier-card:hover .tier-sheen {
+  opacity: 1;
+  transform: translateX(55%);
+}
+
+.tier-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(var(--glow), 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 0 1px rgba(var(--glow), 0.16),
+    0 0 90px rgba(var(--glow), 0.26), 0 40px 90px rgba(0, 0, 0, 0.6);
+}
+
+/* The one we want the eye to land on first: it sits proud of its neighbours,
+   carries the banner, and keeps a permanent halo so the row has a centre. */
+.tier-card.is-featured {
+  z-index: 2;
+  transform: scale(1.03);
+  border-color: rgba(var(--glow), 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 0 1px rgba(var(--glow), 0.14),
+    0 0 90px rgba(var(--glow), 0.22), 0 34px 80px rgba(0, 0, 0, 0.58);
+  padding-top: clamp(48px, 5vh, 64px);
+}
+.tier-card.is-featured:hover {
+  transform: scale(1.03) translateY(-10px);
+}
+.tier-flag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 9px 0;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: #0a0b0f;
+  background: linear-gradient(90deg, rgba(var(--glow), 0.1), var(--m1) 28%, var(--m1) 72%,
+    rgba(var(--glow), 0.1));
+  box-shadow: 0 8px 30px rgba(var(--glow), 0.35);
+}
+
+/* Icon and numeral share the top line, so the card opens on one confident
+   row instead of two stacked scraps. */
+.tier-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  transition: background 0.2s ease, padding-left 0.2s ease;
+  margin-bottom: clamp(18px, 2.4vh, 28px);
 }
-.service-row:last-child {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.tier-rank {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(44px, 4vw, 62px);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -2px;
+  color: transparent;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.02));
+  -webkit-background-clip: text;
+  background-clip: text;
 }
-.service-row:hover {
-  background: rgba(0, 198, 255, 0.06);
-  padding-left: 18px;
-}
-.service-row .icon-badge {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  flex-shrink: 0;
-  background: #00c6ff;
-  box-shadow: 0 0 22px rgba(0, 198, 255, 0.55);
+
+.tier-card .icon-badge {
+  width: 62px;
+  height: 62px;
+  border-radius: 19px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Two-stop metal with a hot spot in the top-left, so the badge looks like a
+     poured ingot rather than a coloured square. */
+  background: linear-gradient(150deg, #fff -20%, var(--m1) 34%, var(--m2) 108%);
+  box-shadow: 0 14px 34px rgba(var(--glow), 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s ease;
 }
-.service-row .icon-badge svg {
-  width: 24px;
-  height: 24px;
-  stroke: #fff;
+.tier-card:hover .icon-badge {
+  transform: translateY(-2px) rotate(-4deg);
+  box-shadow: 0 18px 44px rgba(var(--glow), 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.25);
+}
+.tier-card .icon-badge svg {
+  width: 28px;
+  height: 28px;
+  stroke: #0a0b0f;
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.service-row .text {
-  flex: 1;
-}
-.service-row h3 {
+
+.tier-name {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 19px;
+  font-size: clamp(34px, 3.3vw, 50px);
   font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -1.2px;
+  /* Polished-metal type: white highlight rolling into the two metal stops. */
+  background: linear-gradient(168deg, #ffffff 4%, var(--m1) 52%, var(--m2) 116%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 20px rgba(var(--glow), 0.3));
 }
-.service-row p {
-  font-size: 14px;
-  color: #9aa0ab;
+.tier-kicker {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+  padding: 6px 13px;
+  border: 1px solid rgba(var(--glow), 0.34);
+  border-radius: 999px;
+  background: rgba(var(--glow), 0.11);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--m1);
 }
-.service-row .arrow {
+.tier-desc {
+  margin-top: 18px;
+  font-size: clamp(14px, 1.05vw, 15.5px);
+  line-height: 1.6;
+  color: #a4abb7;
+}
+
+.tier-includes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: clamp(20px, 2.6vh, 30px);
+  padding-top: clamp(16px, 2vh, 22px);
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.46);
+}
+/* A short bar in the tier's metal marks where the feature list starts. */
+.tier-includes::before {
+  content: "";
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--m1);
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+}
+
+.tier-adds {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(11px, 1.4vh, 15px);
+  margin: clamp(15px, 2vh, 20px) 0 clamp(22px, 3vh, 34px);
+  width: 100%;
+}
+.tier-add {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: clamp(13.5px, 1vw, 14.5px);
+  line-height: 1.4;
+  color: #d2d7df;
+}
+.tier-add .tick {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  padding: 3px;
+  margin-top: -1px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(var(--glow), 0.15);
+  box-shadow: inset 0 0 0 1px rgba(var(--glow), 0.3);
+  stroke: var(--m1);
+  fill: none;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Pushed to the bottom so all three CTAs line up however uneven the copy
+   above them is. */
+.tier-cta {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  align-self: stretch;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 17px 22px;
+  border-radius: 999px;
+  background: linear-gradient(140deg, #fff -30%, var(--m1) 30%, var(--m2) 120%);
+  color: #0a0b0f;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  box-shadow: 0 14px 34px rgba(var(--glow), 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: box-shadow 0.3s ease, filter 0.3s ease;
 }
-.service-row .arrow svg {
-  width: 15px;
-  height: 15px;
-  stroke: #fff;
+.tier-card:hover .tier-cta {
+  filter: brightness(1.1);
+  box-shadow: 0 18px 46px rgba(var(--glow), 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+.tier-cta svg {
+  width: 16px;
+  height: 16px;
+  stroke: #0a0b0f;
   fill: none;
-  stroke-width: 2.2;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s ease;
+}
+.tier-card:hover .tier-cta svg {
+  transform: translateX(4px);
+}
+
+/* Short viewports: the menu card clips what it can't fit, so on a laptop
+   screen the whole block tightens rather than losing its bottom row of CTAs. */
+@media (max-height: 880px) {
+  .flat.menu-card {
+    padding-top: 92px;
+  }
+  .menu-card h1 {
+    font-size: clamp(28px, 3vw, 40px);
+  }
+  .menu-sub {
+    margin-top: 9px;
+    font-size: 14px;
+  }
+  .menu-head {
+    margin-bottom: 18px;
+  }
+  .tier-grid {
+    min-height: 0;
+  }
+  .tier-card {
+    padding: 26px clamp(20px, 1.8vw, 30px) 24px;
+  }
+  .tier-card.is-featured {
+    padding-top: 42px;
+  }
+  .tier-card .icon-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+  .tier-card .icon-badge svg {
+    width: 22px;
+    height: 22px;
+  }
+  .tier-top {
+    margin-bottom: 13px;
+  }
+  .tier-name {
+    font-size: clamp(26px, 2.4vw, 34px);
+  }
+  .tier-kicker {
+    margin-top: 10px;
+    padding: 5px 11px;
+    font-size: 10px;
+  }
+  .tier-desc {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .tier-includes {
+    margin-top: 14px;
+    padding-top: 12px;
+  }
+  .tier-adds {
+    gap: 9px;
+    margin: 12px 0 18px;
+    font-size: 13px;
+  }
+  .tier-cta {
+    padding: 13px 20px;
+    font-size: 13.5px;
+  }
+  .tier-rank {
+    font-size: 40px;
+  }
+}
+
+/* Very short: drop the description and let the ticks carry the card, rather
+   than squeezing every block until nothing is readable. */
+@media (max-height: 720px) {
+  .tier-desc {
+    display: none;
+  }
+  .tier-includes {
+    margin-top: 16px;
+  }
+  .tier-cta {
+    padding: 13px 20px;
+  }
+}
+
+/* Narrow viewports: the ring's card can't hold three columns, so the
+   packages stack, the featured card drops its scale-up, and the decorative
+   numeral goes. */
+@media (max-width: 900px) {
+  .tier-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-height: none;
+    min-height: 0;
+  }
+  .tier-card.is-featured,
+  .tier-card.is-featured:hover {
+    transform: none;
+  }
+  .tier-rank {
+    display: none;
+  }
 }
 
 /* individual service cards (ring positions 1-N) */
@@ -748,8 +1062,9 @@ h1 {
   height: 100%;
   border-radius: 0;
 }
+/* Top padding has to clear the HUD, which floats over this layer. */
 .flat.menu-card {
-  padding: 130px 110px;
+  padding: 118px clamp(36px, 5vw, 90px) clamp(56px, 8vh, 84px);
 }
 .flat.service-card {
   padding: 110px 120px;
