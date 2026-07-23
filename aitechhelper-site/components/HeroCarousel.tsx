@@ -591,6 +591,10 @@ export default function HeroCarousel() {
       return idx * ((Math.PI * 2) / N);
     }
 
+    /* Held so a bfcache restore can kill a transition that was still in flight
+       when the visitor navigated away — see the pageshow handler below. */
+    let activeTl: gsap.core.Timeline | null = null;
+
     function goToIndex(targetIdx: number) {
       if (isAnimating || targetIdx === activeIndex) return;
       isAnimating = true;
@@ -606,6 +610,7 @@ export default function HeroCarousel() {
 
       const tl = gsap.timeline({
         onComplete: () => {
+          activeTl = null;
           isAnimating = false;
           activeIndex = targetIdx;
           if (targetIdx === 0) {
@@ -642,6 +647,8 @@ export default function HeroCarousel() {
             updateCamera();
           },
         });
+
+      activeTl = tl;
     }
 
     function onBackClick() {
@@ -649,6 +656,34 @@ export default function HeroCarousel() {
     }
     backBtn.addEventListener("click", onBackClick);
     cleanups.push(() => backBtn.removeEventListener("click", onBackClick));
+
+    /* Browser Back from a package page restores this document from the
+       bfcache: no script re-runs, so the carousel comes back exactly as it was
+       left — parked on the card we navigated away from, ring showing, flat
+       menu hidden, and nothing to click. Worse, a transition still in flight
+       would resume on restore and fire the onComplete that navigates, bouncing
+       the visitor straight back to the page they just left.
+       So kill anything running and play the same return trip the in-stage
+       back button uses, landing them on the menu. */
+    function onPageShow(e: PageTransitionEvent) {
+      if (!e.persisted) return;
+
+      activeTl?.kill();
+      activeTl = null;
+      isAnimating = false;
+
+      if (activeIndex === 0) {
+        // Already resting on the menu — just make sure it's the panel showing.
+        setCss3dVisible(false);
+        showFlat(0);
+        return;
+      }
+      // The hint belongs to the menu; goToIndex puts it back on arrival.
+      hint.style.opacity = "0";
+      goToIndex(0);
+    }
+    window.addEventListener("pageshow", onPageShow);
+    cleanups.push(() => window.removeEventListener("pageshow", onPageShow));
 
     let carouselRaf = 0;
     let previewsLaidOut = false;
