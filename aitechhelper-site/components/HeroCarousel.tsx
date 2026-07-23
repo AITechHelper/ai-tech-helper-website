@@ -250,14 +250,23 @@ export default function HeroCarousel() {
          being quietly covered by the stage while it's still small. The camera
          flight alone wasn't enough — by the time the services had faded up it
          had only closed half the distance. Growing the sphere itself on top of
-         the approach is what makes the core feel like it's rushing at you. */
-      const swell = 1 + Math.pow(scrollProgress, 1.4) * 2.2;
+         the approach is what makes the core feel like it's rushing at you:
+         roughly five times its resting size, and most of that arriving early,
+         so it's already vast well before it starts to go. */
+      const swell = 1 + Math.pow(scrollProgress, 1.15) * 5.4;
       orb.scale.setScalar(swell);
-      field.scale.setScalar(1 + Math.pow(scrollProgress, 1.4) * 0.5);
+      field.scale.setScalar(1 + Math.pow(scrollProgress, 1.3) * 0.9);
+
+      /* Individual points are size-attenuated, so at five times the radius
+         they'd smear into blobs and additive-blend to a white wash. Tapering
+         the sprite keeps the sphere reading as an expanding cloud of points
+         rather than a bloom. */
+      mat.size = 0.026 * (1 - 0.42 * clamp01(scrollProgress / 0.8));
 
       // Burns out just before the stage finishes covering it, so the last
-      // thing seen is the orb dissolving rather than a hard hand-off.
-      const dissolve = 1 - clamp01((scrollProgress - 0.44) / 0.26);
+      // thing seen is the orb dissolving at its biggest rather than a hard
+      // hand-off.
+      const dissolve = 1 - clamp01((scrollProgress - 0.54) / 0.22);
       mat.opacity = dissolve;
       fieldMat.opacity = 0.85 * dissolve;
 
@@ -307,11 +316,11 @@ export default function HeroCarousel() {
         // cleared and are fully readable well before the runway ends, so a
         // visitor sees what the site sells without scrolling to the bottom;
         // the remaining scroll just finishes the flight into the core.
-        /* Held back from where it used to start (0.34) to give the orb a
+        /* Held back from where it used to start (0.34) to give the orb a long
            stretch of runway to swell and burn out on its own — the hero copy
            has cleared by 0.32, the orb owns the screen until it dissolves at
-           0.70, and the services resolve into the space it leaves. */
-        stageIn = clamp01((p - 0.44) / 0.28);
+           0.76, and the services resolve into the space it leaves. */
+        stageIn = clamp01((p - 0.52) / 0.26);
         gsap.set("#stage", { opacity: stageIn });
         // Don't let a half-faded stage swallow clicks meant for the hero.
         stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";
