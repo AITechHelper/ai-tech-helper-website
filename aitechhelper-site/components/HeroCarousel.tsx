@@ -316,11 +316,10 @@ export default function HeroCarousel() {
         // cleared and are fully readable well before the runway ends, so a
         // visitor sees what the site sells without scrolling to the bottom;
         // the remaining scroll just finishes the flight into the core.
-        /* Held back from where it used to start (0.34) to give the orb a long
-           stretch of runway to swell and burn out on its own — the hero copy
-           has cleared by 0.32, the orb is still swelling as the services begin
-           to resolve at 0.46, and it dissolves out from behind them by 0.76. */
-        stageIn = clamp01((p - 0.46) / 0.26);
+        /* The hero copy has cleared by 0.32, the services begin resolving at
+           0.36 while the orb is still swelling, and the orb dissolves out from
+           behind them by 0.76. */
+        stageIn = clamp01((p - 0.36) / 0.26);
         gsap.set("#stage", { opacity: stageIn });
         // Don't let a half-faded stage swallow clicks meant for the hero.
         stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";
