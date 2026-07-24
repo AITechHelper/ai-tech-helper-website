@@ -29,7 +29,32 @@ import {
 } from "../lib/tools";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "ai-tools");
-const MODEL = "claude-opus-4-8";
+
+/**
+ * The cost knobs. The first batch ran on Opus 4.8 at high effort with 8
+ * searches and cost about $1.20 a tool — almost all of it the web-search loop,
+ * where every search pulls page content into context and the model re-reads
+ * the growing pile on each step. So the model price and the search count are
+ * the real levers, not the length of the final write-up.
+ *
+ * The two passes are priced separately because only the first needs judgment:
+ *
+ *   - Research is where the tool is understood and scored. That is worth a
+ *     capable model — Sonnet 5, already about a third of Opus. A cheap review
+ *     that has to be redone costs more than doing it once.
+ *   - Extraction only reformats the prose the first pass already wrote into
+ *     JSON. No judgment, so it runs on Haiku, a third of Sonnet again, at no
+ *     cost to quality.
+ *
+ * Thinking is off and searches are capped at 3. Between the model split and
+ * these, a tool lands near a fifth of the original. If a review ever reads
+ * thin, the fix and the cost are the same few lines: raise RESEARCH_MODEL to
+ * "claude-opus-4-8", turn thinking back on, or lift MAX_SEARCHES.
+ */
+const RESEARCH_MODEL = "claude-sonnet-5";
+const EXTRACT_MODEL = "claude-haiku-4-5";
+const EFFORT = "medium" as const;
+const MAX_SEARCHES = 3;
 
 /**
  * Reads ANTHROPIC_API_KEY out of .env.local so the key lives in one gitignored
@@ -71,11 +96,14 @@ business rather than what features it has.`;
 /** The research pass: search the web, come back with an assessment. */
 async function research(client: Anthropic, toolName: string): Promise<string> {
   const stream = client.messages.stream({
-    model: MODEL,
+    model: RESEARCH_MODEL,
     max_tokens: 8000,
-    thinking: { type: "adaptive" },
-    output_config: { effort: "high" },
-    tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 8 }],
+    // Sonnet 5 runs adaptive thinking unless told not to. The rating rubric is
+    // explicit and the reasoning ends up in the written explanations either
+    // way, so the thinking tokens are not buying much here — turn them off.
+    thinking: { type: "disabled" },
+    output_config: { effort: EFFORT },
+    tools: [{ type: "web_search_20260209", name: "web_search", max_uses: MAX_SEARCHES }],
     system: `You research AI tools for a directory that rates them for small businesses. ${AUDIENCE}`,
     messages: [
       {
@@ -205,7 +233,7 @@ type Extracted = {
 /** The extraction pass: same findings, now as JSON against the schema. */
 async function extract(client: Anthropic, assessment: string): Promise<Extracted> {
   const response = await client.messages.create({
-    model: MODEL,
+    model: EXTRACT_MODEL,
     max_tokens: 8000,
     output_config: { format: { type: "json_schema", schema: SCHEMA } },
     messages: [
