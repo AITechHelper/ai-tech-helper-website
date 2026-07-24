@@ -1,15 +1,37 @@
 {
   "slug": "claude",
   "name": "Claude",
-  "excerpt": "Writes, edits, and reasons over long documents, and will work through a codebase with you rather than handing back a snippet.",
+  "excerpt": "An AI assistant you chat with to write, edit, summarize documents, answer questions, and handle some automated tasks across your business.",
   "url": "https://claude.ai",
-  "pricing": "Free \u2014 $20/mo",
-  "rating": 5,
+  "pricing": "Free — $20/month (Pro); Team and Enterprise pricing available",
+  "rating": 3.5,
   "image": null,
   "categories": [
     "ai-assistants",
-    "writing-blogging",
-    "code-generation",
-    "research-tools"
-  ]
+    "content-creation",
+    "copywriting",
+    "productivity",
+    "coding"
+  ],
+  "fullDescription": "Claude is an AI chatbot you access through a website, mobile app, or by connecting it to other business software. You type or speak to it, and it helps with writing, editing, summarizing documents, answering questions, analyzing images and files, and increasingly, taking actions on your behalf like organizing files or working with connected tools.\n\nFor a small-business owner, Claude works best for content tasks — drafting customer emails, creating marketing copy, writing internal documents, summarizing contracts, or asking it to review a policy you've written. It can also help a technically-minded owner build small automations or solve business problems through conversation. However, it doesn't come with industry-specific templates, customer management, scheduling, or invoicing built in — so a plumbing company or clinic has to invest setup time or pay for a wrapper product to get Claude doing something specific to their trade.",
+  "pros": [
+    "Claude produces well-organized, thoughtful writing and reasoning that often reads like work from a competent employee, making it useful for customer communications and internal documents.",
+    "It can absorb large documents — entire contracts, manuals, or reports — in a single request and answer specific questions about them, saving you from breaking files into small pieces.",
+    "Newer versions can connect to your files, write and execute code, and integrate with other business tools, pushing it beyond chat and toward actually delivering finished work like documents or spreadsheets."
+  ],
+  "cons": [
+    "Without paid-tier setup, Claude starts each conversation fresh and has no memory of your business, tone, or prior decisions — meaning you re-explain things repeatedly and lose time savings for daily use.",
+    "It can state incorrect facts with complete confidence, inventing details or misreading documents, which is a real risk if you're using it for legal, medical, financial, or regulatory decisions without human verification.",
+    "It's a general-purpose writing and thinking tool, not a ready-made business system, so a trades business or clinic has to do real setup work to get it doing anything specific to their industry."
+  ],
+  "scores": {
+    "easeOfUse": 6,
+    "easeOfUseWhy": "The chat interface is simple to start using, but getting real business value requires setup, learning how to prompt effectively, and connecting it to your files or tools — tasks that will feel unfamiliar to a non-technical owner.",
+    "outputQuality": 8,
+    "outputQualityWhy": "For writing, summarizing, and reasoning tasks, Claude produces strong output that often rivals work from a competent employee, though it still needs a human review pass before sending to customers or using for compliance.",
+    "businessValue": 6,
+    "businessValueWhy": "It can save real hours on writing and document review for a modest monthly cost, but a trades or clinic business gets no industry-specific templates or integrations, so the actual value depends on how much time you're willing to spend setting it up.",
+    "reliability": 6,
+    "reliabilityWhy": "Anthropic is a stable, well-funded company, but Claude can produce inconsistent answers to the same question on different days, and service updates or outages can change behavior without notice."
+  }
 }

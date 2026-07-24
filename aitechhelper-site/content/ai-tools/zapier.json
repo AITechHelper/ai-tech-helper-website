@@ -1,14 +1,34 @@
 {
   "slug": "zapier",
   "name": "Zapier",
-  "excerpt": "Connects the apps you already pay for so a form fill, a new lead, or a paid invoice sets off the next step without anyone touching it.",
+  "excerpt": "Connects your business apps so that actions in one automatically trigger actions in another, eliminating manual data entry between tools.",
   "url": "https://zapier.com",
-  "pricing": "Free \u2014 $69/mo",
-  "rating": 4.5,
+  "pricing": "Free \u2014 ~$30/mo (Pro); scales with usage",
+  "rating": 3,
   "image": null,
   "categories": [
     "workflow-automation",
-    "task-automation",
-    "no-code-low-code"
-  ]
+    "process-automation"
+  ],
+  "fullDescription": "Zapier is an automation platform that connects the apps you already use\u2014email, calendar, invoicing software, CRM, forms, spreadsheets\u2014so that when something happens in one app, an action automatically happens in another without you having to manually copy or re-enter information.\n\nFor a shop owner, clinic manager, or contractor, this means you can set up automations like: a new appointment in your scheduling software automatically adds to your Google Calendar and sends the customer a reminder text; a form submission on your website automatically creates a new contact in your CRM and sends you a notification; or a paid invoice automatically logs the transaction in your spreadsheet. You build these automations using a visual, form-like interface\u2014no coding required.\n\nZapier charges based on how many \"tasks\" (individual actions) your automations perform each month. The free tier is limited, and as your business grows its automation use, you move into paid plans that scale from roughly $20\u201330/month for light use up to hundreds per month for heavy automation. Because you're relying on Zapier to bridge between other apps, there can be delays (sometimes minutes between trigger and action), and if one of your connected apps changes its login or data format, the automation can break without obvious warning.",
+  "pros": [
+    "Connects thousands of mainstream business apps, so if you use common tools like Gmail, Google Calendar, Stripe, Square, or Quickbooks, Zapier likely integrates with them without custom work.",
+    "You can build working automations using a visual interface\u2014no coding or technical background needed to set up tasks like forwarding new leads to your email or syncing appointment data.",
+    "Saves real, recurring administrative time by eliminating the repetitive app-switching and data re-entry that eats up your office manager's or your own afternoon."
+  ],
+  "cons": [
+    "Pricing is based on task count, so as your business grows its automation use, your monthly bill can jump tiers unexpectedly, turning what seemed affordable into a surprise expense.",
+    "When an automation fails, error messages assume technical knowledge, and non-technical users often can't figure out why a Zap stopped working or what broke between apps.",
+    "Zapier sits between your apps, so automations can lag by minutes, and if a connected app changes its login method or data structure, your whole automation can silently break without warning, leaving you unknowingly missing leads or reminders."
+  ],
+  "scores": {
+    "easeOfUse": 6,
+    "easeOfUseWhy": "The visual builder is approachable for simple one-step automations, but anything with conditional logic, filters, or multiple branches requires a learning curve that will frustrate a busy owner without technical patience.",
+    "outputQuality": 7,
+    "outputQualityWhy": "When a Zap is built correctly, the automation runs exactly as configured and reliably moves data between apps\u2014the output is dependable data transfer, not a creative or judgment-based product.",
+    "businessValue": 6,
+    "businessValueWhy": "It can save meaningful admin hours for a business juggling several software tools, but task-based pricing means the value proposition erodes as usage grows, and a business needs a clear automation need to justify recurring cost.",
+    "reliability": 6,
+    "reliabilityWhy": "Zapier is a stable, decade-old company, but individual automations are only as reliable as the third-party apps they depend on, and silent failures can leave a business unknowingly missing leads or reminders."
+  }
 }
