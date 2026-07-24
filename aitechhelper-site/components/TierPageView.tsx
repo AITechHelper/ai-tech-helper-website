@@ -34,6 +34,7 @@ export default function TierPageView({
         <div className="nav-links">
           <a href="/#stage">Agents</a>
           <a href="/#stage">Automations</a>
+          <a href="/ai-tools">AI Tools</a>
           <a href="/ai-hub">AI Hub</a>
         </div>
         <a href="#" className="cta-pill">

@@ -832,6 +832,7 @@ export default function HeroCarousel() {
             <div className="nav-links">
               <a href="#">Agents</a>
               <a href="#">Automations</a>
+              <a href="/ai-tools">AI Tools</a>
               <a href="/ai-hub">AI Hub</a>
             </div>
             <a href="#" className="cta-pill">
@@ -873,6 +874,7 @@ export default function HeroCarousel() {
           <div className="nav-links">
             <span>Agents</span>
             <span>Automations</span>
+            <a href="/ai-tools">AI Tools</a>
             <a href="/ai-hub">AI Hub</a>
           </div>
           <div className="contact">Contact Us</div>

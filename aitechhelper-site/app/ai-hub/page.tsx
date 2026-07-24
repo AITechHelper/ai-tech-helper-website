@@ -20,6 +20,7 @@ export default function AiHubPage() {
         <div className="nav-links">
           <a href="/#stage">Agents</a>
           <a href="/#stage">Automations</a>
+          <Link href="/ai-tools">AI Tools</Link>
           <Link href="/ai-hub">AI Hub</Link>
         </div>
         <a href="#" className="cta-pill">

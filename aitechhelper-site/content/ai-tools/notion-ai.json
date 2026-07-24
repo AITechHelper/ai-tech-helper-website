@@ -1,0 +1,37 @@
+{
+  "slug": "notion-ai",
+  "name": "Notion AI",
+  "excerpt": "An AI assistant built into the Notion notes app that drafts and summarizes text, transcribes meetings into action items, and answers questions about your own documents.",
+  "url": "https://www.notion.com/product/ai",
+  "pricing": "Free — $20/user/mo (full AI on Business plan)",
+  "rating": 3,
+  "image": null,
+  "categories": [
+    "productivity",
+    "note-taking",
+    "ai-assistants",
+    "content-creation",
+    "task-management"
+  ],
+  "fullDescription": "Notion AI is an assistant built into Notion, the notes-and-documents app many teams already use to store their files and projects. It writes and edits text for you, summarizes long notes, transcribes meetings into to-do lists, answers questions about the documents you keep in Notion, and can build or update pages for you. The main appeal is that it lives right inside the workspace where your notes and records already sit, so you don't have to copy and paste into a separate chatbot.\n\nThe important catch is that the AI only \"sees\" the material you keep in Notion (plus a few connected apps like Slack and Google Drive). If your business doesn't already run on Notion, most of what makes it useful won't apply to you. As of May 2025, Notion also removed the old $10 AI add-on, so getting the real, unlimited AI now means paying for the Business plan at $20 per person per month.\n\nThink of it as an office-organization and writing helper for teams whose paperwork already lives in Notion. It is not a marketing engine, a customer-support system, or a data-analysis package, and for polished external writing like proposals or blog posts, dedicated tools like ChatGPT or Claude tend to do better.",
+  "pros": [
+    "It can answer questions about your own notes and records — like what was decided on a specific job — which a generic chatbot can't do without being fed everything first.",
+    "Meeting transcription and summaries are genuinely good, pulling out decisions and to-dos so you don't have to write them up afterward.",
+    "Everything sits in one place, so there's no juggling a separate app for your notes and your AI."
+  ],
+  "cons": [
+    "It's only worth the money if your work already lives in Notion; if your records are scattered across email, texts, and paper, it sees only a fraction of the picture.",
+    "Notion starts as a blank, build-it-yourself workspace with a real learning curve, and many users drift away and stop using it.",
+    "It slows down with large databases, output quality varies, it can occasionally invent facts, and the newer automation features are still unreliable."
+  ],
+  "scores": {
+    "easeOfUse": 5,
+    "easeOfUseWhy": "The AI itself is simple to trigger, but getting real value means learning and building out a whole Notion workspace first — a genuine hurdle for a non-technical owner who just wants a result today, and a big reason many users drift away.",
+    "outputQuality": 6,
+    "outputQualityWhy": "Summaries and edits on clean, well-organized material are solid and time-saving, but quality varies request to request, it can invent facts, and for polished external writing it trails standalone tools like ChatGPT and Claude.",
+    "businessValue": 5,
+    "businessValueWhy": "Genuinely valuable only if your business already runs on Notion; otherwise you're paying $20/seat per month and rebuilding your operations to justify it, which most Oklahoma trades, clinics, and shops won't recoup.",
+    "reliability": 7,
+    "reliabilityWhy": "The core company is well-established and stable (100M+ users, a 4.6/5 average across ~12,000 G2 reviews) with dependable uptime, but the newer agent/automation features are still beta-flaky and output isn't perfectly consistent day to day."
+  }
+}

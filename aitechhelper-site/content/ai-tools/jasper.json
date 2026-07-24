@@ -1,0 +1,37 @@
+{
+  "slug": "jasper",
+  "name": "Jasper",
+  "excerpt": "An AI writing tool that turns a short prompt into finished marketing copy — blog posts, ads, emails, and social posts — in your brand's voice.",
+  "url": "https://www.jasper.ai",
+  "pricing": "7-day trial, then $39–$69/mo",
+  "rating": 3.5,
+  "image": null,
+  "categories": [
+    "copywriting",
+    "content-creation",
+    "writing-blogging",
+    "marketing-sales",
+    "seo"
+  ],
+  "fullDescription": "Jasper is an AI writing tool built for marketing content. You give it a short prompt and it hands back a draft — a blog post, a product description, ad text, a social caption, or an email — so you're editing something instead of staring at a blank page. It can learn your brand's tone and reuse it across everything you write, and it comes with ready-made templates for common jobs like ads and product pages.\n\nThis is a marketing and content tool, full stop. It won't answer customer questions, run your books, or automate your scheduling. For an Oklahoma small business, it earns its keep if you or someone on staff regularly writes to attract customers — website copy, newsletters, ads, SEO articles. If your marketing is an occasional Facebook post, this is more tool than you need.\n\nJasper has no permanent free plan. You get a 7-day trial, then pay $39–$49/month for one person on the Creator plan, or $59–$69/month for the Pro plan with multiple brand voices and team features. It connects to tools like Surfer SEO, Grammarly, Copyscape, and Zapier, so it fits into how content actually gets published rather than sitting off on its own.",
+  "pros": [
+    "A non-technical person can start using it quickly — reviewers who call themselves AI newbies report getting usable drafts fast.",
+    "It can learn your brand voice and reuse it everywhere, plus offers templates for common jobs like ads, product pages, and emails.",
+    "It fits into a real content workflow through integrations with Surfer SEO, Grammarly, Copyscape, and Zapier."
+  ],
+  "cons": [
+    "Output can be repetitive and inconsistent, especially in longer pieces, so you'll spend real time editing.",
+    "You only get good results if you write detailed prompts — there's no one-click magic here.",
+    "At $39–$69/month it can be hard to justify when cheaper or free chatbots produce comparable first drafts for light use."
+  ],
+  "scores": {
+    "easeOfUse": 8,
+    "easeOfUseWhy": "The interface is genuinely approachable and reviewers with no technical background get to a result fast; the point off is that good output still requires learning to prompt it well.",
+    "outputQuality": 6,
+    "outputQualityWhy": "It produces solid first drafts, but users consistently report repetition, inconsistency, and the need for human editing, so it lands well short of a skilled copywriter working unassisted.",
+    "businessValue": 6,
+    "businessValueWhy": "For a business that writes marketing content weekly it can save real hours, but the price is steep next to cheaper or free alternatives that do much the same job, so the value is narrow rather than broad.",
+    "reliability": 7,
+    "reliabilityWhy": "Jasper has been around since 2021, is well established, and is stable enough for daily work, but reported quality glitches and repeated changes to plans/credits keep it from scoring higher."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "chatgpt",
+  "name": "ChatGPT",
+  "excerpt": "A chatbot you type or talk to in plain English that writes, summarizes, answers questions, and drafts documents for your business.",
+  "url": "https://chatgpt.com",
+  "pricing": "Free — $20/mo (Plus); Team ~$25-30/user/mo",
+  "rating": 4,
+  "image": null,
+  "categories": [
+    "content-creation",
+    "copywriting",
+    "ai-assistants",
+    "email-marketing",
+    "productivity"
+  ],
+  "fullDescription": "ChatGPT is a chatbot you can type or talk to in plain English. You ask it something the way you'd ask a helpful assistant, and it writes emails, summarizes long documents, answers questions, drafts estimates and social posts, and helps you think through problems. There's nothing to install or configure — you open the site, type, and get a usable answer in seconds.\n\nFor a small business, it earns its keep on everyday writing and admin: customer emails, job postings, training checklists, turning rough notes into something presentable, even translating a message for a Spanish-speaking customer. It's a broad generalist, so the same tool that drafts your marketing can also help with a spreadsheet formula or explain a confusing insurance letter. It drafts and advises — it does not run your business processes on its own.\n\nThe catch is that it sometimes states wrong information confidently, and it doesn't know your specific prices, service area, or customers unless you tell it every time. Treat what it produces as a strong first draft that you review, not a finished, trustworthy product. The free tier is enough to test it, and the $20/month Plus plan is the realistic \"we actually use this\" option — you do not need the $200 tier.",
+  "pros": [
+    "You can start in five minutes with no setup — just type a question in normal words and get a usable answer.",
+    "It's a strong everyday writer and summarizer for emails, estimates, job posts, and turning rough notes into something presentable.",
+    "One tool covers a lot of ground, from drafting marketing to spreadsheet help to translating a customer message."
+  ],
+  "cons": [
+    "It makes things up and states them confidently, so anything factual — a policy quote, a regulation — must be checked.",
+    "Out of the box it doesn't know your prices, customers, or service area, so it writes generic copy unless you feed it your specifics.",
+    "Answers can vary from one time to the next, and model updates sometimes change behavior in ways that disrupt how you'd been using it."
+  ],
+  "scores": {
+    "easeOfUse": 9,
+    "easeOfUseWhy": "There is almost nothing to learn to get started — you type a question and get an answer — which is exactly what a non-technical owner needs; the only real skill is learning to give it good instructions.",
+    "outputQuality": 7,
+    "outputQualityWhy": "On writing and summarizing it's genuinely good, often matching a competent human first draft, but the confident factual errors and generic default tone keep it out of the top range — it produces a strong draft, not a finished, trustworthy product.",
+    "businessValue": 8,
+    "businessValueWhy": "At free-to-$20/month it can save a small business several hours a week on writing and admin for the price of a couple of coffees, which is excellent return — held back only by the fact that you still have to review its work, so it saves time rather than replacing a role.",
+    "reliability": 6,
+    "reliabilityWhy": "OpenAI is an established, well-funded company with a mature, widely-used product and generally good uptime, but occasional outages, answer-to-answer inconsistency, and disruptive model updates mean you can't count on identical results day to day."
+  }
+}

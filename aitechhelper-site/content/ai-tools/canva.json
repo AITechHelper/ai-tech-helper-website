@@ -1,0 +1,37 @@
+{
+  "slug": "canva",
+  "name": "Canva",
+  "excerpt": "An online design app that lets you make professional-looking graphics, flyers, social posts, and simple videos by editing ready-made templates.",
+  "url": "https://www.canva.com",
+  "pricing": "Free — ~$15/user/mo",
+  "rating": 4,
+  "image": null,
+  "categories": [
+    "graphic-design",
+    "content-creation",
+    "image-generation",
+    "social-media",
+    "presentation-tools"
+  ],
+  "fullDescription": "Canva is an online design app that lets you make professional-looking graphics without hiring a designer or learning complicated software. You pick a ready-made template that's close to what you want, swap in your own text, logo, and photos, and end up with a finished flyer, menu, social media post, business card, presentation, or short video. For a trades business, home-services company, clinic, or shop, think of it as your in-house marketing-graphics department.\n\nThere's a genuinely useful free tier with over 250,000 templates, basic tools, and no time limit, so an occasional designer may never need to pay. Canva Pro runs roughly $10–15 per month per person and adds 100GB of storage, a brand kit for your custom colors and fonts, a background remover, Magic Resize, and access to over 100 million premium stock assets. Teams pay per seat with a minimum of two people, verified nonprofits and schools can get Pro features free, and larger organizations negotiate custom Enterprise deals.\n\nCanva is best for everyday marketing and content work rather than automation, data, or precision print design. It won't replace a skilled designer for exact print color or detailed logo work, and because millions start from the same templates, your work can end up looking like everyone else's. But for getting good-looking material out the door quickly and cheaply, it delivers.",
+  "pros": [
+    "A non-technical owner can open a template and have a finished flyer or post ready in minutes with almost no assumed knowledge.",
+    "A single Pro plan bundles background removal, resizing, a brand kit, and premium stock, so you often don't need separate subscriptions for those.",
+    "The free tier is genuinely usable, so a business with only occasional design needs may never have to pay."
+  ],
+  "cons": [
+    "Team pricing is per seat with minimums, so costs can climb quietly as you add staff.",
+    "Because so many people start from the same templates, your designs can look generic and hard to distinguish from competitors.",
+    "It lacks the precise controls of professional software for exact print color, detailed logo, or vector work."
+  ],
+  "scores": {
+    "easeOfUse": 9,
+    "easeOfUseWhy": "This is where Canva genuinely earns a top score; a non-technical owner can open a template and have a finished flyer or post in minutes, with almost no assumed knowledge, and the free tier lets you try before paying.",
+    "outputQuality": 7,
+    "outputQualityWhy": "Output is very good for everyday marketing material, but the templated look and limited fine control mean a skilled human designer still produces more distinctive, print-precise work.",
+    "businessValue": 8,
+    "businessValueWhy": "At roughly $10–15/month it replaces stock-photo and background-removal subscriptions and saves real hours, though per-seat team pricing can erode that value as you add people.",
+    "reliability": 8,
+    "reliabilityWhy": "Canva is a large, established company with a stable, widely-used cloud platform; the main caveats are periodic pricing changes and features that shift over time rather than outages."
+  }
+}

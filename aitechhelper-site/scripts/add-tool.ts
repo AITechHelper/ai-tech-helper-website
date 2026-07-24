@@ -31,6 +31,22 @@ import {
 const CONTENT_DIR = path.join(process.cwd(), "content", "ai-tools");
 const MODEL = "claude-opus-4-8";
 
+/**
+ * Reads ANTHROPIC_API_KEY out of .env.local so the key lives in one gitignored
+ * file rather than in your shell profile. Already-set environment variables
+ * win, so exporting the key still works if you prefer that.
+ */
+function loadEnvLocal() {
+  const file = path.join(process.cwd(), ".env.local");
+  if (!fs.existsSync(file)) return;
+  for (const line of fs.readFileSync(file, "utf8").split("\n")) {
+    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$/i);
+    if (!m) continue;
+    const value = m[2].trim().replace(/^["']|["']$/g, "");
+    if (!process.env[m[1]]) process.env[m[1]] = value;
+  }
+}
+
 const RATING_SCALE = `Rate the tool on four criteria, each an integer from 1 to 10:
 
 - ease_of_use: how quickly a non-technical small-business owner gets to a
@@ -273,6 +289,18 @@ async function main() {
 
   if (names.length === 0) {
     console.error('Usage: npm run add-tool -- "Tool Name" ["Another Tool" …]');
+    process.exit(1);
+  }
+
+  loadEnvLocal();
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.error(
+      "No ANTHROPIC_API_KEY found.\n" +
+        "Create a key at https://console.anthropic.com/settings/keys, then put it in\n" +
+        "aitechhelper-site/.env.local as:\n\n" +
+        "  ANTHROPIC_API_KEY=sk-ant-...\n\n" +
+        "That file is gitignored, so the key never reaches GitHub.",
+    );
     process.exit(1);
   }
 

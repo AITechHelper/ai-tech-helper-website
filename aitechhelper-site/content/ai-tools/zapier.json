@@ -1,10 +1,14 @@
 {
-  "slug": "example-zapier",
+  "slug": "zapier",
   "name": "Zapier",
   "excerpt": "Connects the apps you already pay for so a form fill, a new lead, or a paid invoice sets off the next step without anyone touching it.",
   "url": "https://zapier.com",
-  "pricing": "Free — $69/mo",
+  "pricing": "Free \u2014 $69/mo",
   "rating": 4.5,
   "image": null,
-  "categories": ["workflow-automation", "task-automation", "no-code-low-code"]
+  "categories": [
+    "workflow-automation",
+    "task-automation",
+    "no-code-low-code"
+  ]
 }

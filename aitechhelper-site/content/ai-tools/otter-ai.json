@@ -1,0 +1,35 @@
+{
+  "slug": "otter-ai",
+  "name": "Otter.ai",
+  "excerpt": "Joins your meetings and phone calls, transcribes every word in real time, and hands back a searchable summary with action items pulled out.",
+  "url": "https://otter.ai",
+  "pricing": "Free — ~$30/user/mo (verify current figures)",
+  "rating": 3.5,
+  "image": null,
+  "categories": [
+    "productivity",
+    "note-taking",
+    "content-creation"
+  ],
+  "fullDescription": "Otter.ai is a note-taking tool that sits in on your meetings and phone calls, writes down what everyone says as it happens, and then gives you a clean summary with the to-do items pulled out. Instead of somebody scribbling notes during a client call or staff meeting, Otter does the documenting for you and leaves you with a written record you can search later.\n\nIt's mainly a productivity tool, though the transcripts double as raw material for follow-up emails, client recaps, training notes for new hires, or a record of what was agreed with a customer. Six weeks later you can type a customer's name or a word like \"warranty\" and find exactly what was said — a real record instead of a fuzzy memory. It connects to your calendar and shows up to your Zoom, Teams, or Google Meet calls on its own, so there's very little to learn.\n\nThere is a genuine free tier (called Basic) with a monthly cap on transcription minutes and a limit on how long any single recording can run. Above that, Otter sells a Pro plan (roughly mid-teens dollars per user per month billed annually), a Business plan (around $30/user/month) with shared workspaces and admin controls, and a custom Enterprise tier. Otter changes its plan names, minute caps, and prices fairly often, so check otter.ai/pricing for today's figures — pay attention to the monthly minute cap and the per-conversation time limit, since those are what usually bite small users.",
+  "pros": [
+    "A non-technical owner can be up and running the same afternoon — it connects to your calendar and joins calls on its own.",
+    "Transcripts are searchable and shareable, giving you a real record of who promised what instead of relying on memory.",
+    "The free tier is genuinely useful, so you can test it on your own real meetings without spending anything."
+  ],
+  "cons": [
+    "Accuracy drops with background noise, strong accents, industry jargon, or people talking over each other — you still have to proofread anything that matters.",
+    "It regularly mislabels who said what or merges two speakers, so multi-person meetings need cleanup.",
+    "Independent review sites carry a steady stream of complaints about auto-renewal, refunds, and difficulty cancelling."
+  ],
+  "scores": {
+    "easeOfUse": 8,
+    "easeOfUseWhy": "A shop or clinic owner can be up and running the same afternoon; it connects to your calendar and joins meetings without technical setup, and the interface doesn't assume you know anything.",
+    "outputQuality": 7,
+    "outputQualityWhy": "Clean transcripts and decent summaries for clear English, but a competent human note-taker still beats it on accents, jargon, crosstalk, and correctly attributing who said what — so you'll proofread anything that matters.",
+    "businessValue": 6,
+    "businessValueWhy": "Real time saved and a solid paper trail for businesses that hold lots of calls or meetings, and the free tier softens the cost, but many trades and shops simply don't meet enough to get their money's worth once they hit the paid tiers.",
+    "reliability": 7,
+    "reliabilityWhy": "Otter has been around since 2016, is well-established, and is consistently available day to day; the point off is for accuracy that swings with audio conditions and the recurring billing/cancellation complaints, not for outages."
+  }
+}
