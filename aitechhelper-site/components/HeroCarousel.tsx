@@ -63,16 +63,25 @@ export default function HeroCarousel() {
     const scene = new THREE.Scene();
     const heroCamera = new THREE.PerspectiveCamera(45, 1, 0.05, 100);
 
+    // The hero pins (position: fixed) during the scroll transition, so its
+    // clientWidth/Height can read stale mid-resize and leave the camera aspect
+    // wrong — which stretches the sphere into an ellipse and never corrects.
+    // The canvas is a full 100vw×100vh, so size and aspect off the viewport,
+    // which is always current, and re-run when ScrollTrigger recomputes the pin.
     function sizeRenderer() {
-      const w = wrap.clientWidth,
-        h = wrap.clientHeight;
+      const w = window.innerWidth,
+        h = window.innerHeight;
       renderer.setSize(w, h, false);
       heroCamera.aspect = w / h;
       heroCamera.updateProjectionMatrix();
     }
     sizeRenderer();
     window.addEventListener("resize", sizeRenderer);
-    cleanups.push(() => window.removeEventListener("resize", sizeRenderer));
+    ScrollTrigger.addEventListener("refresh", sizeRenderer);
+    cleanups.push(() => {
+      window.removeEventListener("resize", sizeRenderer);
+      ScrollTrigger.removeEventListener("refresh", sizeRenderer);
+    });
 
     function makeOrbSprite() {
       const c = document.createElement("canvas");
@@ -114,7 +123,7 @@ export default function HeroCarousel() {
       return stops[stops.length - 1].c;
     }
 
-    const COUNT = 9000;
+    const COUNT = 16000;
     const baseDir = new Float32Array(COUNT * 3);
     const positions = new Float32Array(COUNT * 3);
     const colors = new Float32Array(COUNT * 3);
@@ -131,8 +140,10 @@ export default function HeroCarousel() {
       const uz = Math.sin(theta) * r;
       const uy = y;
 
-      const edgeFactor = Math.max(0, Math.abs(uy) - 0.55) / 0.45;
-      const jitter = 1 + (Math.random() - 0.3) * edgeFactor * 0.9;
+      // A thin, even shell reads as a defined sphere. The old version pushed
+      // the pole points outward by a random amount, which is what smeared the
+      // top and bottom into a loose cloud of floating particles.
+      const jitter = 1 + (Math.random() - 0.5) * 0.045;
 
       baseDir[i * 3] = ux;
       baseDir[i * 3 + 1] = uy;
@@ -156,7 +167,7 @@ export default function HeroCarousel() {
     geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
     const mat = new THREE.PointsMaterial({
-      size: 0.026,
+      size: 0.019,
       map: orbSprite,
       vertexColors: true,
       transparent: true,
