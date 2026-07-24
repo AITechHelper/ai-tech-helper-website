@@ -549,11 +549,13 @@ h1 {
      fill the stage instead of floating as three small tiles in a lot of
      black. The cap stops them stretching to billboard height on a tall
      monitor; the min keeps the copy from crushing on a short one. */
-  flex: 1 1 auto;
+  /* Size to the content, not the stage. Filling leftover stage height forced
+     every card to one short height and clipped whatever spilled — which on a
+     wide desktop was Silver's button. Let the tallest card set the height and
+     nothing gets cut. */
+  flex: 0 0 auto;
   width: 100%;
   max-width: 1420px;
-  min-height: 470px;
-  max-height: 860px;
   margin: 0 auto;
   /* Room for the featured card to scale up and glow without being clipped. */
   padding: 10px clamp(6px, 1vw, 18px) 18px;
