@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import { Icons } from "@/components/TierIcons";
 import TierVisual from "@/components/TierVisual";
 import { PHONE_DISPLAY, PHONE_NUMBER, type Tier } from "@/lib/tiers";
@@ -29,9 +30,7 @@ export default function TierPageView({
        rather than the brand cyan. */
     <div className={`page page--${tier.slug}`}>
       <nav className="nav">
-        <div className="logo">
-          <div className="logo-mark">AI</div>TECH <span className="dim">HELPER</span>
-        </div>
+        <Logo />
         <div className="nav-links">
           <a href="/#stage">Agents</a>
           <a href="/#stage">Automations</a>

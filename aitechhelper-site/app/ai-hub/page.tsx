@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { formatDate, getPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -15,9 +16,7 @@ export default function AiHubPage() {
   return (
     <div className="page hub">
       <nav className="nav">
-        <div className="logo">
-          <div className="logo-mark">AI</div>TECH <span className="dim">HELPER</span>
-        </div>
+        <Logo />
         <div className="nav-links">
           <a href="/#stage">Agents</a>
           <a href="/#stage">Automations</a>

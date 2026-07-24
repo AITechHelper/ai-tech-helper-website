@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Logo from "@/components/Logo";
 import ServicesMenu from "@/components/ServicesMenu";
 import TierPageView from "@/components/TierPageView";
 import { TIERS } from "@/lib/tiers";
@@ -827,9 +828,7 @@ export default function HeroCarousel() {
           <div id="orb-canvas-wrap" />
 
           <nav className="nav" id="nav">
-            <div className="logo">
-              <div className="logo-mark">AI</div>TECH <span className="dim">HELPER</span>
-            </div>
+            <Logo />
             <div className="nav-links">
               <a href="#">Agents</a>
               <a href="#">Automations</a>
@@ -870,10 +869,7 @@ export default function HeroCarousel() {
         <div id="flat-layer" />
 
         <div className="hud">
-          <div className="logo">
-            <div className="logo-mark" />
-            TECH <span className="dim">HELPER</span>
-          </div>
+          <Logo />
           <div className="nav-links">
             <span>Agents</span>
             <span>Automations</span>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Logo from "@/components/Logo";
 import { formatDate, getPost, getPosts, readingTime } from "@/lib/posts";
 
 // Every issue is a file in the repo, so all slugs are known at build time.
@@ -27,9 +28,7 @@ export default function AiHubPost({ params }: { params: { slug: string } }) {
   return (
     <div className="page hub">
       <nav className="nav">
-        <div className="logo">
-          <div className="logo-mark">AI</div>TECH <span className="dim">HELPER</span>
-        </div>
+        <Logo />
         <div className="nav-links">
           <a href="/#stage">Agents</a>
           <a href="/#stage">Automations</a>

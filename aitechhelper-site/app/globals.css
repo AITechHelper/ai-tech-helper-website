@@ -25,31 +25,16 @@ body {
 .logo {
   display: flex;
   align-items: center;
-  gap: 11px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 21px;
-  letter-spacing: 0.3px;
-  color: #ffffff;
-  text-transform: uppercase;
 }
-.logo-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  background: #00c6ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  box-shadow: 0 0 24px rgba(0, 198, 255, 0.65);
-}
-.logo span.dim {
-  color: #ffffff;
-  font-weight: 700;
-  opacity: 0.55;
+/* Height drives the size and the width follows, so the single logo file fits
+   both the tall hero nav and the shorter carousel HUD without a second asset.
+   The glow matches the one the old CSS mark carried, keeping the logo lit
+   against black the way the rest of the cyan chrome is. */
+.logo-img {
+  display: block;
+  height: 42px;
+  width: auto;
+  filter: drop-shadow(0 0 18px rgba(0, 198, 255, 0.45));
 }
 .nav-links {
   display: flex;
@@ -401,24 +386,10 @@ h1 {
 .hud .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 17px;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
   pointer-events: auto;
 }
-.hud .logo-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: #00c6ff;
-  box-shadow: 0 0 20px rgba(0, 198, 255, 0.6);
-}
-.hud .logo span.dim {
-  color: #7d8492;
+.hud .logo-img {
+  height: 36px;
 }
 .hud .nav-links {
   display: flex;
