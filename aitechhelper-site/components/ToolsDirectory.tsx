@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CATEGORY_GROUPS, labelForCategory, matchesGroup, type Tool } from "@/lib/tools";
 
@@ -81,14 +82,10 @@ export default function ToolsDirectory({ tools }: { tools: Tool[] }) {
         </p>
       ) : (
         <div className="tool-grid">
+          {/* The card opens our review, not the vendor — the outbound link
+              lives on the tool's own page, under the rating that earned it. */}
           {visible.map((tool) => (
-            <a
-              key={tool.slug}
-              className="tool-card"
-              href={tool.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link key={tool.slug} className="tool-card" href={`/ai-tools/${tool.slug}`}>
               <div className="tool-card-top">
                 {tool.image ? (
                   <img className="tool-logo" src={tool.image} alt="" />
@@ -111,7 +108,7 @@ export default function ToolsDirectory({ tools }: { tools: Tool[] }) {
                   ))}
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       )}

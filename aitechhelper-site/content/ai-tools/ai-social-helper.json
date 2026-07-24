@@ -1,10 +1,36 @@
 {
   "slug": "ai-social-helper",
   "name": "AI Social Helper",
-  "excerpt": "Creates and schedules branded social content — images, video, and captions in your colors, posted on a calendar you set once.",
+  "excerpt": "Creates and schedules branded social content \u2014 images, video, and captions in your colors, posted on a calendar you set once.",
   "url": "https://aisocialhelper.com",
-  "pricing": "Free — $50/mo",
+  "pricing": "Free \u2014 $50/mo",
   "rating": 4.5,
   "image": null,
-  "categories": ["social-media", "content-creation", "scheduling", "copywriting"]
+  "categories": [
+    "social-media",
+    "content-creation",
+    "scheduling",
+    "copywriting"
+  ],
+  "fullDescription": "AI Social Helper offers a comprehensive suite of tools designed for enhancing your social media presence with minimal effort. At its core, it provides AI-driven content creation, generating images and videos tailored to your specific niche, ensuring alignment with your brand's colors and style. This allows businesses to maintain a cohesive and professional appearance across all platforms.\n\nA standout feature of AI Social Helper is its support for auto-posting and content calendars, making it ideal for businesses looking to streamline their social media strategy. Users can leverage these features to plan, create, and schedule content in advance, freeing up resources for other important tasks. Moreover, the ability to upload custom images, which the tool brands automatically, adds a personalized touch to your content.\n\nFor businesses that seek consistency and efficiency in their social media approach, AI Social Helper offers substantial value. Despite its robust functionalities, pricing is competitive, beginning from Free, and scaling based on the level of features and user access required.\n\nIn conclusion, AI Social Helper stands out as a strong all-in-one tool for social media management, balancing ease of use with powerful features tailored to deliver results across multiple platforms.",
+  "pros": [
+    "Comprehensive tool for content creation and scheduling tailored to brand style.",
+    "Supports automation and content calendar, enhancing operational efficiency.",
+    "Affordable pricing with a free tier available."
+  ],
+  "cons": [
+    "Limited customization options for AI-generated content might not suit all brands.",
+    "Dependency on AI might not fully capture unique brand voice in every post.",
+    "Requires initial setup to fully integrate brand colors and styles."
+  ],
+  "scores": {
+    "easeOfUse": 9,
+    "easeOfUseWhy": "The tool's interface is intuitive and user-friendly, making it easy to navigate even for beginners.",
+    "outputQuality": 8,
+    "outputQualityWhy": "The AI-generated content is consistently professional and visually appealing, aligned with brand aesthetics.",
+    "businessValue": 9,
+    "businessValueWhy": "It significantly enhances social media strategy efficiency, offering high returns on investment.",
+    "reliability": 8,
+    "reliabilityWhy": "AI Social Helper delivers consistent performance, with few reported issues during automated postings and scheduling."
+  }
 }

@@ -27,7 +27,51 @@ export type Tool = {
   image?: string | null;
   /** Taxonomy slugs — the specific ones, e.g. "workflow-automation". */
   categories: string[];
+  /** A few paragraphs for the tool's own page. */
+  fullDescription?: string;
+  pros?: string[];
+  cons?: string[];
+  /** The four-criteria score, each out of 10, with the reasoning behind each. */
+  scores?: Scores;
 };
+
+/**
+ * The rating scale, carried over from the WordPress build so old and new
+ * reviews stay comparable. Four criteria out of 10; `rating` on the Tool is
+ * their average put on the five-star scale the cards use.
+ */
+export type Scores = {
+  easeOfUse: number;
+  easeOfUseWhy: string;
+  outputQuality: number;
+  outputQualityWhy: string;
+  businessValue: number;
+  businessValueWhy: string;
+  reliability: number;
+  reliabilityWhy: string;
+};
+
+export const SCORE_CRITERIA: { key: keyof Scores; whyKey: keyof Scores; label: string }[] = [
+  { key: "easeOfUse", whyKey: "easeOfUseWhy", label: "Ease of use" },
+  { key: "outputQuality", whyKey: "outputQualityWhy", label: "Output quality" },
+  { key: "businessValue", whyKey: "businessValueWhy", label: "Business value" },
+  { key: "reliability", whyKey: "reliabilityWhy", label: "Reliability" },
+];
+
+/** The average of the four criteria, out of 10. */
+export function finalScore(s: Scores): number {
+  return (s.easeOfUse + s.outputQuality + s.businessValue + s.reliability) / 4;
+}
+
+/** Every taxonomy slug a tool may carry — the groups plus everything under them. */
+export function allCategorySlugs(): string[] {
+  const out = new Set<string>();
+  for (const g of CATEGORY_GROUPS) {
+    out.add(g.slug);
+    for (const c of g.children) out.add(c);
+  }
+  return [...out];
+}
 
 /**
  * The filter bar. A tool is matched by a group if it carries the group's own

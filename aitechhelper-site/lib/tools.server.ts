@@ -11,6 +11,12 @@ import type { Tool } from "@/lib/tools";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "ai-tools");
 
+export function getTool(slug: string): Tool | null {
+  const file = path.join(CONTENT_DIR, `${slug}.json`);
+  if (!fs.existsSync(file)) return null;
+  return JSON.parse(fs.readFileSync(file, "utf8")) as Tool;
+}
+
 export function getTools(): Tool[] {
   if (!fs.existsSync(CONTENT_DIR)) return [];
   return fs
