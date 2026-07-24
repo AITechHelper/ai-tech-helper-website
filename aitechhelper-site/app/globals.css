@@ -2174,3 +2174,232 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   AI TOOLS DIRECTORY
+   =========================================================
+   The old WordPress version styled this with a hardcoded #8EF2FE. Here the
+   filter chips and stars ride --m1/--glow like the rest of the chrome, so the
+   page picks up the brand cyan the same way every other section does.
+
+   The layout is a plain flex/grid; the old build declared
+   grid-template-columns in its mobile media queries against a flex container,
+   which meant the phone layout it was aiming for never actually applied. */
+.tools-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px clamp(24px, 5vw, 56px) 100px;
+}
+
+.tool-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 36px;
+  width: 100%;
+}
+.tool-search-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+.tool-search {
+  width: 40%;
+  min-width: 260px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--glow), 0.22);
+  background: rgba(10, 18, 40, 0.95);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.tool-search:focus {
+  border-color: rgba(var(--glow), 0.6);
+}
+.tool-search::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+.tool-results-count {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tool-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 90%;
+}
+.tool-filters .filter-btn {
+  border: 1px solid rgba(var(--glow), 0.2);
+  background: rgba(10, 18, 40, 0.85);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.tool-filters .filter-btn:hover:not(.active) {
+  border-color: rgba(var(--glow), 0.5);
+  color: #fff;
+}
+.tool-filters .filter-btn.active {
+  color: #0a1228;
+  border-color: transparent;
+  background: linear-gradient(135deg, #cffdff 0%, var(--m1) 50%, var(--m2) 100%);
+  font-weight: 800;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0b0d12;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.tool-card:hover {
+  border-color: rgba(var(--glow), 0.4);
+  transform: translateY(-2px);
+}
+.tool-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px;
+  color: #fff;
+}
+.tool-card p {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #aab1bb;
+  flex: 1;
+}
+.tool-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tool-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  object-fit: cover;
+  background: #11141b;
+}
+.tool-logo--letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #0a1228;
+  background: linear-gradient(135deg, #cffdff 0%, var(--m1) 100%);
+}
+.tool-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.2);
+}
+.tool-stars .on {
+  color: var(--m1);
+}
+.tool-rating-num {
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+}
+.tool-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.tool-pricing {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--m1);
+  white-space: nowrap;
+}
+.tool-cats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tool-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 4px 9px;
+}
+.tool-empty {
+  text-align: center;
+  color: #9aa0ab;
+  padding: 70px 24px;
+}
+
+@media (max-width: 900px) {
+  .tool-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tool-search {
+    width: 60%;
+  }
+}
+@media (max-width: 600px) {
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+  .tool-filters {
+    width: 100%;
+    gap: 6px;
+  }
+  .tool-search-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tool-search {
+    width: 100%;
+    min-width: 0;
+  }
+  .tool-results-count {
+    text-align: center;
+  }
+}

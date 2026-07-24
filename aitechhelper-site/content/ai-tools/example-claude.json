@@ -1,0 +1,10 @@
+{
+  "slug": "example-claude",
+  "name": "Claude",
+  "excerpt": "Writes, edits, and reasons over long documents, and will work through a codebase with you rather than handing back a snippet.",
+  "url": "https://claude.ai",
+  "pricing": "Free — $20/mo",
+  "rating": 5,
+  "image": null,
+  "categories": ["ai-assistants", "writing-blogging", "code-generation", "research-tools"]
+}
