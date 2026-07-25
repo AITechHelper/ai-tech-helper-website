@@ -1,4 +1,5 @@
 import Logo from "@/components/Logo";
+import MobileMenu from "@/components/MobileMenu";
 import Footer from "@/components/Footer";
 import { Icons } from "@/components/TierIcons";
 import TierVisual from "@/components/TierVisual";
@@ -40,6 +41,7 @@ export default function TierPageView({
         <a href="#" className="cta-pill">
           Contact Us
         </a>
+        <MobileMenu />
       </nav>
 
       <section className="tier-hero">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Logo from "@/components/Logo";
+import MobileMenu from "@/components/MobileMenu";
 import NavLink from "@/components/NavLink";
 import Footer from "@/components/Footer";
 import ToolsDirectory from "@/components/ToolsDirectory";
@@ -26,6 +27,7 @@ export default function AiToolsPage() {
         <a href="#" className="cta-pill">
           Contact Us
         </a>
+        <MobileMenu />
       </nav>
 
       <header className="hub-head">

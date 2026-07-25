@@ -10,6 +10,7 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Logo from "@/components/Logo";
+import MobileMenu from "@/components/MobileMenu";
 import ServicesMenu from "@/components/ServicesMenu";
 import TierPageView from "@/components/TierPageView";
 import { TIERS } from "@/lib/tiers";
@@ -59,6 +60,10 @@ export default function HeroCarousel() {
     const wrap = document.getElementById("orb-canvas-wrap")!;
     // Needed by the hero's scroll handler below as well as the carousel setup.
     const stageEl = document.getElementById("services")!;
+    // Phones get a smaller, tighter orb with fewer but larger points, so it
+    // reads as a defined sphere rather than a faint scatter of specks.
+    const isMobile = window.innerWidth <= 700;
+    const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1200, 1.3));
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: false,
@@ -95,7 +100,7 @@ export default function HeroCarousel() {
       bloom?.setSize(w, h);
       if (orbUniforms) {
         orbUniforms.uPixelRatio.value = renderer.getPixelRatio();
-        orbUniforms.uSize.value = Math.min(w / 1200, 1.1);
+        orbUniforms.uSize.value = orbSizeFor(w);
       }
     }
     sizeRenderer();
@@ -116,7 +121,7 @@ export default function HeroCarousel() {
        points each frame — which is why this reads as far heavier
        yet runs lighter.
        --------------------------------------------------------- */
-    const COUNT = 16000;
+    const COUNT = isMobile ? 7000 : 16000;
 
     // Rasterise the wordmark to a canvas and keep every lit pixel as a target
     // point. A plain bold sans is used rather than the brand face so the shape
@@ -164,7 +169,7 @@ export default function HeroCarousel() {
     const aRand = new Float32Array(COUNT);
 
     const golden = Math.PI * (3 - Math.sqrt(5));
-    const ORB_R = 1.55;
+    const ORB_R = isMobile ? 1.15 : 1.55;
     for (let i = 0; i < COUNT; i++) {
       // Even shell via the Fibonacci sphere — the resting orb.
       const y = 1 - (i / (COUNT - 1)) * 2;
@@ -216,7 +221,7 @@ export default function HeroCarousel() {
       uMouse: { value: new THREE.Vector3(999, 999, 0) },
       uMouseR: { value: 1.15 },
       uMousePush: { value: 0.55 },
-      uSize: { value: Math.min(window.innerWidth / 1200, 1.3) },
+      uSize: { value: orbSizeFor(window.innerWidth) },
       uSwell: { value: 1 },
       uOpacity: { value: 1 },
       uPixelRatio: { value: renderer.getPixelRatio() },
@@ -1044,6 +1049,7 @@ export default function HeroCarousel() {
             <a href="#" className="cta-pill">
               Contact Us
             </a>
+            <MobileMenu />
           </nav>
 
           <div className="copy" id="copy" style={{ opacity: 0 }}>
@@ -1091,6 +1097,7 @@ export default function HeroCarousel() {
             <a href="/ai-hub">AI Hub</a>
           </div>
           <div className="contact">Contact Us</div>
+          <MobileMenu />
         </div>
 
         <button className="back-btn" id="backBtn">

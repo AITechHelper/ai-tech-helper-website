@@ -76,6 +76,105 @@ body {
 }
 
 /* =========================================================
+   MOBILE MENU (hamburger dropdown; ≤720px only)
+   ========================================================= */
+.mobile-menu {
+  display: none;
+  position: relative;
+  z-index: 60;
+}
+.hamburger {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.hamburger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.is-open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+}
+.mobile-menu-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-width: 210px;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(11, 15, 23, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.mobile-menu-panel.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.mobile-menu-panel a {
+  padding: 13px 16px;
+  border-radius: 11px;
+  color: #e7ebf2;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.18s ease;
+}
+.mobile-menu-panel a:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.mobile-menu-cta {
+  margin-top: 6px;
+  text-align: center;
+  color: #04141c !important;
+  font-weight: 700 !important;
+  background: linear-gradient(140deg, #6fe0ff -10%, #00c6ff 55%, #00a3d9 120%);
+}
+@media (max-width: 720px) {
+  .mobile-menu {
+    display: block;
+  }
+  /* The hamburger replaces the desktop Contact pill / HUD contact on phones. */
+  .nav .cta-pill,
+  .hud .contact {
+    display: none;
+  }
+}
+
+/* =========================================================
    ACCENT TOKENS
    =========================================================
    One accent, inherited. Brand cyan is the default everywhere; a package page
@@ -2498,7 +2597,7 @@ h1 {
 
 @media (max-width: 900px) {
   .tool-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .tool-search {
     width: 60%;
@@ -2960,6 +3059,18 @@ h1 {
   }
   .footer-col {
     align-items: center;
+  }
+  .footer-signup {
+    text-align: center;
+  }
+  .footer-signup-sub {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .footer-signup-form {
+    justify-content: center;
+    max-width: 420px;
+    margin: 0 auto;
   }
   .footer-bottom {
     flex-direction: column;

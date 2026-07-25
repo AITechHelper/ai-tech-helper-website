@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Logo from "@/components/Logo";
+import MobileMenu from "@/components/MobileMenu";
 import NavLink from "@/components/NavLink";
 import Footer from "@/components/Footer";
 import { getTool, getTools } from "@/lib/tools.server";
@@ -39,6 +40,7 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
         <a href="#" className="cta-pill">
           Contact Us
         </a>
+        <MobileMenu />
       </nav>
 
       <div className="tool-page">
