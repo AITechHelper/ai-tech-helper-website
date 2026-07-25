@@ -411,9 +411,9 @@ export default function HeroCarousel() {
       if (stageIn >= 1) return;
       // Whenever the hero is even partly visible, the services stage (fixed,
       // z-index 40, on top) must not swallow clicks meant for the hero's nav and
-      // buttons. Forcing it here every frame guarantees it can never get stuck
-      // "on" after you scroll back up from the services stage.
-      if (stageEl.style.pointerEvents !== "none") stageEl.style.pointerEvents = "none";
+      // buttons. Dropping .stage-live here every frame guarantees it can never
+      // get stuck "on" after you scroll back up from the services stage.
+      if (stageEl.classList.contains("stage-live")) stageEl.classList.remove("stage-live");
       const t = clock.getElapsedTime();
       const u = orbUniforms!;
 
@@ -512,7 +512,7 @@ export default function HeroCarousel() {
         // Only capture clicks once the stage fully covers the hero (its resting
         // state); any less and the hero underneath must stay clickable. The
         // render loop also forces this off whenever the hero is drawing.
-        stageEl.style.pointerEvents = stageIn >= 1 ? "auto" : "none";
+        stageEl.classList.toggle("stage-live", stageIn >= 1);
       },
     });
     cleanups.push(() => pinTrigger.kill());

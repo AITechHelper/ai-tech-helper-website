@@ -432,14 +432,21 @@ h1 {
 #flat-layer {
   z-index: 20;
 }
-/* The stage is fixed at z-index 40 over the whole viewport — above the hero
-   nav (z-index 30) — and only transparent (opacity 0) when hidden, not gone.
-   The scroll handler toggles pointer-events on #services, but child layers like
-   #flat-layer default to `auto` and would keep eating clicks meant for the nav
-   and hero buttons beneath. Make the whole subtree follow #services so nothing
-   re-enables click capture while the stage is hidden. */
-#services * {
-  pointer-events: inherit;
+/* The stage is fixed at z-index 40 over the whole viewport, above the hero, and
+   only transparent (opacity 0) when hidden — not gone. HeroCarousel adds/removes
+   `.stage-live` on it: only its resting, fully-covering state.
+
+   Not live → the whole subtree ignores clicks (including child layers that
+   default to `auto`), so the hero's nav and buttons underneath stay usable.
+   Live → the stage and its real controls take clicks, but descendants keep
+   their OWN pointer-events, so decorative overlays (e.g. the featured card's
+   sheen, which overhangs its neighbours) can't steal clicks from other cards. */
+#services:not(.stage-live),
+#services:not(.stage-live) * {
+  pointer-events: none;
+}
+#services.stage-live {
+  pointer-events: auto;
 }
 
 .hud {
