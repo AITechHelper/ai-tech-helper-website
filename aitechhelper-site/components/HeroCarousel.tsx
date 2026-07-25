@@ -409,6 +409,11 @@ export default function HeroCarousel() {
       heroRaf = requestAnimationFrame(animateHero);
       // Fully covered by the stage — nothing here can be seen, so skip the draw.
       if (stageIn >= 1) return;
+      // Whenever the hero is even partly visible, the services stage (fixed,
+      // z-index 40, on top) must not swallow clicks meant for the hero's nav and
+      // buttons. Forcing it here every frame guarantees it can never get stuck
+      // "on" after you scroll back up from the services stage.
+      if (stageEl.style.pointerEvents !== "none") stageEl.style.pointerEvents = "none";
       const t = clock.getElapsedTime();
       const u = orbUniforms!;
 
@@ -504,8 +509,10 @@ export default function HeroCarousel() {
            behind them by 0.76. */
         stageIn = clamp01((p - 0.36) / 0.26);
         gsap.set("#services", { opacity: stageIn });
-        // Don't let a half-faded stage swallow clicks meant for the hero.
-        stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";
+        // Only capture clicks once the stage fully covers the hero (its resting
+        // state); any less and the hero underneath must stay clickable. The
+        // render loop also forces this off whenever the hero is drawing.
+        stageEl.style.pointerEvents = stageIn >= 1 ? "auto" : "none";
       },
     });
     cleanups.push(() => pinTrigger.kill());
