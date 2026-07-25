@@ -1,4 +1,5 @@
 import Logo from "@/components/Logo";
+import Footer from "@/components/Footer";
 import { Icons } from "@/components/TierIcons";
 import TierVisual from "@/components/TierVisual";
 import { PHONE_DISPLAY, PHONE_NUMBER, type Tier } from "@/lib/tiers";
@@ -32,8 +33,7 @@ export default function TierPageView({
       <nav className="nav">
         <Logo />
         <div className="nav-links">
-          <a href="/#stage">Agents</a>
-          <a href="/#stage">Automations</a>
+          <a href="/#services">Agents</a>
           <a href="/ai-tools">AI Tools</a>
           <a href="/ai-hub">AI Hub</a>
         </div>
@@ -46,7 +46,7 @@ export default function TierPageView({
         <div className="tier-hero-copy">
           {/* `from` tells the carousel which card to park on so it can play
               the zoom-out-and-spin back to the menu on arrival. */}
-          <a href={`/?from=${tier.slug}#stage`} className="page-back">
+          <a href={`/?from=${tier.slug}#services`} className="page-back">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -103,6 +103,10 @@ export default function TierPageView({
           ))}
         </div>
       </section>
+
+      {/* Real page only — the carousel preview renders this same component
+          scaled onto a card and doesn't want a footer in the thumbnail. */}
+      {interactive && <Footer />}
     </div>
   );
 }

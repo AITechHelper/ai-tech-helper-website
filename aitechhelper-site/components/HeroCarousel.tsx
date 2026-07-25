@@ -55,7 +55,7 @@ export default function HeroCarousel() {
        ========================================================= */
     const wrap = document.getElementById("orb-canvas-wrap")!;
     // Needed by the hero's scroll handler below as well as the carousel setup.
-    const stageEl = document.getElementById("stage")!;
+    const stageEl = document.getElementById("services")!;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     wrap.appendChild(renderer.domElement);
@@ -332,7 +332,7 @@ export default function HeroCarousel() {
            0.36 while the orb is still swelling, and the orb dissolves out from
            behind them by 0.76. */
         stageIn = clamp01((p - 0.36) / 0.26);
-        gsap.set("#stage", { opacity: stageIn });
+        gsap.set("#services", { opacity: stageIn });
         // Don't let a half-faded stage swallow clicks meant for the hero.
         stageEl.style.pointerEvents = stageIn > 0.6 ? "auto" : "none";
       },
@@ -769,9 +769,9 @@ export default function HeroCarousel() {
     cleanups.push(() => cancelAnimationFrame(carouselRaf));
     cleanups.push(() => webglRenderer.dispose());
 
-    /* Arriving on /#stage — from a package page's "Back to services" button or
-       the nav — should land on the carousel rather than replay the whole
-       intro. A normal anchor jump can't do it: #stage is position:fixed, so
+    /* Arriving on /#services — from a package page's "Back to services" button
+       or the nav — should land on the carousel rather than replay the whole
+       intro. A normal anchor jump can't do it: #services is position:fixed, so
        it's always at the top of the viewport and scrolling "to" it is a no-op,
        leaving the visitor at the hero with the stage still at opacity 0.
        Jumping to the end of the pin runway drives the pin progress to 1, which
@@ -785,7 +785,7 @@ export default function HeroCarousel() {
     const returnSlug = new URLSearchParams(window.location.search).get("from");
     const returnIdx = SERVICES.findIndex((s) => s.tier.slug === returnSlug) + 1;
 
-    if (window.location.hash === "#stage" || returnIdx > 0) {
+    if (window.location.hash === "#services" || returnIdx > 0) {
       requestAnimationFrame(() => {
         if (cancelled) return;
         // Pinning inserts spacers, so the document isn't its final height
@@ -807,14 +807,14 @@ export default function HeroCarousel() {
           hint.style.opacity = "0";
 
           // Drop the query so a refresh doesn't replay the return trip.
-          history.replaceState({}, "", "/#stage");
+          history.replaceState({}, "", "/#services");
 
           requestAnimationFrame(() => {
             if (cancelled) return;
             // The stage is now scrolled into place and holding the card the
             // visitor arrived from, so it's safe to reveal — the hero stays
             // covered behind it from here on.
-            gsap.set("#stage", { opacity: 1 });
+            gsap.set("#services", { opacity: 1 });
             document.documentElement.removeAttribute("data-returning");
             goToIndex(0);
           });
@@ -842,7 +842,6 @@ export default function HeroCarousel() {
             <Logo />
             <div className="nav-links">
               <a href="#">Agents</a>
-              <a href="#">Automations</a>
               <a href="/ai-tools">AI Tools</a>
               <a href="/ai-hub">AI Hub</a>
             </div>
@@ -852,17 +851,28 @@ export default function HeroCarousel() {
           </nav>
 
           <div className="copy" id="copy">
-            <h1>We help businesses save time and make money using AI</h1>
+            <h1>We help you save time and make money with AI</h1>
             <p className="subtext">
-              We build AI that answers instantly, captures every lead, and books the appointment —
-              so you close more deals, keep more clients, and get your time back.
+              We build AI agents and automations that handle the busywork, capture every lead, and
+              book the appointment — so you spend less time on manual tasks and more time growing
+              revenue.
             </p>
             <div className="actions">
               <a href="tel:+15722204756" className="btn-primary">
                 Call Now
               </a>
-              <a href="#" className="btn-ghost">
-                See how it works
+              <a
+                href="#services"
+                className="btn-ghost"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({
+                    top: document.documentElement.scrollHeight,
+                    behavior: "smooth",
+                  });
+                }}
+              >
+                Get Started
               </a>
             </div>
           </div>
@@ -874,7 +884,7 @@ export default function HeroCarousel() {
         </section>
       </div>
 
-      <div id="stage">
+      <div id="services">
         <div id="webgl-layer" />
         <div id="css3d-layer" />
         <div id="flat-layer" />
@@ -883,7 +893,6 @@ export default function HeroCarousel() {
           <Logo />
           <div className="nav-links">
             <span>Agents</span>
-            <span>Automations</span>
             <a href="/ai-tools">AI Tools</a>
             <a href="/ai-hub">AI Hub</a>
           </div>

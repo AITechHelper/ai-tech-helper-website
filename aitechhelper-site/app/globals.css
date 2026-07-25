@@ -344,7 +344,7 @@ h1 {
    pin progress in HeroCarousel.tsx. All the scroll length comes from
    .pin-wrapper; this element contributes none, and sits fully opaque at the
    end of the scroll as the page's resting state. */
-#stage {
+#services {
   position: fixed;
   inset: 0;
   background: #000;
@@ -1071,6 +1071,26 @@ h1 {
   padding: 110px 120px;
 }
 
+/* Phones/tablets: the services stage is a fixed, viewport-tall layer, and
+   .card3d clips its overflow. Once the tier cards stack into a single column
+   they're taller than the screen, so the lower cards sat below the fold with
+   no way to reach them — the page's scroll runway is already spent revealing
+   the stage. Let the visible flat card scroll its own overflow instead, and
+   anchor its content to the top so nothing is clipped out of reach. */
+@media (max-width: 900px) {
+  .card3d.flat.visible {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .flat.menu-card,
+  .flat.service-card {
+    justify-content: flex-start;
+  }
+  .flat.service-card {
+    padding: 100px clamp(20px, 6vw, 60px) 56px;
+  }
+}
+
 /* =========================================================
    live page preview on a ring card
    ========================================================= */
@@ -1336,7 +1356,7 @@ h1 {
   margin-bottom: 38px;
 }
 
-/* Returns to the homepage carousel. See the #stage hash handling in
+/* Returns to the homepage carousel. See the #services hash handling in
    HeroCarousel.tsx — the stage is fixed and only visible at the end of the
    scroll runway, so arriving there takes more than an anchor jump. */
 .page-back {
@@ -2589,5 +2609,156 @@ h1 {
   .tool-criteria,
   .tool-verdict {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   SITE FOOTER (every normal scrolling page)
+   ========================================================= */
+.site-footer {
+  position: relative;
+  z-index: 5;
+  margin-top: auto;
+  background: #000;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 64px clamp(24px, 5vw, 96px) 28px;
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+  max-width: 1320px;
+  margin: 0 auto;
+}
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+.footer-social {
+  display: flex;
+  gap: 12px;
+}
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.footer-social a:hover {
+  background: rgba(0, 198, 255, 0.14);
+  border-color: rgba(0, 198, 255, 0.5);
+  transform: translateY(-1px);
+}
+.footer-social svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.footer-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.footer-call svg {
+  width: 20px;
+  height: 20px;
+  color: #00c6ff;
+}
+.footer-call:hover {
+  color: #00c6ff;
+  text-shadow: 0 0 16px rgba(0, 198, 255, 0.8);
+}
+.footer-loc {
+  color: #cfd4dc;
+  font-weight: 700;
+  font-size: 16px;
+}
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.footer-col h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.footer-col a {
+  color: #cfd4dc;
+  font-weight: 600;
+  font-size: 15.5px;
+  text-decoration: none;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.footer-col a:hover {
+  color: #fff;
+  text-shadow: 0 0 16px rgba(0, 198, 255, 0.7);
+}
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  max-width: 1320px;
+  margin: 56px auto 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #9098a3;
+  font-size: 14px;
+}
+.footer-legal {
+  display: flex;
+  gap: 34px;
+}
+.footer-legal a {
+  color: #9098a3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.footer-legal a:hover {
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  .footer-brand {
+    align-items: center;
+    text-align: center;
+  }
+  .footer-col {
+    align-items: center;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+  .footer-legal {
+    gap: 24px;
   }
 }

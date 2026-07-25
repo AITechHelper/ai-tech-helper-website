@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Logo from "@/components/Logo";
+import NavLink from "@/components/NavLink";
+import Footer from "@/components/Footer";
 import { formatDate, getPost, getPosts, readingTime } from "@/lib/posts";
 
 // Every issue is a file in the repo, so all slugs are known at build time.
@@ -30,10 +32,9 @@ export default function AiHubPost({ params }: { params: { slug: string } }) {
       <nav className="nav">
         <Logo />
         <div className="nav-links">
-          <a href="/#stage">Agents</a>
-          <a href="/#stage">Automations</a>
-          <Link href="/ai-tools">AI Tools</Link>
-          <Link href="/ai-hub">AI Hub</Link>
+          <a href="/#services">Agents</a>
+          <NavLink href="/ai-tools">AI Tools</NavLink>
+          <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>
         <a href="#" className="cta-pill">
           Contact Us
@@ -76,6 +77,8 @@ export default function AiHubPost({ params }: { params: { slug: string } }) {
           </a>
         </div>
       </article>
+
+      <Footer />
     </div>
   );
 }

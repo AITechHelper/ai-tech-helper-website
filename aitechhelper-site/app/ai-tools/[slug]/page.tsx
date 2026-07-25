@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Logo from "@/components/Logo";
+import NavLink from "@/components/NavLink";
+import Footer from "@/components/Footer";
 import { getTool, getTools } from "@/lib/tools.server";
 import { finalScore, labelForCategory, SCORE_CRITERIA } from "@/lib/tools";
 
@@ -30,10 +32,9 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
       <nav className="nav">
         <Logo />
         <div className="nav-links">
-          <a href="/#stage">Agents</a>
-          <a href="/#stage">Automations</a>
-          <Link href="/ai-tools">AI Tools</Link>
-          <Link href="/ai-hub">AI Hub</Link>
+          <a href="/#services">Agents</a>
+          <NavLink href="/ai-tools">AI Tools</NavLink>
+          <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>
         <a href="#" className="cta-pill">
           Contact Us
@@ -133,6 +134,8 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
           </section>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import NavLink from "@/components/NavLink";
+import Footer from "@/components/Footer";
 import { formatDate, getPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -18,10 +20,9 @@ export default function AiHubPage() {
       <nav className="nav">
         <Logo />
         <div className="nav-links">
-          <a href="/#stage">Agents</a>
-          <a href="/#stage">Automations</a>
-          <Link href="/ai-tools">AI Tools</Link>
-          <Link href="/ai-hub">AI Hub</Link>
+          <a href="/#services">Agents</a>
+          <NavLink href="/ai-tools">AI Tools</NavLink>
+          <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>
         <a href="#" className="cta-pill">
           Contact Us
@@ -74,6 +75,8 @@ export default function AiHubPage() {
           )}
         </div>
       )}
+
+      <Footer />
     </div>
   );
 }
