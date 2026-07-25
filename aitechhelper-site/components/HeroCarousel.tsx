@@ -852,11 +852,10 @@ export default function HeroCarousel() {
           </nav>
 
           <div className="copy" id="copy">
-            <h1>Implement AI into your Oklahoma business</h1>
+            <h1>We help businesses save time and make money using AI</h1>
             <p className="subtext">
-              Every missed call is money walking out the door. We build AI that answers instantly,
-              captures every lead, and books the appointment — so you close more deals, keep more
-              clients, and get your time back.
+              We build AI that answers instantly, captures every lead, and books the appointment —
+              so you close more deals, keep more clients, and get your time back.
             </p>
             <div className="actions">
               <a href="tel:+15722204756" className="btn-primary">
