@@ -255,7 +255,7 @@ export default function HeroCarousel() {
       const bob = Math.sin(t * ((Math.PI * 2) / 7)) * 0.12;
       orb.position.y = bob;
       // Slow, patient drift at rest; still winds up as you fly into the core.
-      orb.rotation.y = t * (0.06 + scrollProgress * 1.0);
+      orb.rotation.y = t * (0.16 + scrollProgress * 1.0);
       orb.rotation.x = Math.sin(t * 0.15) * 0.08;
 
       /* The orb swells as you fall into it and then burns out, instead of
