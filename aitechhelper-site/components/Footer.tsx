@@ -80,9 +80,8 @@ export default function Footer() {
 
         <nav className="footer-col" aria-label="Resources">
           <h3>Resources</h3>
-          <a href={`tel:${PHONE_NUMBER}`}>AI Audit</a>
           <Link href="/ai-tools">AI Tools</Link>
-          <Link href="/ai-hub">AI News</Link>
+          <Link href="/ai-hub">AI Hub</Link>
         </nav>
 
         <EmailSignup />
