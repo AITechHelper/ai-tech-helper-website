@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import * as THREE from "three";
 import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Logo from "@/components/Logo";
@@ -56,12 +59,26 @@ export default function HeroCarousel() {
     const wrap = document.getElementById("orb-canvas-wrap")!;
     // Needed by the hero's scroll handler below as well as the carousel setup.
     const stageEl = document.getElementById("services")!;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: false,
+      powerPreference: "high-performance",
+    });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Opaque black rather than a transparent canvas: the bloom pass composites
+    // on a real background, and the page behind is black anyway.
+    renderer.setClearColor(0x000000, 1);
     wrap.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
     const heroCamera = new THREE.PerspectiveCamera(45, 1, 0.05, 100);
+    heroCamera.position.set(0, 0, 6.4);
+
+    // The glow post-processing and the orb's uniforms are built once the scene
+    // exists (below). sizeRenderer runs before that, so it guards against null.
+    let composer: EffectComposer | null = null;
+    let bloom: UnrealBloomPass | null = null;
+    let orbUniforms: Record<string, { value: any }> | null = null;
 
     // The hero pins (position: fixed) during the scroll transition, so its
     // clientWidth/Height can read stale mid-resize and leave the camera aspect
@@ -74,6 +91,12 @@ export default function HeroCarousel() {
       renderer.setSize(w, h, false);
       heroCamera.aspect = w / h;
       heroCamera.updateProjectionMatrix();
+      composer?.setSize(w, h);
+      bloom?.setSize(w, h);
+      if (orbUniforms) {
+        orbUniforms.uPixelRatio.value = renderer.getPixelRatio();
+        orbUniforms.uSize.value = Math.min(w / 1200, 1.1);
+      }
     }
     sizeRenderer();
     window.addEventListener("resize", sizeRenderer);
@@ -83,145 +106,239 @@ export default function HeroCarousel() {
       ScrollTrigger.removeEventListener("refresh", sizeRenderer);
     });
 
-    function makeOrbSprite() {
-      const c = document.createElement("canvas");
-      c.width = 64;
-      c.height = 64;
-      const ctx = c.getContext("2d")!;
-      const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      g.addColorStop(0, "rgba(255,255,255,1)");
-      g.addColorStop(0.35, "rgba(255,255,255,0.9)");
-      g.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, 64, 64);
-      return new THREE.CanvasTexture(c);
-    }
-    const orbSprite = makeOrbSprite();
+    /* ---------------------------------------------------------
+       The hero particle system — one GPU shader, ~11k points.
+       On load the points storm in from a scattered cloud and
+       assemble into the wordmark, hold, then flow apart into a
+       slowly rotating galaxy sphere that breathes and parts around
+       the cursor. Every bit of that motion happens in the vertex
+       shader, so unlike the old build the CPU never loops over the
+       points each frame — which is why this reads as far heavier
+       yet runs lighter.
+       --------------------------------------------------------- */
+    const COUNT = 16000;
 
-    const stops = [
-      { y: 1.0, c: [0.78, 0.9, 1.0] },
-      { y: 0.55, c: [0.52, 0.58, 1.0] },
-      { y: 0.18, c: [0.55, 0.35, 0.92] },
-      { y: -0.15, c: [0.78, 0.24, 0.75] },
-      { y: -0.5, c: [0.9, 0.24, 0.43] },
-      { y: -0.78, c: [1.0, 0.43, 0.16] },
-      { y: -1.0, c: [1.0, 0.75, 0.25] },
-    ];
-    function colorForY(y: number) {
-      for (let i = 0; i < stops.length - 1; i++) {
-        const a = stops[i],
-          b = stops[i + 1];
-        if (y <= a.y && y >= b.y) {
-          const t = (a.y - y) / (a.y - b.y);
-          return [
-            a.c[0] + (b.c[0] - a.c[0]) * t,
-            a.c[1] + (b.c[1] - a.c[1]) * t,
-            a.c[2] + (b.c[2] - a.c[2]) * t,
-          ];
+    // Rasterise the wordmark to a canvas and keep every lit pixel as a target
+    // point. A plain bold sans is used rather than the brand face so the shape
+    // is identical whether or not the web font has loaded yet.
+    function sampleWordmark(lines: string[]) {
+      const W = 1100,
+        H = 512;
+      const cv = document.createElement("canvas");
+      cv.width = W;
+      cv.height = H;
+      const ctx = cv.getContext("2d")!;
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = "800 150px Arial, Helvetica, sans-serif";
+      const lh = 168;
+      const y0 = H / 2 - ((lines.length - 1) * lh) / 2;
+      lines.forEach((ln, i) => ctx.fillText(ln, W / 2, y0 + i * lh));
+      const data = ctx.getImageData(0, 0, W, H).data;
+      const pts: number[] = [];
+      // Dense sampling so the letters have enough target points to fill solid.
+      const step = 2;
+      for (let y = 0; y < H; y += step) {
+        for (let x = 0; x < W; x += step) {
+          if (data[(y * W + x) * 4] > 130) {
+            // Big + bold on screen.
+            pts.push((x / W - 0.5) * 6.6, -(y / H - 0.5) * 3.0);
+          }
         }
       }
-      return stops[stops.length - 1].c;
+      return pts; // flat [x0,y0, x1,y1, ...]
     }
+    const textPts = sampleWordmark(["AI TECH", "HELPER"]);
+    // If sampling ever yields nothing (e.g. a locked-down canvas), fall back to
+    // a single point so the attribute never carries undefined → NaN.
+    if (textPts.length === 0) textPts.push(0, 0);
+    const textN = textPts.length / 2;
 
-    const COUNT = 16000;
-    const baseDir = new Float32Array(COUNT * 3);
-    const positions = new Float32Array(COUNT * 3);
-    const colors = new Float32Array(COUNT * 3);
-    const phases = new Float32Array(COUNT);
-    const radii = new Float32Array(COUNT);
+    const spherePos = new Float32Array(COUNT * 3);
+    const textPos = new Float32Array(COUNT * 3);
+    const startPos = new Float32Array(COUNT * 3);
+    const aColor = new Float32Array(COUNT * 3);
+    const aRand = new Float32Array(COUNT);
 
     const golden = Math.PI * (3 - Math.sqrt(5));
-    const ORB_R = 1.5;
+    const ORB_R = 1.55;
     for (let i = 0; i < COUNT; i++) {
+      // Even shell via the Fibonacci sphere — the resting orb.
       const y = 1 - (i / (COUNT - 1)) * 2;
-      const r = Math.sqrt(1 - y * y);
-      const theta = golden * i;
-      const ux = Math.cos(theta) * r;
-      const uz = Math.sin(theta) * r;
-      const uy = y;
+      const rr = Math.sqrt(1 - y * y);
+      const th = golden * i;
+      const jitter = 1 + (Math.random() - 0.5) * 0.025;
+      spherePos[i * 3] = Math.cos(th) * rr * ORB_R * jitter;
+      spherePos[i * 3 + 1] = y * ORB_R * jitter;
+      spherePos[i * 3 + 2] = Math.sin(th) * rr * ORB_R * jitter;
 
-      // A thin, even shell reads as a defined sphere. The old version pushed
-      // the pole points outward by a random amount, which is what smeared the
-      // top and bottom into a loose cloud of floating particles.
-      const jitter = 1 + (Math.random() - 0.5) * 0.045;
+      // Wordmark target: a random lit pixel, with a little depth so the text
+      // has body rather than sitting on a dead-flat plane.
+      const p = (Math.random() * textN) | 0;
+      textPos[i * 3] = textPts[p * 2] + (Math.random() - 0.5) * 0.03;
+      textPos[i * 3 + 1] = textPts[p * 2 + 1] + (Math.random() - 0.5) * 0.03;
+      textPos[i * 3 + 2] = (Math.random() - 0.5) * 0.25;
 
-      baseDir[i * 3] = ux;
-      baseDir[i * 3 + 1] = uy;
-      baseDir[i * 3 + 2] = uz;
-      radii[i] = ORB_R * jitter;
-      phases[i] = Math.random() * Math.PI * 2;
+      // The "exploded" waypoint: a cloud flung outward around the core. The
+      // wordmark bursts out to here, then everything pulls in to the sphere.
+      const rad = 4 + Math.random() * 3.5;
+      const a1 = Math.random() * Math.PI * 2;
+      const a2 = Math.acos(Math.random() * 2 - 1);
+      startPos[i * 3] = Math.sin(a2) * Math.cos(a1) * rad;
+      startPos[i * 3 + 1] = Math.sin(a2) * Math.sin(a1) * rad;
+      startPos[i * 3 + 2] = Math.cos(a2) * rad;
 
-      const colY = Math.max(-1, Math.min(1, uy + (Math.random() - 0.5) * 0.12));
-      const col = colorForY(colY);
-      colors[i * 3] = col[0];
-      colors[i * 3 + 1] = col[1];
-      colors[i * 3 + 2] = col[2];
-
-      positions[i * 3] = ux * radii[i];
-      positions[i * 3 + 1] = uy * radii[i];
-      positions[i * 3 + 2] = uz * radii[i];
+      // Brand cyan (#00c6ff) for every particle, with a little per-particle
+      // lightness variation so the orb keeps depth instead of reading flat.
+      const shade = 0.8 + Math.random() * 0.2;
+      aColor[i * 3] = 0.03 * shade;
+      aColor[i * 3 + 1] = 0.72 * shade;
+      aColor[i * 3 + 2] = 1.0 * shade;
+      aRand[i] = Math.random();
     }
 
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    // 'position' carries the sphere target; the shader derives the drawn point
+    // from the attributes, so this bound attribute isn't used for layout — but
+    // three needs one, and the sphere is the safe bounding volume.
+    geo.setAttribute("position", new THREE.BufferAttribute(spherePos, 3));
+    geo.setAttribute("aText", new THREE.BufferAttribute(textPos, 3));
+    geo.setAttribute("aStart", new THREE.BufferAttribute(startPos, 3));
+    geo.setAttribute("aColor", new THREE.BufferAttribute(aColor, 3));
+    geo.setAttribute("aRand", new THREE.BufferAttribute(aRand, 1));
 
-    const mat = new THREE.PointsMaterial({
-      size: 0.019,
-      map: orbSprite,
-      vertexColors: true,
+    orbUniforms = {
+      uTime: { value: 0 },
+      uMorph: { value: 0 },
+      uMouse: { value: new THREE.Vector3(999, 999, 0) },
+      uMouseR: { value: 1.15 },
+      uMousePush: { value: 0.55 },
+      uSize: { value: Math.min(window.innerWidth / 1200, 1.3) },
+      uSwell: { value: 1 },
+      uOpacity: { value: 1 },
+      uPixelRatio: { value: renderer.getPixelRatio() },
+    };
+
+    const orbMat = new THREE.ShaderMaterial({
+      uniforms: orbUniforms,
       transparent: true,
       depthWrite: false,
+      depthTest: false,
       blending: THREE.AdditiveBlending,
-      sizeAttenuation: true,
+      vertexShader: `
+        uniform float uTime;
+        uniform float uMorph;
+        uniform float uSize;
+        uniform float uPixelRatio;
+        uniform float uSwell;
+        uniform float uMouseR;
+        uniform float uMousePush;
+        uniform vec3 uMouse;
+        attribute vec3 aText;
+        attribute vec3 aStart;
+        attribute vec3 aColor;
+        attribute float aRand;
+        varying vec3 vColor;
+
+        void main() {
+          vColor = aColor;
+
+          // Spin the resting sphere on its axis (manual rotation about Y —
+          // avoids swizzle-assignment, which some GLSL compilers reject).
+          vec3 sph = position;
+          float ang = uTime * 0.16;
+          float ca = cos(ang);
+          float sa = sin(ang);
+          sph = vec3(sph.x * ca - sph.z * sa, sph.y, sph.x * sa + sph.z * ca);
+
+          // Orderly flow straight from the wordmark into the orb — no scattered
+          // explosion in between (that read as messy). A gentle per-particle
+          // stagger keeps it from looking mechanical without going chaotic.
+          float form = smoothstep(0.0, 1.0, clamp((uMorph - aRand * 0.14) / 0.86, 0.0, 1.0));
+          vec3 p = mix(aText, sph, form);
+
+          // life once formed: a subtle breathe along the surface normal
+          vec3 nrm = normalize(sph + vec3(0.0001));
+          p += nrm * sin(uTime * 0.6 + aRand * 6.2831) * 0.035 * form;
+
+          // cursor repulsion in the view plane; brightens what it touches
+          vec2 toM = p.xy - uMouse.xy;
+          float dm = length(toM);
+          float infl = smoothstep(uMouseR, 0.0, dm) * form;
+          p.xy += normalize(toM + vec2(0.0001)) * infl * uMousePush;
+          vColor += vec3(infl * 0.5);
+
+          p *= uSwell;
+
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_Position = projectionMatrix * mv;
+          float s = uSize * (0.5 + aRand * 0.8);
+          gl_PointSize = s * uPixelRatio * (9.0 / -mv.z);
+        }
+      `,
+      fragmentShader: `
+        uniform float uOpacity;
+        varying vec3 vColor;
+        void main() {
+          float d = length(gl_PointCoord - vec2(0.5));
+          if (d > 0.5) discard;
+          float edge = smoothstep(0.5, 0.05, d);
+          float core = smoothstep(0.35, 0.0, d);
+          gl_FragColor = vec4(vColor + vec3(core * 0.3), edge * uOpacity);
+        }
+      `,
     });
 
-    const orb = new THREE.Points(geo, mat);
+    const orb = new THREE.Points(geo, orbMat);
+    orb.frustumCulled = false; // during the intro the points sit outside the sphere bound
     scene.add(orb);
+    cleanups.push(() => {
+      geo.dispose();
+      orbMat.dispose();
+    });
 
-    const FIELD_COUNT = 650;
-    const fieldPositions = new Float32Array(FIELD_COUNT * 3);
-    const fieldBase = new Float32Array(FIELD_COUNT * 3);
-    const fieldColors = new Float32Array(FIELD_COUNT * 3);
-    const fieldPhase = new Float32Array(FIELD_COUNT);
-    for (let i = 0; i < FIELD_COUNT; i++) {
-      const x = (Math.random() * 2 - 1) * 6.8;
-      const y = (Math.random() * 2 - 1) * 3.6;
-      const z = (Math.random() * 2 - 1) * 3.2 - 0.3;
-      fieldBase[i * 3] = x;
-      fieldBase[i * 3 + 1] = y;
-      fieldBase[i * 3 + 2] = z;
-      fieldPositions[i * 3] = x;
-      fieldPositions[i * 3 + 1] = y;
-      fieldPositions[i * 3 + 2] = z;
-      fieldPhase[i] = Math.random() * Math.PI * 2;
-
-      const warm = Math.random() < 0.18;
-      if (warm) {
-        fieldColors[i * 3] = 1.0;
-        fieldColors[i * 3 + 1] = 0.75;
-        fieldColors[i * 3 + 2] = 0.55;
-      } else {
-        fieldColors[i * 3] = 0.75;
-        fieldColors[i * 3 + 1] = 0.85;
-        fieldColors[i * 3 + 2] = 1.0;
-      }
+    // A quiet starfield behind the orb for parallax depth. Static — drifts only
+    // by a slow object rotation, so it costs nothing per frame.
+    const STAR_COUNT = 320;
+    const starPos = new Float32Array(STAR_COUNT * 3);
+    for (let i = 0; i < STAR_COUNT; i++) {
+      starPos[i * 3] = (Math.random() * 2 - 1) * 14;
+      starPos[i * 3 + 1] = (Math.random() * 2 - 1) * 8;
+      starPos[i * 3 + 2] = -6 - Math.random() * 10;
     }
-    const fieldGeo = new THREE.BufferGeometry();
-    fieldGeo.setAttribute("position", new THREE.BufferAttribute(fieldPositions, 3));
-    fieldGeo.setAttribute("color", new THREE.BufferAttribute(fieldColors, 3));
-    const fieldMat = new THREE.PointsMaterial({
-      size: 0.02,
-      map: orbSprite,
-      vertexColors: true,
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+    const starMat = new THREE.PointsMaterial({
+      size: 0.03,
+      color: 0x8fb4ff,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.5,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-      sizeAttenuation: true,
     });
-    const field = new THREE.Points(fieldGeo, fieldMat);
-    scene.add(field);
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+    cleanups.push(() => {
+      starGeo.dispose();
+      starMat.dispose();
+    });
+
+    // Bloom. Threshold at zero so the whole orb glows; strength/radius tuned to
+    // read as light rather than a blown-out white wash.
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, heroCamera));
+    bloom = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.55,
+      0.6,
+      0.18
+    );
+    composer.addPass(bloom);
+    sizeRenderer();
+    cleanups.push(() => bloom?.dispose());
 
     const clock = new THREE.Clock();
     let scrollProgress = 0;
@@ -234,63 +351,81 @@ export default function HeroCarousel() {
        stutter. */
     let stageIn = 0;
 
+    /* --- intro choreography --------------------------------------------
+       The real, pixel-crisp "AI TECH HELPER" (a DOM element) reads for ~1s,
+       then dissolves as the particles — invisible until now — burst out of it
+       (morph: text -> exploded cloud) and rush inward to form the orb.
+         reveal: particle opacity, 0 while the crisp text is up, 1 once it bursts
+         morph:  0 text -> exploded -> 1 orb
+       Skipped (jump straight to the formed orb) when arriving on the services
+       stage or with reduced motion. */
+    const intro = { morph: 0, reveal: 0 };
+    let introReady = false;
+
+    const arrivingServices =
+      window.location.hash === "#services" ||
+      !!new URLSearchParams(window.location.search).get("from");
+    const reduceMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
+    if (arrivingServices) {
+      intro.morph = 1;
+      intro.reveal = 1;
+      introReady = true;
+      gsap.set("#hero-wordmark", { opacity: 0 });
+    } else if (reduceMotion) {
+      intro.morph = 1;
+      intro.reveal = 1;
+      introReady = true;
+      gsap.set("#hero-wordmark", { opacity: 0 });
+      gsap.set(["#copy", ".scroll-cue"], { opacity: 1 });
+      gsap.set("#nav", { opacity: 1 });
+    } else {
+      const tl = gsap.timeline();
+      // Hold the crisp text ~1s. Then the particles start flowing inward
+      // ('power2.out' — quick off the letters, gentle settle) while the text
+      // fades and the particles fade in, so you see a clean convergence into
+      // the orb rather than a readable particle-text or a scattered burst.
+      tl.to("#nav", { opacity: 1, duration: 0.7 }, 0.1)
+        .to(
+          intro,
+          {
+            morph: 1,
+            duration: 2.2,
+            ease: "power2.out",
+            onComplete: () => {
+              introReady = true;
+            },
+          },
+          1.0
+        )
+        .to("#hero-wordmark", { opacity: 0, duration: 0.4, ease: "power2.in" }, 1.0)
+        .to(intro, { reveal: 1, duration: 0.5, ease: "power1.out" }, 1.05)
+        .to(["#copy", ".scroll-cue"], { opacity: 1, duration: 0.7, ease: "power2.out" }, 1.9);
+      cleanups.push(() => tl.kill());
+    }
+
     function animateHero() {
       heroRaf = requestAnimationFrame(animateHero);
-      // Fully covered by the stage — nothing here can be seen, so skip the
-      // 9,000-point rebuild and the draw entirely.
+      // Fully covered by the stage — nothing here can be seen, so skip the draw.
       if (stageIn >= 1) return;
       const t = clock.getElapsedTime();
+      const u = orbUniforms!;
 
-      const posAttr = geo.attributes.position;
-      const arr = posAttr.array as Float32Array;
-      for (let i = 0; i < COUNT; i++) {
-        const amp = 0.05 + 0.05 * Math.min(1, Math.abs(baseDir[i * 3 + 1]) * 1.4);
-        const r = radii[i] * (1 + amp * Math.sin(t * 0.6 + phases[i]));
-        arr[i * 3] = baseDir[i * 3] * r;
-        arr[i * 3 + 1] = baseDir[i * 3 + 1] * r;
-        arr[i * 3 + 2] = baseDir[i * 3 + 2] * r;
-      }
-      posAttr.needsUpdate = true;
+      u.uTime.value = t;
+      u.uMorph.value = intro.morph;
 
-      const bob = Math.sin(t * ((Math.PI * 2) / 7)) * 0.12;
-      orb.position.y = bob;
-      // Slow, patient drift at rest; still winds up as you fly into the core.
-      orb.rotation.y = t * (0.16 + scrollProgress * 1.0);
-      orb.rotation.x = Math.sin(t * 0.15) * 0.08;
+      // Swell into the core and burn out as the stage takes over — the same
+      // dive the old orb did, now driven entirely through uniforms.
+      u.uSwell.value = 1 + Math.pow(scrollProgress, 1.15) * 4.6;
+      // Hidden while the crisp DOM text is up (reveal 0); fades away again on
+      // the scroll dive as the stage covers the orb.
+      u.uOpacity.value = intro.reveal * (1 - clamp01((scrollProgress - 0.54) / 0.22));
 
-      /* The orb swells as you fall into it and then burns out, instead of
-         being quietly covered by the stage while it's still small. The camera
-         flight alone wasn't enough — by the time the services had faded up it
-         had only closed half the distance. Growing the sphere itself on top of
-         the approach is what makes the core feel like it's rushing at you:
-         roughly five times its resting size, and most of that arriving early,
-         so it's already vast well before it starts to go. */
-      const swell = 1 + Math.pow(scrollProgress, 1.15) * 5.4;
-      orb.scale.setScalar(swell);
-      field.scale.setScalar(1 + Math.pow(scrollProgress, 1.3) * 0.9);
+      orb.position.y = Math.sin(t * ((Math.PI * 2) / 7)) * 0.1;
+      stars.rotation.y = t * 0.01;
 
-      /* Individual points are size-attenuated, so at five times the radius
-         they'd smear into blobs and additive-blend to a white wash. Tapering
-         the sprite keeps the sphere reading as an expanding cloud of points
-         rather than a bloom. */
-      mat.size = 0.026 * (1 - 0.42 * clamp01(scrollProgress / 0.8));
-
-      // Burns out just before the stage finishes covering it, so the last
-      // thing seen is the orb dissolving at its biggest rather than a hard
-      // hand-off.
-      const dissolve = 1 - clamp01((scrollProgress - 0.54) / 0.22);
-      mat.opacity = dissolve;
-      fieldMat.opacity = 0.85 * dissolve;
-
-      const fieldAttr = fieldGeo.attributes.position;
-      const farr = fieldAttr.array as Float32Array;
-      for (let i = 0; i < FIELD_COUNT; i++) {
-        farr[i * 3] = fieldBase[i * 3] + Math.sin(t * 0.12 + fieldPhase[i]) * 0.12;
-        farr[i * 3 + 1] = fieldBase[i * 3 + 1] + Math.sin(t * 0.18 + fieldPhase[i] * 1.3) * 0.18;
-      }
-      fieldAttr.needsUpdate = true;
-      field.rotation.y = t * 0.015;
-
+      // Camera spirals in as you fall toward the orb's core.
       const eased = Math.pow(scrollProgress, 1.35);
       const spiralAngle = scrollProgress * Math.PI * 3;
       const spiralR = 1.3 * (1 - scrollProgress);
@@ -299,11 +434,42 @@ export default function HeroCarousel() {
       heroCamera.position.z = 6.4 - eased * 6.28;
       heroCamera.lookAt(0, 0, 0);
 
-      renderer.render(scene, heroCamera);
+      // Bloom grows as you dive, so the burnout reads as blowing out into light.
+      // Low glow while it's still crisp solid text; ramps up as it breaks into
+      // the orb, and again as you dive into the core.
+      if (bloom) bloom.strength = 0.28 + intro.morph * 0.32 + scrollProgress * 0.45;
+      composer!.render();
     }
     animateHero();
     cleanups.push(() => cancelAnimationFrame(heroRaf));
     cleanups.push(() => renderer.dispose());
+
+    // Cursor → a point on the z=0 plane in world space, handed to the shader so
+    // the particles part around it. The orb has no object transform (spin and
+    // swell both live in the shader), so world xy maps straight to particle xy.
+    const mouseNdc = new THREE.Vector3();
+    function onPointerMove(e: PointerEvent) {
+      if (!orbUniforms) return;
+      mouseNdc.set(
+        (e.clientX / window.innerWidth) * 2 - 1,
+        -(e.clientY / window.innerHeight) * 2 + 1,
+        0.5
+      );
+      mouseNdc.unproject(heroCamera);
+      const dir = mouseNdc.sub(heroCamera.position).normalize();
+      const dist = -heroCamera.position.z / dir.z;
+      const world = heroCamera.position.clone().add(dir.multiplyScalar(dist));
+      orbUniforms.uMouse.value.set(world.x, world.y, 0);
+    }
+    function onPointerLeave() {
+      orbUniforms?.uMouse.value.set(999, 999, 0);
+    }
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerleave", onPointerLeave);
+    cleanups.push(() => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", onPointerLeave);
+    });
 
     const pinTrigger = ScrollTrigger.create({
       trigger: ".pin-wrapper",
@@ -315,12 +481,17 @@ export default function HeroCarousel() {
         const p = self.progress;
         scrollProgress = p;
 
-        gsap.set("#copy", {
-          opacity: 1 - Math.min(1, p / 0.32),
-          y: -p * 60,
-          scale: 1 - p * 0.08,
-        });
-        gsap.set("#nav", { opacity: 1 - Math.min(1, p / 0.28) });
+        // The intro owns nav + centre copy until it has finished handing them
+        // over (introReady); after that, scroll drives their exit.
+        if (introReady) {
+          gsap.set("#copy", {
+            opacity: 1 - Math.min(1, p / 0.32),
+            y: -p * 60,
+            scale: 1 - p * 0.08,
+          });
+          gsap.set(".scroll-cue", { opacity: 1 - Math.min(1, p / 0.2) });
+          gsap.set("#nav", { opacity: 1 - Math.min(1, p / 0.28) });
+        }
 
         // Services rise out of nothing as the core is reached. No vertical
         // movement — the whole point is that it should feel like arriving,
@@ -838,10 +1009,28 @@ export default function HeroCarousel() {
         <section className="hero">
           <div id="orb-canvas-wrap" />
 
-          <nav className="nav" id="nav">
+          {/* Pixel-crisp real text that reads for ~1s, then dissolves as the
+              particles burst out of it. aria-hidden — the SEO/a11y H1 lives in
+              the copy block below. */}
+          <div id="hero-wordmark" className="hero-wordmark" aria-hidden="true">
+            AI TECH<br />HELPER
+          </div>
+
+          <nav className="nav" id="nav" style={{ opacity: 0 }}>
             <Logo />
             <div className="nav-links">
-              <a href="#">Agents</a>
+              <a
+                href="#services"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({
+                    top: document.documentElement.scrollHeight,
+                    behavior: "smooth",
+                  });
+                }}
+              >
+                Services
+              </a>
               <a href="/ai-tools">AI Tools</a>
               <a href="/ai-hub">AI Hub</a>
             </div>
@@ -850,13 +1039,11 @@ export default function HeroCarousel() {
             </a>
           </nav>
 
-          <div className="copy" id="copy">
-            <h1>We help you save time and make money with AI</h1>
-            <p className="subtext">
-              We build AI agents and automations that handle the busywork, capture every lead, and
-              book the appointment — so you spend less time on manual tasks and more time growing
-              revenue.
-            </p>
+          <div className="copy" id="copy" style={{ opacity: 0 }}>
+            {/* The particle intro delivers the wordmark; this stays for SEO and
+                screen readers without muddying the orb behind the copy. */}
+            <h1 className="sr-only">AI Tech Helper</h1>
+            <p className="hero-lede">AI that saves you time and makes you money</p>
             <div className="actions">
               <a href="tel:+15722204756" className="btn-primary">
                 Call Now
@@ -877,7 +1064,7 @@ export default function HeroCarousel() {
             </div>
           </div>
 
-          <div className="scroll-cue">
+          <div className="scroll-cue" style={{ opacity: 0 }}>
             <span>Scroll to enter</span>
             <div className="pill" />
           </div>
@@ -892,7 +1079,7 @@ export default function HeroCarousel() {
         <div className="hud">
           <Logo />
           <div className="nav-links">
-            <span>Agents</span>
+            <span>Services</span>
             <a href="/ai-tools">AI Tools</a>
             <a href="/ai-hub">AI Hub</a>
           </div>

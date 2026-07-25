@@ -19,7 +19,7 @@ export default function AiToolsPage() {
       <nav className="nav">
         <Logo />
         <div className="nav-links">
-          <a href="/#services">Agents</a>
+          <a href="/#services">Services</a>
           <NavLink href="/ai-tools">AI Tools</NavLink>
           <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>

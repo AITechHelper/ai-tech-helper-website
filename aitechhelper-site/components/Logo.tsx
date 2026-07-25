@@ -8,7 +8,7 @@
    beside it. */
 export default function Logo() {
   return (
-    <div className="logo">
+    <a className="logo" href="/" aria-label="AI Tech Helper — home">
       <img
         src="/assets/logo.png"
         alt="AI Tech Helper"
@@ -16,6 +16,6 @@ export default function Logo() {
         width={1757}
         height={517}
       />
-    </div>
+    </a>
   );
 }

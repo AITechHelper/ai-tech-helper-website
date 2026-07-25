@@ -236,6 +236,68 @@ h1 {
   margin: 0 auto 42px;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
 }
+
+/* The hero's one line of visible copy now that the wordmark is the particle
+   intro — a statement over the orb rather than a small subhead under a title.
+   Heavy shadow so a single line reads cleanly over the orb's lit equator. */
+.hero-lede {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(34px, 5.2vw, 68px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  max-width: 1040px;
+  margin: 0 auto 40px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.95), 0 2px 48px rgba(0, 0, 0, 0.85);
+}
+
+/* The pixel-crisp intro wordmark that dissolves into the particle burst. Real
+   text, so the letters are perfectly sharp — big, bold, centered over the orb. */
+.hero-wordmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  pointer-events: none;
+  text-align: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(54px, 11vw, 156px);
+  line-height: 0.92;
+  letter-spacing: -1.5px;
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #eaf2ff 42%,
+    #6fa8ff 50%,
+    #eaf2ff 58%,
+    #ffffff 100%
+  );
+  background-size: 240% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 44px rgba(0, 198, 255, 0.4));
+  animation: shine 6s ease-in-out infinite;
+  will-change: opacity;
+}
+
+/* Visually hidden but present for SEO and assistive tech. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .actions {
   display: flex;
   align-items: center;
@@ -369,6 +431,15 @@ h1 {
 }
 #flat-layer {
   z-index: 20;
+}
+/* The stage is fixed at z-index 40 over the whole viewport — above the hero
+   nav (z-index 30) — and only transparent (opacity 0) when hidden, not gone.
+   The scroll handler toggles pointer-events on #services, but child layers like
+   #flat-layer default to `auto` and would keep eating clicks meant for the nav
+   and hero buttons beneath. Make the whole subtree follow #services so nothing
+   re-enables click capture while the stage is hidden. */
+#services * {
+  pointer-events: inherit;
 }
 
 .hud {
@@ -2299,7 +2370,11 @@ h1 {
 
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0, 1fr) forces genuinely equal columns — plain 1fr lets a long
+     unbreakable price string widen its column. grid-auto-rows: 1fr equalises
+     row heights, so every card is the same size. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 20px;
 }
 .tool-card {
@@ -2326,7 +2401,12 @@ h1 {
   font-size: 14.5px;
   line-height: 1.55;
   color: #aab1bb;
-  flex: 1;
+  /* Clamp every description to a uniform 3 lines so cards line up cleanly;
+     the full text lives on the tool's own page. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .tool-card-top {
   display: flex;
@@ -2373,7 +2453,8 @@ h1 {
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 4px;
+  /* Pin the price/tags to the bottom so footers align across a row. */
+  margin-top: auto;
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
@@ -2381,7 +2462,6 @@ h1 {
   font-size: 12.5px;
   font-weight: 600;
   color: var(--m1);
-  white-space: nowrap;
 }
 .tool-cats {
   display: flex;
@@ -2625,10 +2705,11 @@ h1 {
 }
 .footer-inner {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
-  gap: clamp(32px, 5vw, 80px);
+  grid-template-columns: 1.3fr 0.8fr 0.8fr 1.5fr;
+  gap: clamp(28px, 4vw, 64px);
   max-width: 1320px;
   margin: 0 auto;
+  align-items: start;
 }
 .footer-brand {
   display: flex;
@@ -2738,6 +2819,121 @@ h1 {
 }
 .footer-legal a:hover {
   color: #fff;
+}
+
+/* Footer lead-capture — sits as the rightmost column of the footer grid. */
+.footer-signup h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.footer-signup-sub {
+  color: #aab1bb;
+  font-size: 15.5px;
+  margin-bottom: 18px;
+  max-width: 460px;
+}
+.footer-signup-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.footer-signup-form input {
+  flex: 1;
+  min-width: 160px;
+  padding: 15px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.footer-signup-form input::placeholder {
+  color: #6b7280;
+}
+.footer-signup-form input:focus {
+  border-color: rgba(0, 198, 255, 0.6);
+  background: rgba(0, 198, 255, 0.06);
+}
+.footer-signup-form button {
+  padding: 15px 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(140deg, #6fe0ff -10%, #00c6ff 55%, #00a3d9 120%);
+  color: #04141c;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 10px 26px rgba(0, 198, 255, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.footer-signup-form button:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+.footer-signup-form button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+.footer-signup-err {
+  color: #ff8080;
+  font-size: 13.5px;
+  margin-top: 10px;
+}
+.footer-signup-done {
+  color: #9fe6c0;
+  font-size: 15.5px;
+}
+
+/* Legal pages (privacy, terms) */
+.legal {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) clamp(24px, 5vw, 40px) 80px;
+  color: #c4cad3;
+}
+.legal h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 700;
+  color: #fff;
+  margin: 10px 0 6px;
+  text-transform: none;
+  letter-spacing: -0.5px;
+  -webkit-text-fill-color: #fff;
+  background: none;
+  animation: none;
+}
+.legal-updated {
+  color: #7c8492;
+  font-size: 14px;
+  margin-bottom: 34px;
+}
+.legal h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #fff;
+  margin: 34px 0 10px;
+}
+.legal p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.legal a {
+  color: #00c6ff;
+  text-decoration: none;
+}
+.legal a:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 760px) {
