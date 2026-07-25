@@ -440,10 +440,15 @@ h1 {
    default to `auto`), so the hero's nav and buttons underneath stay usable.
    Live → the stage and its real controls take clicks, but descendants keep
    their OWN pointer-events, so decorative overlays (e.g. the featured card's
-   sheen, which overhangs its neighbours) can't steal clicks from other cards. */
+   sheen, which overhangs its neighbours) can't steal clicks from other cards.
+
+   !important is required: three's CSS3DRenderer sets `pointer-events: auto`
+   INLINE on every carousel card, and once you've opened the services stage
+   those cards linger (faded, but present) — one sits over the hero buttons and
+   would keep eating their clicks. Only !important can override an inline style. */
 #services:not(.stage-live),
 #services:not(.stage-live) * {
-  pointer-events: none;
+  pointer-events: none !important;
 }
 #services.stage-live {
   pointer-events: auto;
