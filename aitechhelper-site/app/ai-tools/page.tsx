@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Logo from "@/components/Logo";
+import ContactButton from "@/components/ContactButton";
 import MobileMenu from "@/components/MobileMenu";
 import NavLink from "@/components/NavLink";
 import Footer from "@/components/Footer";
@@ -24,9 +25,7 @@ export default function AiToolsPage() {
           <NavLink href="/ai-tools">AI Tools</NavLink>
           <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>
-        <a href="#" className="cta-pill">
-          Contact Us
-        </a>
+        <ContactButton />
         <MobileMenu />
       </nav>
 

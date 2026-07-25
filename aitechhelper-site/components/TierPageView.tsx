@@ -1,4 +1,5 @@
 import Logo from "@/components/Logo";
+import ContactButton from "@/components/ContactButton";
 import MobileMenu from "@/components/MobileMenu";
 import Footer from "@/components/Footer";
 import { Icons } from "@/components/TierIcons";
@@ -38,9 +39,7 @@ export default function TierPageView({
           <a href="/ai-tools">AI Tools</a>
           <a href="/ai-hub">AI Hub</a>
         </div>
-        <a href="#" className="cta-pill">
-          Contact Us
-        </a>
+        <ContactButton />
         <MobileMenu />
       </nav>
 

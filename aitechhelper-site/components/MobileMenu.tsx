@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { PHONE_NUMBER } from "@/lib/tiers";
 
 /* Hamburger menu for the top nav on phones (≤720px, where the inline nav links
    and the Contact pill are hidden). Same destinations as the desktop nav.
@@ -45,9 +44,16 @@ export default function MobileMenu() {
         <a href="/ai-hub" onClick={close}>
           AI Hub
         </a>
-        <a href={`tel:${PHONE_NUMBER}`} className="mobile-menu-cta" onClick={close}>
+        <button
+          type="button"
+          className="mobile-menu-cta"
+          onClick={() => {
+            close();
+            window.dispatchEvent(new Event("open-contact"));
+          }}
+        >
           Contact Us
-        </a>
+        </button>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Logo from "@/components/Logo";
+import ContactButton from "@/components/ContactButton";
 import MobileMenu from "@/components/MobileMenu";
 import ServicesMenu from "@/components/ServicesMenu";
 import TierPageView from "@/components/TierPageView";
@@ -1046,9 +1047,7 @@ export default function HeroCarousel() {
               <a href="/ai-tools">AI Tools</a>
               <a href="/ai-hub">AI Hub</a>
             </div>
-            <a href="#" className="cta-pill">
-              Contact Us
-            </a>
+            <ContactButton />
             <MobileMenu />
           </nav>
 
