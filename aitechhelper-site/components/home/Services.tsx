@@ -28,11 +28,11 @@ export default function Services() {
 
       <figure className="home-shot">
         <ImgSlot
-          src="/images/dashboard.png"
-          alt="The AI Tech Helper dashboard showing calls, messages and bookings"
+          src="/images/AdobeStock_303627699.webp"
+          alt="Reviewing calls, messages and booking activity at a glance"
           label="Add your dashboard screenshot at /public/images/dashboard.png"
         />
-        <figcaption>Every call, message, booking and invoice in one dashboard.</figcaption>
+        <figcaption>One place for every call, message, booking and invoice.</figcaption>
       </figure>
 
       <div className="home-tier-grid">
