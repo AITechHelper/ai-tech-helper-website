@@ -49,6 +49,11 @@ export default function HeroCarousel() {
     // Registered here rather than at module scope: this file is imported
     // during SSR too, and ScrollTrigger needs a real window.
     gsap.registerPlugin(ScrollTrigger);
+    // Mobile browsers resize the viewport whenever the URL bar hides/shows on
+    // scroll. Left alone that re-fires ScrollTrigger's refresh mid-scroll and
+    // makes the pinned hero jump — the site's worst "broken on mobile" symptom.
+    // Telling ScrollTrigger to ignore those height-only mobile resizes fixes it.
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     // Track everything that needs tearing down on unmount (important in
     // React 18 dev Strict Mode, which mounts/unmounts effects twice).
@@ -64,13 +69,21 @@ export default function HeroCarousel() {
     // Phones get a smaller, tighter orb with fewer but larger points, so it
     // reads as a defined sphere rather than a faint scatter of specks.
     const isMobile = window.innerWidth <= 700;
+    // Touch phones/tablets: no real cursor and a weaker GPU. Used to strip the
+    // desktop-only interactions (cursor repulsion, the CSS3D dive) and to cap
+    // the pixel ratio so the particle passes don't overdraw on retina phones.
+    const coarsePointer = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+    const canHover =
+      window.matchMedia?.("(hover: hover) and (pointer: fine)").matches ?? true;
+    const isTouch = coarsePointer || isMobile;
+    const maxDpr = isMobile ? 1.5 : 2;
     const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1200, 1.3));
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: false,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
     // Opaque black rather than a transparent canvas: the bloom pass composites
     // on a real background, and the page behind is black anyway.
     renderer.setClearColor(0x000000, 1);
@@ -91,9 +104,16 @@ export default function HeroCarousel() {
     // wrong — which stretches the sphere into an ellipse and never corrects.
     // The canvas is a full 100vw×100vh, so size and aspect off the viewport,
     // which is always current, and re-run when ScrollTrigger recomputes the pin.
+    let lastHeroW = -1;
     function sizeRenderer() {
       const w = window.innerWidth,
         h = window.innerHeight;
+      // On touch, ignore height-only changes: those are just the URL bar
+      // sliding in/out during scroll, and re-sizing the canvas for them is what
+      // makes the pinned orb stretch and jump. Width changes (real rotation /
+      // resize) still go through. First call always runs (lastHeroW = -1).
+      if (isTouch && w === lastHeroW) return;
+      lastHeroW = w;
       renderer.setSize(w, h, false);
       heroCamera.aspect = w / h;
       heroCamera.updateProjectionMatrix();
@@ -475,12 +495,17 @@ export default function HeroCarousel() {
     function onPointerLeave() {
       orbUniforms?.uMouse.value.set(999, 999, 0);
     }
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerleave", onPointerLeave);
-    cleanups.push(() => {
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
-    });
+    // Cursor repulsion is a desktop-only affordance. On touch there is no
+    // hovering cursor — pointermove only fires mid-drag, so it just fought the
+    // scroll and burned GPU. Only wire it up where a real hover pointer exists.
+    if (canHover) {
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerleave", onPointerLeave);
+      cleanups.push(() => {
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerleave", onPointerLeave);
+      });
+    }
 
     const pinTrigger = ScrollTrigger.create({
       trigger: ".pin-wrapper",
@@ -541,16 +566,21 @@ export default function HeroCarousel() {
 
     const webglScene = new THREE.Scene();
     const webglRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    webglRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    webglRenderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
     document.getElementById("webgl-layer")!.appendChild(webglRenderer.domElement);
 
     const cssScene = new THREE.Scene();
     const cssRenderer = new CSS3DRenderer();
     document.getElementById("css3d-layer")!.appendChild(cssRenderer.domElement);
 
+    let lastStageW = -1;
     function sizeRenderers() {
       const w = stageEl.clientWidth,
         h = stageEl.clientHeight;
+      // Same URL-bar-thrash guard as the hero: on touch, only re-lay-out the
+      // stage when its width actually changes, not when the address bar toggles.
+      if (isTouch && w === lastStageW) return;
+      lastStageW = w;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       webglRenderer.setSize(w, h);
@@ -757,7 +787,13 @@ export default function HeroCarousel() {
 
     function onCss3dClick(e: MouseEvent) {
       const row = (e.target as HTMLElement).closest(".service-row") as HTMLElement | null;
-      if (row) goToIndex(parseInt(row.dataset.index || "0", 10));
+      if (!row) return;
+      const idx = parseInt(row.dataset.index || "0", 10);
+      if (isTouch && idx > 0) {
+        window.location.href = SERVICES[idx - 1].href;
+        return;
+      }
+      goToIndex(idx);
     }
     css3dLayerEl.addEventListener("click", onCss3dClick);
     cleanups.push(() => css3dLayerEl.removeEventListener("click", onCss3dClick));
@@ -782,7 +818,16 @@ export default function HeroCarousel() {
 
     function onFlatClick(e: MouseEvent) {
       const row = (e.target as HTMLElement).closest(".service-row") as HTMLElement | null;
-      if (row) goToIndex(parseInt(row.dataset.index || "0", 10));
+      if (!row) return;
+      const idx = parseInt(row.dataset.index || "0", 10);
+      // On touch, skip the CSS3D ring flight (three live page previews projected
+      // in 3D — the heaviest, jankiest thing on the page) and just go to the
+      // service page. The desktop dive stays exactly as it was.
+      if (isTouch && idx > 0) {
+        window.location.href = SERVICES[idx - 1].href;
+        return;
+      }
+      goToIndex(idx);
     }
     flatLayer.addEventListener("click", onFlatClick);
     cleanups.push(() => flatLayer.removeEventListener("click", onFlatClick));
