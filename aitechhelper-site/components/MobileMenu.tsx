@@ -12,8 +12,11 @@ export default function MobileMenu() {
 
   const onServices = (e: React.MouseEvent) => {
     if (typeof window !== "undefined" && window.location.pathname === "/") {
-      e.preventDefault();
-      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+      const svc = document.getElementById("services");
+      if (svc) {
+        e.preventDefault();
+        svc.scrollIntoView({ behavior: "smooth" });
+      }
     }
     close();
   };
