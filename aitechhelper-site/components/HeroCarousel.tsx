@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, type MouseEvent as ReactMouseEvent } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import * as THREE from "three";
 import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer";
@@ -77,6 +77,30 @@ export default function HeroCarousel() {
       window.matchMedia?.("(hover: hover) and (pointer: fine)").matches ?? true;
     const isTouch = coarsePointer || isMobile;
     const maxDpr = isMobile ? 1.5 : 2;
+
+    // On touch, the hero and services stop being a pinned scroll-scrubbed
+    // "dive" and become two plain stacked sections that scroll natively — a
+    // pinned/fixed layer visibly jitters against the compositor-threaded touch
+    // scroll, which is what made mobile feel rough. The class drives the
+    // .touch-flow layout rules in globals.css, set from JS so the stylesheet and
+    // the behaviour branches below (no pin, direct nav) stay in lockstep.
+    let heroOnScreen = true;
+    if (isTouch) {
+      document.documentElement.classList.add("touch-flow");
+      cleanups.push(() => document.documentElement.classList.remove("touch-flow"));
+      const heroEl = document.querySelector(".hero");
+      if (heroEl && "IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            heroOnScreen = entry.isIntersecting;
+          },
+          { threshold: 0 }
+        );
+        io.observe(heroEl);
+        cleanups.push(() => io.disconnect());
+      }
+    }
+
     const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1200, 1.3));
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -434,7 +458,9 @@ export default function HeroCarousel() {
     function animateHero() {
       heroRaf = requestAnimationFrame(animateHero);
       // Fully covered by the stage — nothing here can be seen, so skip the draw.
-      if (stageIn >= 1) return;
+      // On touch there's no dive: once the hero has scrolled out of view, stop
+      // drawing the orb rather than burning GPU behind the services section.
+      if (stageIn >= 1 || (isTouch && !heroOnScreen)) return;
       // Whenever the hero is even partly visible, the services stage (fixed,
       // z-index 40, on top) must not swallow clicks meant for the hero's nav and
       // buttons. Dropping .stage-live here every frame guarantees it can never
@@ -507,6 +533,10 @@ export default function HeroCarousel() {
       });
     }
 
+    // Desktop only. On touch there is no pin/scrub dive — the hero is a normal
+    // section and the services stage sits statically below it (see .touch-flow
+    // in globals.css), so this whole scroll-scrubbed choreography is skipped.
+    if (!isTouch) {
     const pinTrigger = ScrollTrigger.create({
       trigger: ".pin-wrapper",
       start: "top top",
@@ -547,6 +577,7 @@ export default function HeroCarousel() {
       },
     });
     cleanups.push(() => pinTrigger.kill());
+    }
 
     /* =========================================================
        PART 2 — services carousel (CSS3D ring, click-driven)
@@ -1017,6 +1048,14 @@ export default function HeroCarousel() {
     if (window.location.hash === "#services" || returnIdx > 0) {
       requestAnimationFrame(() => {
         if (cancelled) return;
+        // Touch has no pin/ring: just scroll the plain services section into
+        // view. (Clear the return flag the pre-paint script may have set.)
+        if (isTouch) {
+          document.documentElement.removeAttribute("data-returning");
+          history.replaceState({}, "", "/#services");
+          stageEl.scrollIntoView({ behavior: "auto" });
+          return;
+        }
         // Pinning inserts spacers, so the document isn't its final height
         // until ScrollTrigger has measured.
         ScrollTrigger.refresh();
@@ -1061,6 +1100,22 @@ export default function HeroCarousel() {
     };
   }, []);
 
+  // "Services" nav/CTA target. On desktop, scrolling to the bottom drives the
+  // pin runway to its end (which reveals the stage); on touch there's no pin, so
+  // scroll the plain services section into view instead.
+  const goToServices = (e: ReactMouseEvent) => {
+    e.preventDefault();
+    const svc = document.getElementById("services");
+    if (document.documentElement.classList.contains("touch-flow") && svc) {
+      svc.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <>
       <div className="pin-wrapper">
@@ -1077,16 +1132,7 @@ export default function HeroCarousel() {
           <nav className="nav" id="nav" style={{ opacity: 0 }}>
             <Logo />
             <div className="nav-links">
-              <a
-                href="#services"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.scrollTo({
-                    top: document.documentElement.scrollHeight,
-                    behavior: "smooth",
-                  });
-                }}
-              >
+              <a href="#services" onClick={goToServices}>
                 Services
               </a>
               <a href="/ai-tools">AI Tools</a>
@@ -1105,17 +1151,7 @@ export default function HeroCarousel() {
               <a href="tel:+15722204756" className="btn-primary">
                 Call Now
               </a>
-              <a
-                href="#services"
-                className="btn-ghost"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.scrollTo({
-                    top: document.documentElement.scrollHeight,
-                    behavior: "smooth",
-                  });
-                }}
-              >
+              <a href="#services" className="btn-ghost" onClick={goToServices}>
                 Get Started
               </a>
             </div>

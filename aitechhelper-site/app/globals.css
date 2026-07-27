@@ -1363,6 +1363,64 @@ h1 {
 }
 
 /* =========================================================
+   TOUCH / MOBILE — plain scrolling, no pinned WebGL "dive"
+   =========================================================
+   Phones scroll on the compositor thread, and a pinned (position:fixed) hero
+   visibly jitters against that scroll — the main reason the site felt rough on
+   mobile. On touch, HeroCarousel adds `.touch-flow` to <html> (and skips
+   building the pin), turning the hero and the services stage into two ordinary
+   stacked sections that scroll natively. The decorative WebGL/CSS3D layers on
+   the stage are dropped — they cost the most and buy nothing on a phone. */
+.touch-flow .pin-wrapper {
+  height: auto; /* was 280vh of scroll runway for the dive */
+}
+.touch-flow .hero {
+  height: 100svh; /* svh, so the URL bar showing/hiding doesn't resize it */
+}
+.touch-flow #services {
+  position: relative; /* was fixed, cross-faded by scroll */
+  inset: auto;
+  opacity: 1 !important;
+  pointer-events: auto;
+  min-height: 100svh;
+  will-change: auto;
+}
+/* Desktop keeps the stage click-dead until it "goes live" at the end of the
+   scroll; there is no such scroll on touch, so keep the section interactive. */
+.touch-flow #services:not(.stage-live),
+.touch-flow #services:not(.stage-live) * {
+  pointer-events: auto !important;
+}
+.touch-flow #webgl-layer,
+.touch-flow #css3d-layer {
+  display: none;
+}
+/* The flat menu flows to give the section its height instead of being an
+   absolute fill that a now-static parent would collapse to zero. Only the
+   resting menu card is shown; the per-service flat cards stay hidden (taps go
+   straight to the service page on touch). */
+.touch-flow #flat-layer {
+  position: relative;
+  height: auto;
+}
+.touch-flow .card3d.flat {
+  display: none;
+  position: relative;
+  inset: auto;
+  height: auto;
+}
+.touch-flow .card3d.flat.visible {
+  display: flex;
+  opacity: 1;
+  overflow-y: visible;
+  height: auto;
+}
+.touch-flow .flat.menu-card {
+  height: auto;
+  min-height: 100svh;
+}
+
+/* =========================================================
    live page preview on a ring card
    ========================================================= */
 .card3d.preview-card {
