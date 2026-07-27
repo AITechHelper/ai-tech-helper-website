@@ -79,62 +79,34 @@ export default function HeroCarousel() {
     const maxDpr = isMobile ? 1.5 : 2;
 
     /* =========================================================
-       TOUCH / MOBILE — no 3D at all
+       TOUCH / MOBILE — orb as a calm backdrop, nothing else
        =========================================================
-       Phones get none of the WebGL: no hero particle orb, no scroll-scrubbed
-       dive, no CSS3D services ring. Building any of that just to run it on a
-       phone GPU is what made the site feel glitchy. Instead the hero is plain
-       DOM copy, and the services menu is an ordinary section right below it
-       that scrolls natively. The `.touch-flow` class drives the matching
-       layout in globals.css. We set it all up here and return early, so none
-       of the Three.js / GSAP-pin code below ever runs on touch. */
+       Phones keep the hero orb (built below), but only as a quiet spinning
+       backdrop: the formed orb renders and rotates, and that's it. The things
+       that made mobile rough are all skipped elsewhere in this effect via the
+       same isTouch flag — no scroll-scrubbed dive (the pin), no cursor
+       repulsion, no CSS3D services ring. The hero and the services menu become
+       plain stacked sections that scroll natively, driven by the `.touch-flow`
+       layout in globals.css. The class is set from JS so the stylesheet and
+       those behaviour branches stay in lockstep. */
+    let heroOnScreen = true;
     if (isTouch) {
       document.documentElement.classList.add("touch-flow");
-
-      // Reveal the plain hero immediately — there are no particles to animate
-      // the wordmark in, so hide it and just show the nav, copy and cue.
-      gsap.set("#hero-wordmark", { opacity: 0 });
-      gsap.set(["#nav", "#copy", ".scroll-cue"], { opacity: 1 });
-
-      // The services menu: render the same menu-card React tree into the flat
-      // layer, show it, and send a tap on any package straight to its page
-      // (no ring flight). This mirrors buildMenuCard/showFlat on desktop.
-      const flatLayer = document.getElementById("flat-layer")!;
-      const menuEl = document.createElement("div");
-      menuEl.className = "card3d menu-card flat visible";
-      const menuRoot = createRoot(menuEl);
-      menuRoot.render(<ServicesMenu />);
-      flatLayer.appendChild(menuEl);
-
-      const onTap = (e: MouseEvent) => {
-        const row = (e.target as HTMLElement).closest(".service-row") as HTMLElement | null;
-        if (!row) return;
-        const idx = parseInt(row.dataset.index || "0", 10);
-        if (idx > 0) window.location.href = SERVICES[idx - 1].href;
-      };
-      flatLayer.addEventListener("click", onTap);
-
-      // Arriving on /#services (nav anchor or a package page's back button):
-      // just scroll the plain section into view; clear the pre-paint flag.
-      const arriving =
-        window.location.hash === "#services" ||
-        !!new URLSearchParams(window.location.search).get("from");
-      if (arriving) {
-        document.documentElement.removeAttribute("data-returning");
-        history.replaceState({}, "", "/#services");
-        requestAnimationFrame(() =>
-          document.getElementById("services")?.scrollIntoView()
+      cleanups.push(() => document.documentElement.classList.remove("touch-flow"));
+      // Once the hero has scrolled out of view there's nothing to show, so stop
+      // drawing the orb rather than spinning it forever behind the services
+      // section. A cheap IntersectionObserver flips the flag the loop reads.
+      const heroEl = document.querySelector(".hero");
+      if (heroEl && "IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            heroOnScreen = entry.isIntersecting;
+          },
+          { threshold: 0 }
         );
+        io.observe(heroEl);
+        cleanups.push(() => io.disconnect());
       }
-
-      return () => {
-        document.documentElement.classList.remove("touch-flow");
-        flatLayer.removeEventListener("click", onTap);
-        // Unmount on a microtask — React errors if a root is torn down while
-        // it is mid-render, which is exactly what a synchronous cleanup hits.
-        queueMicrotask(() => menuRoot.unmount());
-        flatLayer.innerHTML = "";
-      };
     }
 
     const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1200, 1.3));
@@ -459,7 +431,10 @@ export default function HeroCarousel() {
       intro.reveal = 1;
       introReady = true;
       gsap.set("#hero-wordmark", { opacity: 0 });
-    } else if (reduceMotion) {
+    } else if (reduceMotion || isTouch) {
+      // Reduced-motion, and every touch device: skip the wordmark-burst intro
+      // and just present the formed orb with the copy already up. On mobile the
+      // orb is only a backdrop, so there's no reason to play the assembly.
       intro.morph = 1;
       intro.reveal = 1;
       introReady = true;
@@ -494,7 +469,9 @@ export default function HeroCarousel() {
     function animateHero() {
       heroRaf = requestAnimationFrame(animateHero);
       // Fully covered by the stage — nothing here can be seen, so skip the draw.
-      if (stageIn >= 1) return;
+      // On touch there's no dive, so also stop once the hero has scrolled out of
+      // view rather than spinning the orb behind the services section.
+      if (stageIn >= 1 || (isTouch && !heroOnScreen)) return;
       // Whenever the hero is even partly visible, the services stage (fixed,
       // z-index 40, on top) must not swallow clicks meant for the hero's nav and
       // buttons. Dropping .stage-live here every frame guarantees it can never

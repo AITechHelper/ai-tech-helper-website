@@ -1376,14 +1376,6 @@ h1 {
 }
 .touch-flow .hero {
   height: 100svh; /* svh, so the URL bar showing/hiding doesn't resize it */
-  /* No particle orb on mobile — a soft cyan wash keeps the hero from reading
-     as a flat black rectangle behind the copy. */
-  background: radial-gradient(
-      ellipse 90% 60% at 50% 38%,
-      rgba(0, 198, 255, 0.12),
-      transparent 62%
-    ),
-    #000;
 }
 /* Ring-only controls have no meaning without the 3D carousel. */
 .touch-flow .hint,
