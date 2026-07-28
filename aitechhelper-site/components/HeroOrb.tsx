@@ -28,9 +28,9 @@ export default function HeroOrb() {
 
     // Fewer, larger points: lighter to draw and still reads as a solid, bright
     // orb rather than a fine mist.
-    const COUNT = isMobile ? 3200 : 6000;
+    const COUNT = isMobile ? 2000 : 3600;
     const ORB_R = isMobile ? 1.45 : 2.0;
-    const orbSizeFor = (w: number) => (w <= 700 ? 1.5 : Math.min(w / 950, 1.9));
+    const orbSizeFor = (w: number) => (w <= 700 ? 2.0 : Math.min(w / 780, 2.4));
 
     const renderer = new THREE.WebGLRenderer({
       // No MSAA: the scene is drawn into the composer's own render target, so
@@ -162,9 +162,40 @@ export default function HeroOrb() {
       starMat.dispose();
     });
 
+    // A soft luminous core at the orb's centre. The particle shell is hollow,
+    // so on its own the middle reads dark; this radial-gradient sprite fills it
+    // with a glow that the bloom pass then spreads outward.
+    const glowCanvas = document.createElement("canvas");
+    glowCanvas.width = glowCanvas.height = 128;
+    const gctx = glowCanvas.getContext("2d")!;
+    const grad = gctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, "rgba(255,255,255,1)");
+    grad.addColorStop(0.22, "rgba(190,238,255,0.75)");
+    grad.addColorStop(1, "rgba(0,150,255,0)");
+    gctx.fillStyle = grad;
+    gctx.fillRect(0, 0, 128, 128);
+    const glowTex = new THREE.CanvasTexture(glowCanvas);
+    const glowMat = new THREE.SpriteMaterial({
+      map: glowTex,
+      color: 0x5cd6ff,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      depthTest: false,
+      opacity: 0.95,
+    });
+    const glow = new THREE.Sprite(glowMat);
+    const GLOW_BASE = ORB_R * 2.1;
+    glow.scale.set(GLOW_BASE, GLOW_BASE, 1);
+    scene.add(glow);
+    cleanups.push(() => {
+      glowTex.dispose();
+      glowMat.dispose();
+    });
+
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.6, 0.18);
+    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.62, 0.16);
     composer.addPass(bloom);
     cleanups.push(() => bloom?.dispose());
 
@@ -210,7 +241,12 @@ export default function HeroOrb() {
       if (!onScreen) return;
       const t = clock.getElapsedTime();
       uniforms.uTime.value = t;
-      orb.position.y = Math.sin(t * ((Math.PI * 2) / 7)) * 0.1;
+      const bob = Math.sin(t * ((Math.PI * 2) / 7)) * 0.1;
+      orb.position.y = bob;
+      // Keep the core centred on the orb and let it breathe gently.
+      glow.position.y = bob;
+      const gp = GLOW_BASE * (1 + 0.06 * Math.sin(t * 1.2));
+      glow.scale.set(gp, gp, 1);
       stars.rotation.y = t * 0.01;
       composer!.render();
     }
