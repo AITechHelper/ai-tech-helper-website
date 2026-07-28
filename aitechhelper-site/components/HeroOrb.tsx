@@ -28,9 +28,9 @@ export default function HeroOrb() {
 
     // Fewer, larger points: lighter to draw and still reads as a solid, bright
     // orb rather than a fine mist.
-    const COUNT = isMobile ? 2000 : 3600;
+    const COUNT = isMobile ? 1200 : 2200;
     const ORB_R = isMobile ? 1.45 : 2.0;
-    const orbSizeFor = (w: number) => (w <= 700 ? 3.1 : Math.min(w / 560, 3.7));
+    const orbSizeFor = (w: number) => (w <= 700 ? 4.2 : Math.min(w / 430, 4.9));
 
     const renderer = new THREE.WebGLRenderer({
       // No MSAA: the scene is drawn into the composer's own render target, so
