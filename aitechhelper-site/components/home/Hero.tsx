@@ -1,5 +1,5 @@
 import HeroOrb from "@/components/HeroOrb";
-import { PHONE_NUMBER, PHONE_DISPLAY } from "@/lib/tiers";
+import { PHONE_NUMBER } from "@/lib/tiers";
 
 /* The hero: the orb as a quiet backdrop, with the plain-language pitch on top —
    what we do, who it's for, and where — plus the two primary actions and a row
@@ -13,30 +13,24 @@ export default function Hero() {
         <span className="home-eyebrow">AI Tech Helper · Oklahoma &amp; surrounding areas</span>
 
         <h1 className="home-hero-title">
-          Never miss a call.
-          <br />
-          Never lose a job.
+          Save time and make more money with AI
         </h1>
 
         <p className="home-hero-sub">
-          AI voice &amp; messaging agents for local service businesses — answering
-          every call and message 24/7, qualifying the lead, and booking the job
-          straight onto your calendar. Set up for you.
+          AI Tech Helper helps local service businesses win back hours and capture
+          more revenue — voice and messaging agents that answer every call, reply on
+          every channel, and book the job for you. Serving Oklahoma and surrounding
+          areas.
         </p>
 
         <div className="home-hero-actions">
-          <a href={`tel:${PHONE_NUMBER}`} className="btn-primary">
+          <a href="#services" className="btn-primary">
+            See our services
+          </a>
+          <a href={`tel:${PHONE_NUMBER}`} className="btn-ghost">
             Call the live demo
           </a>
-          <a href="#services" className="btn-ghost">
-            See what we build
-          </a>
         </div>
-
-        <p className="home-hero-note">
-          Call <a href={`tel:${PHONE_NUMBER}`}>{PHONE_DISPLAY}</a> and talk to the AI
-          receptionist yourself — it&apos;s answering right now.
-        </p>
       </div>
 
       <a href="#services" className="home-scroll-cue" aria-label="Scroll to services">

@@ -3376,7 +3376,7 @@ html {
 .home-hero-inner {
   position: relative;
   z-index: 2;
-  max-width: 680px;
+  max-width: 780px;
 }
 .home-eyebrow {
   display: inline-block;
@@ -3392,8 +3392,8 @@ html {
 .home-hero-title {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 800;
-  font-size: clamp(32px, 7.5vw, 56px);
-  line-height: 1.06;
+  font-size: clamp(40px, 8.5vw, 74px);
+  line-height: 1.04;
   letter-spacing: -1.5px;
   margin: 22px 0 0;
   text-shadow: 0 2px 40px rgba(0, 0, 0, 0.9);
