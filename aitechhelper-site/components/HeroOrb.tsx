@@ -26,16 +26,20 @@ export default function HeroOrb() {
     const reduceMotion =
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-    const COUNT = isMobile ? 5500 : 12000;
+    const COUNT = isMobile ? 5000 : 10000;
     const ORB_R = isMobile ? 1.45 : 2.0;
     const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1250, 1.3));
 
     const renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      // No MSAA: the scene is drawn into the composer's own render target, so
+      // antialias here costs fill-rate for no visible benefit.
+      antialias: false,
       alpha: false,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+    // The bloom pass is fill-rate bound, so cap the device pixel ratio — the
+    // single biggest lever on how heavy the orb is to draw.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.5));
     renderer.setClearColor(0x000000, 1);
     wrap.appendChild(renderer.domElement);
     renderer.domElement.style.display = "block";
@@ -174,7 +178,10 @@ export default function HeroOrb() {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       composer?.setSize(w, h);
-      bloom?.setSize(w, h);
+      // Bloom is a blur, so run it at half resolution — a quarter of the pixels
+      // for a near-identical glow. Must come after composer.setSize, which
+      // otherwise resets every pass (including bloom) back to full size.
+      bloom?.setSize(Math.max(1, Math.round(w / 2)), Math.max(1, Math.round(h / 2)));
       uniforms.uSize.value = orbSizeFor(w);
       uniforms.uPixelRatio.value = renderer.getPixelRatio();
     }
