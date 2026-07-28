@@ -28,9 +28,9 @@ export default function HeroOrb() {
 
     // Fewer, larger points: lighter to draw and still reads as a solid, bright
     // orb rather than a fine mist.
-    const COUNT = isMobile ? 1200 : 2200;
+    const COUNT = isMobile ? 800 : 1400;
     const ORB_R = isMobile ? 1.45 : 2.0;
-    const orbSizeFor = (w: number) => (w <= 700 ? 4.2 : Math.min(w / 430, 4.9));
+    const orbSizeFor = (w: number) => (w <= 700 ? 5.2 : Math.min(w / 360, 6.0));
 
     const renderer = new THREE.WebGLRenderer({
       // No MSAA: the scene is drawn into the composer's own render target, so
@@ -131,13 +131,16 @@ export default function HeroOrb() {
           float sa = sin(a);
           vec2 q = vec2(p.x * ca - p.y * sa, p.x * sa + p.y * ca);
           // random thickness per shard for variety
-          float b = 0.14 + fract(vSeed * 13.0) * 0.18;
-          float shard = abs(q.x) / 0.48 + abs(q.y) / b;
-          if (shard > 1.0) discard;
-          // solid body with a brighter, crisp rim so the edges catch the light
+          float b = 0.10 + fract(vSeed * 13.0) * 0.14;
+          float shard = abs(q.x) / 0.34 + abs(q.y) / b;
+          if (shard > 1.6) discard;
+          // solid body + a brighter crisp rim, wrapped in a faint halo so each
+          // shard glows slightly rather than ending at a hard edge
           float body = smoothstep(1.0, 0.15, shard);
-          float rim = smoothstep(1.0, 0.82, shard);
-          gl_FragColor = vec4(vColor + vec3(rim * 0.55), clamp(body + rim * 0.35, 0.0, 1.0));
+          float rim = smoothstep(1.0, 0.80, shard);
+          float glow = smoothstep(1.6, 1.0, shard) * 0.22;
+          float alpha = clamp(body + rim * 0.3 + glow, 0.0, 1.0);
+          gl_FragColor = vec4(vColor + vec3(rim * 0.5), alpha);
         }
       `,
     });
