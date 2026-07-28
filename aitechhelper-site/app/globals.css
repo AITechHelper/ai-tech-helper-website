@@ -3260,14 +3260,20 @@ html {
   overflow-x: hidden;
 }
 
-/* Reset the retired fixed #services rules for the new in-flow section. */
+/* Reset the retired fixed #services rules for the new in-flow section. The old
+   carousel CSS still sets `#services:not(.stage-live) * { pointer-events: none
+   !important }`, which would disable every link in the new services section —
+   so override it back to interactive. */
 #services.home-services {
   position: static;
   inset: auto;
   opacity: 1;
-  pointer-events: auto;
   z-index: auto;
   will-change: auto;
+}
+#services.home-services,
+#services.home-services * {
+  pointer-events: auto !important;
 }
 
 /* ---- shared section scaffolding ---- */
