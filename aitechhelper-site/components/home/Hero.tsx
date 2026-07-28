@@ -37,36 +37,6 @@ export default function Hero() {
           Call <a href={`tel:${PHONE_NUMBER}`}>{PHONE_DISPLAY}</a> and talk to the AI
           receptionist yourself — it&apos;s answering right now.
         </p>
-
-        <ul className="home-trustchips">
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3Z" />
-              <path d="m9 12 2 2 4-4" />
-            </svg>
-            Oklahoma-based &amp; owner-run
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3 3" />
-            </svg>
-            Answers 24/7 — nights &amp; weekends
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
-            No missed calls, no voicemail
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 3v18h18" />
-              <path d="m7 14 3-3 3 3 5-6" />
-            </svg>
-            Every call logged &amp; transcribed
-          </li>
-        </ul>
       </div>
 
       <a href="#services" className="home-scroll-cue" aria-label="Scroll to services">

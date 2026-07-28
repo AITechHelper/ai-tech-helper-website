@@ -26,9 +26,11 @@ export default function HeroOrb() {
     const reduceMotion =
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-    const COUNT = isMobile ? 6000 : 14000;
-    const ORB_R = isMobile ? 1.15 : 1.55;
-    const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1200, 1.35));
+    // Kept deliberately sparse and dim — the orb is a quiet ambient backdrop,
+    // not a dense sphere competing with the headline.
+    const COUNT = isMobile ? 4000 : 8500;
+    const ORB_R = isMobile ? 1.15 : 1.5;
+    const orbSizeFor = (w: number) => (w <= 700 ? 0.95 : Math.min(w / 1300, 1.15));
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -117,7 +119,7 @@ export default function HeroOrb() {
           if (d > 0.5) discard;
           float edge = smoothstep(0.5, 0.05, d);
           float core = smoothstep(0.35, 0.0, d);
-          gl_FragColor = vec4(vColor + vec3(core * 0.3), edge);
+          gl_FragColor = vec4(vColor + vec3(core * 0.3), edge * 0.6);
         }
       `,
     });
@@ -158,7 +160,7 @@ export default function HeroOrb() {
 
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.6, 0.6, 0.18);
+    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.45, 0.6, 0.2);
     composer.addPass(bloom);
     cleanups.push(() => bloom?.dispose());
 
