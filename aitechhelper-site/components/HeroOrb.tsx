@@ -30,7 +30,7 @@ export default function HeroOrb() {
     // orb rather than a fine mist.
     const COUNT = isMobile ? 2000 : 3600;
     const ORB_R = isMobile ? 1.45 : 2.0;
-    const orbSizeFor = (w: number) => (w <= 700 ? 2.0 : Math.min(w / 780, 2.4));
+    const orbSizeFor = (w: number) => (w <= 700 ? 3.1 : Math.min(w / 560, 3.7));
 
     const renderer = new THREE.WebGLRenderer({
       // No MSAA: the scene is drawn into the composer's own render target, so
@@ -99,8 +99,10 @@ export default function HeroOrb() {
         attribute vec3 aColor;
         attribute float aRand;
         varying vec3 vColor;
+        varying float vSeed;
         void main() {
           vColor = aColor;
+          vSeed = aRand;
           // spin about Y (manual rotation — avoids swizzle assignment)
           vec3 sph = position;
           float ang = uTime * 0.16;
@@ -118,12 +120,24 @@ export default function HeroOrb() {
       `,
       fragmentShader: `
         varying vec3 vColor;
+        varying float vSeed;
         void main() {
-          float d = length(gl_PointCoord - vec2(0.5));
-          if (d > 0.5) discard;
-          float edge = smoothstep(0.5, 0.05, d);
-          float core = smoothstep(0.35, 0.0, d);
-          gl_FragColor = vec4(vColor + vec3(core * 0.35), edge);
+          // Each point is a little shard: take the square sprite, rotate it by a
+          // per-particle angle and cut an elongated diamond out of it, so the orb
+          // reads as scattered slivers of glass instead of soft dots.
+          vec2 p = gl_PointCoord - 0.5;
+          float a = vSeed * 6.2831;
+          float ca = cos(a);
+          float sa = sin(a);
+          vec2 q = vec2(p.x * ca - p.y * sa, p.x * sa + p.y * ca);
+          // random thickness per shard for variety
+          float b = 0.14 + fract(vSeed * 13.0) * 0.18;
+          float shard = abs(q.x) / 0.48 + abs(q.y) / b;
+          if (shard > 1.0) discard;
+          // solid body with a brighter, crisp rim so the edges catch the light
+          float body = smoothstep(1.0, 0.15, shard);
+          float rim = smoothstep(1.0, 0.82, shard);
+          gl_FragColor = vec4(vColor + vec3(rim * 0.55), clamp(body + rim * 0.35, 0.0, 1.0));
         }
       `,
     });
