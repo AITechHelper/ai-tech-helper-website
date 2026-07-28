@@ -182,15 +182,49 @@ export default function HeroOrb() {
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       depthTest: false,
-      opacity: 0.95,
+      opacity: 0.28,
     });
     const glow = new THREE.Sprite(glowMat);
-    const GLOW_BASE = ORB_R * 2.1;
+    const GLOW_BASE = ORB_R * 1.6;
     glow.scale.set(GLOW_BASE, GLOW_BASE, 1);
     scene.add(glow);
     cleanups.push(() => {
       glowTex.dispose();
       glowMat.dispose();
+    });
+
+    // Stray particles drifting in the space around the orb — a loose halo that
+    // floats further out than the shell, so the orb doesn't end at a hard edge.
+    const STRAY = isMobile ? 180 : 360;
+    const strayPos = new Float32Array(STRAY * 3);
+    for (let i = 0; i < STRAY; i++) {
+      // random direction on a sphere, scattered from just outside the shell to
+      // well beyond it
+      const u = Math.random() * 2 - 1;
+      const th = Math.random() * Math.PI * 2;
+      const r = Math.sqrt(1 - u * u);
+      const rad = ORB_R * (1.7 + Math.random() * 2.4);
+      strayPos[i * 3] = Math.cos(th) * r * rad;
+      strayPos[i * 3 + 1] = u * rad;
+      strayPos[i * 3 + 2] = Math.sin(th) * r * rad;
+    }
+    const strayGeo = new THREE.BufferGeometry();
+    strayGeo.setAttribute("position", new THREE.BufferAttribute(strayPos, 3));
+    const strayMat = new THREE.PointsMaterial({
+      size: isMobile ? 0.11 : 0.14,
+      map: glowTex,
+      color: 0x66c6ff,
+      transparent: true,
+      opacity: 0.55,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    });
+    const strays = new THREE.Points(strayGeo, strayMat);
+    scene.add(strays);
+    cleanups.push(() => {
+      strayGeo.dispose();
+      strayMat.dispose();
     });
 
     composer = new EffectComposer(renderer);
@@ -247,6 +281,11 @@ export default function HeroOrb() {
       glow.position.y = bob;
       const gp = GLOW_BASE * (1 + 0.06 * Math.sin(t * 1.2));
       glow.scale.set(gp, gp, 1);
+      // Strays drift on their own slow orbit for a bit of parallax against the
+      // shell, plus a gentle bob.
+      strays.rotation.y = t * 0.035;
+      strays.rotation.x = Math.sin(t * 0.12) * 0.12;
+      strays.position.y = bob * 0.6;
       stars.rotation.y = t * 0.01;
       composer!.render();
     }
