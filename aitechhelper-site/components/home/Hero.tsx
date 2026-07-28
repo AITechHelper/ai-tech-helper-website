@@ -13,15 +13,15 @@ export default function Hero() {
         <span className="home-eyebrow">AI Tech Helper · Oklahoma &amp; surrounding areas</span>
 
         <h1 className="home-hero-title">
-          AI phone &amp; messaging agents that
+          Never miss a call.
           <br />
-          answer every call and win the job
+          Never lose a job.
         </h1>
 
         <p className="home-hero-sub">
-          We build AI voice and messaging agents for local service businesses — so you
-          never miss a call, lose a lead, or chase an invoice again. Set up for you,
-          working 24/7, live on your calendar.
+          AI voice &amp; messaging agents for local service businesses — answering
+          every call and message 24/7, qualifying the lead, and booking the job
+          straight onto your calendar. Set up for you.
         </p>
 
         <div className="home-hero-actions">
