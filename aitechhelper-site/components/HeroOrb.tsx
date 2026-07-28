@@ -27,8 +27,8 @@ export default function HeroOrb() {
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
     const COUNT = isMobile ? 5500 : 12000;
-    const ORB_R = isMobile ? 1.15 : 1.55;
-    const orbSizeFor = (w: number) => (w <= 700 ? 1.0 : Math.min(w / 1250, 1.25));
+    const ORB_R = isMobile ? 1.45 : 2.0;
+    const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1250, 1.3));
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -44,7 +44,7 @@ export default function HeroOrb() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.05, 100);
-    camera.position.set(0, 0, 6.4);
+    camera.position.set(0, 0, 5.8);
 
     let composer: EffectComposer | null = null;
     let bloom: UnrealBloomPass | null = null;
