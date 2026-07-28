@@ -26,9 +26,11 @@ export default function HeroOrb() {
     const reduceMotion =
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-    const COUNT = isMobile ? 5000 : 10000;
+    // Fewer, larger points: lighter to draw and still reads as a solid, bright
+    // orb rather than a fine mist.
+    const COUNT = isMobile ? 3200 : 6000;
     const ORB_R = isMobile ? 1.45 : 2.0;
-    const orbSizeFor = (w: number) => (w <= 700 ? 1.05 : Math.min(w / 1250, 1.3));
+    const orbSizeFor = (w: number) => (w <= 700 ? 1.5 : Math.min(w / 950, 1.9));
 
     const renderer = new THREE.WebGLRenderer({
       // No MSAA: the scene is drawn into the composer's own render target, so
@@ -121,7 +123,7 @@ export default function HeroOrb() {
           if (d > 0.5) discard;
           float edge = smoothstep(0.5, 0.05, d);
           float core = smoothstep(0.35, 0.0, d);
-          gl_FragColor = vec4(vColor + vec3(core * 0.3), edge * 0.9);
+          gl_FragColor = vec4(vColor + vec3(core * 0.35), edge);
         }
       `,
     });
@@ -162,7 +164,7 @@ export default function HeroOrb() {
 
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.6, 0.18);
+    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.6, 0.18);
     composer.addPass(bloom);
     cleanups.push(() => bloom?.dispose());
 
