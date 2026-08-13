@@ -44,7 +44,7 @@ export default function CloudBackground() {
         float mc = 0.022;                        // cyan/deep drift (slower)
 
         vec3 cyan  = vec3(0.204,0.792,0.965);    // #34caf6 soft sky cyan
-        vec3 white = vec3(1.0);
+        vec3 white = vec3(0.027,0.251,0.353);    // #07405a deep navy-teal (was white)
         vec3 deep  = vec3(0.047,0.498,0.690);    // #0c7fb0 deeper teal-blue
 
         // white points (spread across corners + middle), faster motion
