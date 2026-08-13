@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import HomeNav from "@/components/home/HomeNav";
 import Hero from "@/components/home/Hero";
-import TrustBar from "@/components/home/TrustBar";
+import ChannelHub from "@/components/home/ChannelHub";
 import Feature from "@/components/home/Feature";
 import Services from "@/components/home/Services";
 import Process from "@/components/home/Process";
@@ -21,7 +21,7 @@ export default function HomePage() {
     <main className="home">
       <HomeNav />
       <Hero />
-      <TrustBar />
+      <ChannelHub />
       <Feature
         side="right"
         kicker="Who it's for"

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hub section preview</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#05060a;font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff}
+  .wrap{max-width:1120px;margin:0 auto;padding:clamp(60px,9vw,120px) 20px}
+  .head{text-align:center;max-width:640px;margin:0 auto 56px}
+  .kicker{color:#00c6ff;font-weight:700;font-size:13px;letter-spacing:2.5px;text-transform:uppercase}
+  .head h2{font-size:clamp(30px,5vw,50px);font-weight:800;line-height:1.08;letter-spacing:-1px;margin:14px 0 14px}
+  .head p{color:#aab3bf;font-size:clamp(15px,2vw,18px);line-height:1.55}
+
+  .hub-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    grid-template-areas:
+      "ig   wa   sms"
+      "fb   hub  web"
+      "goog em   phone";
+    gap:18px;
+    align-items:stretch;
+  }
+  /* connector lines behind the cards */
+  .links{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:visible}
+  /* soft outer halo */
+  .links line.halo{stroke:rgba(0,198,255,0.3);stroke-width:2.2;filter:blur(2.5px)}
+  /* bright glowing core */
+  .links line.core{stroke:rgba(120,225,255,0.9);stroke-width:0.5;filter:drop-shadow(0 0 2px rgba(0,198,255,0.95))}
+
+  .node{
+    position:relative;z-index:1;
+    background:rgba(255,255,255,0.035);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:16px;padding:14px 15px;
+    display:flex;flex-direction:column;gap:8px;
+    backdrop-filter:blur(6px);
+    box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  }
+  .node-head{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14px;color:#e7ebf2}
+  .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;flex:0 0 auto}
+  .ic-ig{background:linear-gradient(135deg,#feda75,#d62976,#4f5bd5)}
+  .ic-wa{background:#25d366}
+  .ic-sms{background:#00c6ff;color:#04141c}
+  .ic-fb{background:#1877f2}
+  .ic-web{background:#0e6b85}
+  .ic-goog{background:#fff;color:#4285f4}
+  .ic-em{background:#8a94a6}
+  .ic-phone{background:#00c6ff;color:#04141c}
+
+  .bubble{font-size:12.5px;line-height:1.35;padding:7px 11px;border-radius:12px;max-width:92%}
+  .bubble.in{background:rgba(255,255,255,0.08);color:#cfd4dc;border-bottom-left-radius:4px;align-self:flex-start}
+  .bubble.out{background:linear-gradient(140deg,#00c6ff,#0088cc);color:#04141c;font-weight:600;border-bottom-right-radius:4px;align-self:flex-end}
+
+  .n-ig{grid-area:ig}.n-wa{grid-area:wa}.n-sms{grid-area:sms}
+  .n-fb{grid-area:fb}.n-web{grid-area:web}.n-goog{grid-area:goog}
+  .n-em{grid-area:em}.n-phone{grid-area:phone}
+
+  .hub{
+    grid-area:hub;position:relative;z-index:2;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;
+    padding:26px 18px;border-radius:22px;
+    background:radial-gradient(120% 120% at 50% 30%,rgba(0,198,255,0.16),rgba(0,198,255,0.02));
+    border:1px solid rgba(0,198,255,0.45);
+    box-shadow:0 0 0 1px rgba(0,198,255,0.2),0 0 64px rgba(0,198,255,0.32),inset 0 0 42px rgba(0,198,255,0.1);
+  }
+  .hub-logo{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(140deg,#6fe0ff,#00c6ff);color:#04141c;font-size:24px;font-weight:900;box-shadow:0 8px 24px rgba(0,198,255,0.5)}
+  .hub h3{font-size:19px;font-weight:800;letter-spacing:-0.3px}
+  .hub p{font-size:12.5px;color:#9fb9c9;line-height:1.4;max-width:180px}
+  .hub .tag{margin-top:2px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#00c6ff;background:rgba(0,198,255,0.1);border:1px solid rgba(0,198,255,0.3);padding:4px 10px;border-radius:999px}
+
+  @media (max-width:760px){
+    .links{display:none}
+    .hub-grid{
+      grid-template-columns:1fr 1fr;
+      grid-template-areas:
+        "hub  hub"
+        "phone sms"
+        "web  ig"
+        "wa   fb"
+        "goog em";
+      gap:11px;
+    }
+    .hub{padding:22px 16px}
+    .hub-logo{width:46px;height:46px;font-size:21px}
+    .hub p{max-width:240px}
+    .node{padding:12px 13px}
+  }
+  @media (max-width:380px){
+    .bubble{font-size:12px}
+    .node-head{font-size:13px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">One inbox, every channel</span>
+      <h2>However they reach out, one AI answers</h2>
+      <p>Phone, text, social, chat and email all flow into a single hub — your agent replies in seconds, everywhere at once.</p>
+    </div>
+
+    <div class="hub-grid">
+      <svg class="links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <g class="halo-g">
+          <line class="halo" x1="50" y1="50" x2="16.6" y2="16.6"/>
+          <line class="halo" x1="50" y1="50" x2="50"   y2="16.6"/>
+          <line class="halo" x1="50" y1="50" x2="83.3" y2="16.6"/>
+          <line class="halo" x1="50" y1="50" x2="16.6" y2="50"/>
+          <line class="halo" x1="50" y1="50" x2="83.3" y2="50"/>
+          <line class="halo" x1="50" y1="50" x2="16.6" y2="83.3"/>
+          <line class="halo" x1="50" y1="50" x2="50"   y2="83.3"/>
+          <line class="halo" x1="50" y1="50" x2="83.3" y2="83.3"/>
+        </g>
+        <g class="core-g">
+          <line class="core" x1="50" y1="50" x2="16.6" y2="16.6"/>
+          <line class="core" x1="50" y1="50" x2="50"   y2="16.6"/>
+          <line class="core" x1="50" y1="50" x2="83.3" y2="16.6"/>
+          <line class="core" x1="50" y1="50" x2="16.6" y2="50"/>
+          <line class="core" x1="50" y1="50" x2="83.3" y2="50"/>
+          <line class="core" x1="50" y1="50" x2="16.6" y2="83.3"/>
+          <line class="core" x1="50" y1="50" x2="50"   y2="83.3"/>
+          <line class="core" x1="50" y1="50" x2="83.3" y2="83.3"/>
+        </g>
+      </svg>
+
+      <div class="node n-ig">
+        <div class="node-head"><span class="ic ic-ig">◎</span> Instagram</div>
+        <div class="bubble in">Are you open Sunday?</div>
+        <div class="bubble out">We are — want a slot?</div>
+      </div>
+      <div class="node n-wa">
+        <div class="node-head"><span class="ic ic-wa">✆</span> WhatsApp</div>
+        <div class="bubble in">How much for a quote?</div>
+        <div class="bubble out">Happy to help — what service?</div>
+      </div>
+      <div class="node n-sms">
+        <div class="node-head"><span class="ic ic-sms">✉</span> Text / SMS</div>
+        <div class="bubble in">Do you do same-day?</div>
+        <div class="bubble out">Yes! Book you for 2pm today?</div>
+      </div>
+
+      <div class="node n-fb">
+        <div class="node-head"><span class="ic ic-fb">f</span> Facebook</div>
+        <div class="bubble in">Can someone call me back?</div>
+        <div class="bubble out">Booking your callback now.</div>
+      </div>
+
+      <div class="hub">
+        <div class="hub-logo">◈</div>
+        <h3>AI Tech Helper</h3>
+        <p>One central inbox. Every message, answered in seconds.</p>
+        <span class="tag">24/7 · Never misses</span>
+      </div>
+
+      <div class="node n-web">
+        <div class="node-head"><span class="ic ic-web">◍</span> Website chat</div>
+        <div class="bubble in">Need a plumber ASAP</div>
+        <div class="bubble out">On it — grabbing your details.</div>
+      </div>
+
+      <div class="node n-goog">
+        <div class="node-head"><span class="ic ic-goog">G</span> Google</div>
+        <div class="bubble in">Are you licensed?</div>
+        <div class="bubble out">Fully licensed &amp; insured.</div>
+      </div>
+      <div class="node n-em">
+        <div class="node-head"><span class="ic ic-em">@</span> Email</div>
+        <div class="bubble in">Requesting an estimate</div>
+        <div class="bubble out">Sent — check your inbox!</div>
+      </div>
+      <div class="node n-phone">
+        <div class="node-head"><span class="ic ic-phone">☎</span> Phone call</div>
+        <div class="bubble in">"Hi, are you available…"</div>
+        <div class="bubble out">Answered &amp; booked, live.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

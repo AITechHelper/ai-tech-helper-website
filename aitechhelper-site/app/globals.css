@@ -3629,6 +3629,210 @@ html {
   }
 }
 
+/* ---- channel hub: every channel -> one AI inbox ---- */
+.chub-section {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(60px, 9vw, 120px) 20px;
+}
+.chub-head {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 56px;
+}
+.chub-kicker {
+  color: #00c6ff;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.chub-head h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -1px;
+  margin: 14px 0;
+}
+.chub-head p {
+  color: #aab3bf;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.55;
+}
+.chub-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "ig   wa   sms"
+    "fb   hub  web"
+    "goog em   phone";
+  gap: 18px;
+  align-items: stretch;
+}
+.chub-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.chub-halo {
+  stroke: rgba(0, 198, 255, 0.3);
+  stroke-width: 2.2;
+  filter: blur(2.5px);
+}
+.chub-core {
+  stroke: rgba(120, 225, 255, 0.9);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 0 2px rgba(0, 198, 255, 0.95));
+}
+.chub-node {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+.chub-node-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #e7ebf2;
+}
+.chub-ic {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  flex: 0 0 auto;
+}
+.chub-ic-ig { background: linear-gradient(135deg, #feda75, #d62976, #4f5bd5); }
+.chub-ic-wa { background: #25d366; }
+.chub-ic-sms { background: #00c6ff; color: #04141c; }
+.chub-ic-fb { background: #1877f2; }
+.chub-ic-web { background: #0e6b85; }
+.chub-ic-goog { background: #fff; color: #4285f4; }
+.chub-ic-em { background: #8a94a6; }
+.chub-ic-phone { background: #00c6ff; color: #04141c; }
+.chub-bubble {
+  font-size: 12.5px;
+  line-height: 1.35;
+  padding: 7px 11px;
+  border-radius: 12px;
+  max-width: 92%;
+}
+.chub-in {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cfd4dc;
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+}
+.chub-out {
+  background: linear-gradient(140deg, #00c6ff, #0088cc);
+  color: #04141c;
+  font-weight: 600;
+  border-bottom-right-radius: 4px;
+  align-self: flex-end;
+}
+.chub-a-ig { grid-area: ig; }
+.chub-a-wa { grid-area: wa; }
+.chub-a-sms { grid-area: sms; }
+.chub-a-fb { grid-area: fb; }
+.chub-a-web { grid-area: web; }
+.chub-a-goog { grid-area: goog; }
+.chub-a-em { grid-area: em; }
+.chub-a-phone { grid-area: phone; }
+.chub-hub {
+  grid-area: hub;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 26px 18px;
+  border-radius: 22px;
+  background: radial-gradient(120% 120% at 50% 30%, rgba(0, 198, 255, 0.16), rgba(0, 198, 255, 0.02));
+  border: 1px solid rgba(0, 198, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 198, 255, 0.2), 0 0 64px rgba(0, 198, 255, 0.32),
+    inset 0 0 42px rgba(0, 198, 255, 0.1);
+}
+.chub-hub-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, #6fe0ff, #00c6ff);
+  color: #04141c;
+  font-size: 24px;
+  font-weight: 900;
+  box-shadow: 0 8px 24px rgba(0, 198, 255, 0.5);
+}
+.chub-hub h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.chub-hub p {
+  font-size: 12.5px;
+  color: #9fb9c9;
+  line-height: 1.4;
+  max-width: 180px;
+}
+.chub-tag {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #00c6ff;
+  background: rgba(0, 198, 255, 0.1);
+  border: 1px solid rgba(0, 198, 255, 0.3);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+@media (max-width: 760px) {
+  .chub-links { display: none; }
+  .chub-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "hub  hub"
+      "phone sms"
+      "web  ig"
+      "wa   fb"
+      "goog em";
+    gap: 11px;
+  }
+  .chub-hub { padding: 22px 16px; }
+  .chub-hub-logo { width: 46px; height: 46px; font-size: 21px; }
+  .chub-hub p { max-width: 240px; }
+  .chub-node { padding: 12px 13px; }
+}
+@media (max-width: 380px) {
+  .chub-bubble { font-size: 12px; }
+  .chub-node-head { font-size: 13px; }
+}
+
 /* ---- services banner: image background + dark overlay + heading ---- */
 .svc-banner {
   position: relative;
