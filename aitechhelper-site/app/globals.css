@@ -3629,8 +3629,10 @@ html {
   }
 }
 
-/* ---- services: three package cards, side by side ---- */
-.svc-cards {
+/* ---- services: three package cards, side by side ----
+   Classes are prefixed `pkg-` (not `svc-`) to avoid the retired carousel's
+   `.svc-card { position:absolute }` rules still present below. */
+.pkg-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -3638,7 +3640,7 @@ html {
   max-width: 1080px;
   margin: 40px auto 0;
 }
-.svc-card {
+.pkg-card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -3648,13 +3650,13 @@ html {
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
-.svc-card.is-featured {
+.pkg-card.pkg-featured {
   border-color: rgba(var(--glow), 0.55);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(var(--glow), 0.25),
     0 0 40px rgba(var(--glow), 0.18);
   transform: translateY(-8px);
 }
-.svc-badge {
+.pkg-badge {
   position: absolute;
   top: -12px;
   left: 50%;
@@ -3669,27 +3671,27 @@ html {
   box-shadow: 0 6px 18px rgba(var(--glow), 0.4);
   white-space: nowrap;
 }
-.svc-kicker {
+.pkg-kicker {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.4px;
   text-transform: uppercase;
   color: var(--m1);
 }
-.svc-name {
+.pkg-name {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 30px;
   font-weight: 800;
   margin: 6px 0 10px;
   color: #fff;
 }
-.svc-desc {
+.pkg-desc {
   color: #cfd4dc;
   font-size: 15px;
   line-height: 1.55;
   margin-bottom: 20px;
 }
-.svc-features {
+.pkg-features {
   list-style: none;
   padding: 0;
   margin: 0 0 26px;
@@ -3697,7 +3699,7 @@ html {
   flex-direction: column;
   gap: 12px;
 }
-.svc-features li {
+.pkg-features li {
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -3705,7 +3707,7 @@ html {
   font-size: 14.5px;
   line-height: 1.4;
 }
-.svc-check {
+.pkg-check {
   flex: 0 0 auto;
   width: 18px;
   height: 18px;
@@ -3716,7 +3718,7 @@ html {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.svc-cta {
+.pkg-cta {
   margin-top: auto;
   display: inline-flex;
   align-items: center;
@@ -3731,22 +3733,22 @@ html {
   box-shadow: 0 10px 26px rgba(var(--glow), 0.3);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.svc-card:not(.is-featured) .svc-cta {
+.pkg-card:not(.pkg-featured) .pkg-cta {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(var(--glow), 0.4);
   box-shadow: none;
 }
-.svc-cta:hover {
+.pkg-cta:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(var(--glow), 0.42);
 }
 @media (max-width: 900px) {
-  .svc-cards {
+  .pkg-grid {
     grid-template-columns: 1fr;
     max-width: 460px;
   }
-  .svc-card.is-featured {
+  .pkg-card.pkg-featured {
     transform: none;
   }
 }
