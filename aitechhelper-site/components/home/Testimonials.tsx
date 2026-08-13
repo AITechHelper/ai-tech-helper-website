@@ -1,28 +1,10 @@
-/* ⚠ PLACEHOLDER REVIEWS — replace with real ones before relying on them.
-   Swap the quote, name, business and initials below with genuine customer
-   feedback. Nothing here is a real quote; it's template copy so the section
-   looks right until you drop yours in. */
 const REVIEWS = [
   {
     quote:
-      "It caught three after-hours calls in the first week that would have gone to voicemail. Two of them booked. It paid for itself immediately.",
-    name: "Client Name",
-    business: "Business · Tulsa, OK",
-    initials: "CN",
-  },
-  {
-    quote:
-      "I stopped answering the phone during jobs and stopped losing work because of it. Every lead gets a reply in seconds now, day or night.",
-    name: "Client Name",
-    business: "Business · Oklahoma City, OK",
-    initials: "CN",
-  },
-  {
-    quote:
-      "Setup was done for me and it just worked. The dashboard shows me every call and message in one place — I finally know what's coming in.",
-    name: "Client Name",
-    business: "Business · Broken Arrow, OK",
-    initials: "CN",
+      "AI Tech Helper has helped me a ton with implementing AI into our company systems. I would highly recommend their team to anyone.",
+    name: "Will H",
+    business: "",
+    initials: "WH",
   },
 ];
 
@@ -44,9 +26,6 @@ export default function Testimonials() {
       <div className="home-section-head">
         <span className="home-kicker">Reviews</span>
         <h2>What local owners say</h2>
-        <p className="home-note">
-          Sample layout — your real customer reviews drop straight in.
-        </p>
       </div>
 
       <div className="home-review-grid">
@@ -60,7 +39,7 @@ export default function Testimonials() {
               </span>
               <span className="home-review-who">
                 <strong>{r.name}</strong>
-                <span>{r.business}</span>
+                {r.business && <span>{r.business}</span>}
               </span>
             </figcaption>
           </figure>
