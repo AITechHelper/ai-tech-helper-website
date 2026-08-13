@@ -1,13 +1,13 @@
-import HeroOrb from "@/components/HeroOrb";
+import CloudBackground from "@/components/home/CloudBackground";
 import { PHONE_NUMBER } from "@/lib/tiers";
 
-/* The hero: the orb as a quiet backdrop, with the plain-language pitch on top —
-   what we do, who it's for, and where — plus the two primary actions and a row
-   of quick trust signals. */
+/* The hero: a living cloud mesh gradient as the backdrop, with the plain-language
+   pitch on top — what we do, who it's for, and where — plus the two primary
+   actions and a row of quick trust signals. */
 export default function Hero() {
   return (
     <section className="home-hero">
-      <HeroOrb />
+      <CloudBackground />
 
       <div className="home-hero-inner">
         <span className="home-eyebrow">AI Tech Helper · Oklahoma &amp; surrounding areas</span>
