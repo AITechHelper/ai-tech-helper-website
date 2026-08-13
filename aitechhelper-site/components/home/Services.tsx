@@ -1,5 +1,5 @@
 import ImgSlot from "@/components/home/ImgSlot";
-import ServicesCarousel from "@/components/home/ServicesCarousel";
+import ServicesCards from "@/components/home/ServicesCards";
 
 /* The services section: header, a dashboard image slot, and the rotating card
    carousel (ServicesCarousel) driven by lib/tiers. */
@@ -24,7 +24,7 @@ export default function Services() {
         <figcaption>One place for every call, message, booking and invoice.</figcaption>
       </figure>
 
-      <ServicesCarousel />
+      <ServicesCards />
     </section>
   );
 }
