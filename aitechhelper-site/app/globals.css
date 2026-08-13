@@ -3763,53 +3763,14 @@ html {
   position: relative;
   z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 8px;
-  padding: 26px 18px;
-  border-radius: 22px;
-  background: radial-gradient(120% 120% at 50% 30%, rgba(0, 198, 255, 0.16), rgba(0, 198, 255, 0.02));
-  border: 1px solid rgba(0, 198, 255, 0.45);
-  box-shadow: 0 0 0 1px rgba(0, 198, 255, 0.2), 0 0 64px rgba(0, 198, 255, 0.32),
-    inset 0 0 42px rgba(0, 198, 255, 0.1);
+  /* no box — just the logo with a glow so the lines radiate from the mark */
 }
-.chub-hub-logo {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(140deg, #6fe0ff, #00c6ff);
-  color: #04141c;
-  font-size: 24px;
-  font-weight: 900;
-  box-shadow: 0 8px 24px rgba(0, 198, 255, 0.5);
-}
-.chub-hub h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
-.chub-hub p {
-  font-size: 12.5px;
-  color: #9fb9c9;
-  line-height: 1.4;
-  max-width: 180px;
-}
-.chub-tag {
-  margin-top: 2px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: #00c6ff;
-  background: rgba(0, 198, 255, 0.1);
-  border: 1px solid rgba(0, 198, 255, 0.3);
-  padding: 4px 10px;
-  border-radius: 999px;
+.chub-hub-mark {
+  width: clamp(96px, 12vw, 132px);
+  height: auto;
+  filter: drop-shadow(0 0 22px rgba(0, 198, 255, 0.55)) drop-shadow(0 0 6px rgba(0, 198, 255, 0.8));
 }
 @media (max-width: 760px) {
   .chub-links { display: none; }

@@ -65,10 +65,8 @@ export default function ChannelHub() {
         ))}
 
         <div className="chub-hub">
-          <div className="chub-hub-logo">◈</div>
-          <h3>AI Tech Helper</h3>
-          <p>One central inbox. Every message, answered in seconds.</p>
-          <span className="chub-tag">24/7 · Never misses</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="chub-hub-mark" src="/images/hub-mark.png" alt="AI Tech Helper" />
         </div>
 
         {NODES.slice(4).map((n) => (
