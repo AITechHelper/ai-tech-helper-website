@@ -3653,7 +3653,17 @@ html {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.15) 88%, #000 100%),
+    linear-gradient(
+      180deg,
+      #000 0%,
+      rgba(0, 0, 0, 0.72) 6%,
+      rgba(0, 0, 0, 0.32) 13%,
+      rgba(0, 0, 0, 0.12) 20%,
+      rgba(0, 0, 0, 0.12) 80%,
+      rgba(0, 0, 0, 0.32) 87%,
+      rgba(0, 0, 0, 0.72) 94%,
+      #000 100%
+    ),
     rgba(0, 0, 0, 0.28);
 }
 .svc-banner-content {
