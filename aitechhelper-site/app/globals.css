@@ -3629,6 +3629,39 @@ html {
   }
 }
 
+/* ---- services banner: image background + dark overlay + heading ---- */
+.svc-banner {
+  position: relative;
+  min-height: clamp(360px, 46vw, 520px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: clamp(56px, 9vw, 110px) clamp(20px, 5vw, 56px);
+}
+.svc-banner > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.svc-banner-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.35) 24%, rgba(0, 0, 0, 0.4) 76%, #000 100%),
+    rgba(0, 0, 0, 0.48);
+}
+.svc-banner-content {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+}
+
 /* ---- services: three package cards, side by side ----
    Classes are prefixed `pkg-` (not `svc-`) to avoid the retired carousel's
    `.svc-card { position:absolute }` rules still present below. */
