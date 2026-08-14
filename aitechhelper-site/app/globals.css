@@ -3668,10 +3668,10 @@ html {
     "ig   wa   sms"
     "fb   hub  web"
     "goog em   phone";
-  gap: 18px;
+  gap: 30px;
   align-items: stretch;
 }
-.chub-links {
+.chub-wires {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -3680,28 +3680,40 @@ html {
   pointer-events: none;
   overflow: visible;
 }
-.chub-halo {
-  stroke: rgba(0, 198, 255, 0.3);
-  stroke-width: 2.2;
-  filter: blur(2.5px);
+.chub-trace {
+  fill: none;
+  stroke: rgba(110, 224, 255, 0.9);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2.5px rgba(0, 198, 255, 0.85));
 }
-.chub-core {
-  stroke: rgba(120, 225, 255, 0.9);
-  stroke-width: 0.5;
-  filter: drop-shadow(0 0 2px rgba(0, 198, 255, 0.95));
+.chub-pad {
+  fill: #8fe8ff;
+  filter: drop-shadow(0 0 3px rgba(0, 198, 255, 1));
+}
+.chub-pin {
+  fill: #8fe8ff;
+  filter: drop-shadow(0 0 2px rgba(0, 198, 255, 0.9));
+}
+.chub-via {
+  fill: #06202b;
+  stroke: #7ce4ff;
+  stroke-width: 1.1;
+  filter: drop-shadow(0 0 1.5px rgba(0, 198, 255, 0.7));
 }
 .chub-node {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 198, 255, 0.35);
   border-radius: 16px;
   padding: 14px 15px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 1px rgba(0, 198, 255, 0.05), 0 12px 30px rgba(0, 0, 0, 0.4),
+    inset 0 0 22px rgba(0, 198, 255, 0.04);
 }
 .chub-node-head {
   display: flex;
@@ -3768,12 +3780,12 @@ html {
   /* no box — just the logo with a glow so the lines radiate from the mark */
 }
 .chub-hub-mark {
-  width: clamp(96px, 12vw, 132px);
+  width: clamp(104px, 13vw, 150px);
   height: auto;
-  filter: drop-shadow(0 0 22px rgba(0, 198, 255, 0.55)) drop-shadow(0 0 6px rgba(0, 198, 255, 0.8));
+  filter: drop-shadow(0 0 20px rgba(0, 198, 255, 0.5)) drop-shadow(0 0 5px rgba(0, 198, 255, 0.85));
 }
 @media (max-width: 760px) {
-  .chub-links { display: none; }
+  .chub-wires { display: none; }
   .chub-grid {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
