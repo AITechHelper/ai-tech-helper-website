@@ -144,13 +144,8 @@ export const TIERS: Tier[] = [
     features: [
       {
         icon: "contract",
-        title: "Contract & waiver signing",
-        desc: "Sends the right document the moment a job is booked and collects a legally binding e-signature before work starts.",
-      },
-      {
-        icon: "invoice",
-        title: "Invoice follow-up",
-        desc: "Professional, persistent payment reminders on every unpaid invoice — so you get paid without the awkward call.",
+        title: "Paperwork & payments",
+        desc: "Sends contracts and waivers for a legally binding e-signature the moment a job is booked, then invoices the client and chases every unpaid bill with automatic reminders — signed to paid, all hands-off.",
       },
       {
         icon: "onboarding",
@@ -194,8 +189,7 @@ export const COMPARISON: ComparisonRow[] = [
   { label: "Appointment reminders", tiers: FROM_SILVER },
   { label: "Estimate follow-up", tiers: FROM_SILVER },
   { label: "Review & referral requests", tiers: FROM_SILVER },
-  { label: "Contract & waiver signing", tiers: GOLD_ONLY },
-  { label: "Invoice follow-up", tiers: GOLD_ONLY },
+  { label: "Contracts, e-sign & invoicing", tiers: GOLD_ONLY },
   { label: "New client onboarding", tiers: GOLD_ONLY },
   { label: "Custom email pipeline", tiers: GOLD_ONLY },
 ];
