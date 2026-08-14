@@ -4255,11 +4255,14 @@ html {
 
 /* ---- reviews ---- */
 .home-review-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: clamp(16px, 2vw, 26px);
 }
 .home-review {
+  flex: 0 1 360px;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   gap: 16px;
