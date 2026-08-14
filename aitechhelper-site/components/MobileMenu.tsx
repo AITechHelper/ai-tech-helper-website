@@ -3,23 +3,10 @@
 import { useState } from "react";
 
 /* Hamburger menu for the top nav on phones (≤720px, where the inline nav links
-   and the Contact pill are hidden). Same destinations as the desktop nav.
-   "Services" scrolls the homepage into the services stage; on any other page it
-   just navigates to /#services. */
+   and the Contact pill are hidden). Same destinations as the desktop nav. */
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
-
-  const onServices = (e: React.MouseEvent) => {
-    if (typeof window !== "undefined" && window.location.pathname === "/") {
-      const svc = document.getElementById("services");
-      if (svc) {
-        e.preventDefault();
-        svc.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-    close();
-  };
 
   return (
     <div className="mobile-menu">
@@ -38,7 +25,7 @@ export default function MobileMenu() {
       {open && <div className="mobile-menu-backdrop" onClick={close} />}
 
       <div className={`mobile-menu-panel${open ? " is-open" : ""}`}>
-        <a href="/#services" onClick={onServices}>
+        <a href="/services" onClick={close}>
           Services
         </a>
         <a href="/ai-tools" onClick={close}>

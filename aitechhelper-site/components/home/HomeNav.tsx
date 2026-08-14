@@ -10,10 +10,7 @@ export default function HomeNav() {
       <nav className="nav">
         <Logo />
         <div className="nav-links">
-          <a href="#services">Services</a>
-          <a href="#process">How it works</a>
-          <a href="#reviews">Reviews</a>
-          <a href="#faq">FAQ</a>
+          <a href="/services">Services</a>
           <a href="/ai-tools">AI Tools</a>
           <a href="/ai-hub">AI Hub</a>
         </div>
