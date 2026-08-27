@@ -9,13 +9,12 @@ export default function Hero() {
     <section className="home-hero">
       <CloudBackground />
 
-      {/* The Tulsa skyline, anchored along the bottom of the hero and masked so
-          its sky fades up into the living gradient above. Purely decorative, so
-          it carries no alt text; if the file isn't present yet it simply shows
-          nothing. */}
+      {/* City glass-tower backdrop behind the living gradient and the copy.
+          Darkened/masked in CSS so the headline stays readable while the
+          buildings ground the hero in something real. Decorative — no alt. */}
       <div className="home-hero-skyline" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/tulsa-skyline.webp" alt="" />
+        <img src="/images/hero-buildings.webp" alt="" />
       </div>
 
       <div className="home-hero-inner">

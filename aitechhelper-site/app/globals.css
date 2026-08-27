@@ -3422,22 +3422,27 @@ html {
    (z0) but below the copy (z2). */
 .home-hero-skyline {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: min(52%, 440px);
-  z-index: 1;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
+  background: #05070c; /* solid black base so the cloud's white never shows through */
 }
 .home-hero-skyline img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center bottom;
-  opacity: 0.9;
-  filter: brightness(0.82) contrast(1.03);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 34%, #000 76%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 34%, #000 76%, transparent 100%);
+  object-position: center;
+  opacity: 1;
+  filter: brightness(0.5) saturate(1.05);
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+}
+/* A flat black wash over the photo so the white headline always reads. */
+.home-hero-skyline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(3, 5, 9, 0.55) 0%, rgba(3, 5, 9, 0.42) 45%, rgba(3, 5, 9, 0.72) 100%);
 }
 .home-hero-inner {
   position: relative;
@@ -3815,13 +3820,86 @@ html {
   border: 1px solid rgba(var(--glow), 0.28);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 70px rgba(var(--glow), 0.12);
 }
+/* Full-bleed Tulsa skyline band between the hero and the story. */
+.about-banner {
+  position: relative;
+  margin: clamp(24px, 4vw, 48px) 0;
+  height: clamp(220px, 34vw, 380px);
+  overflow: hidden;
+}
+.about-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+}
+.about-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 40%, rgba(5, 7, 12, 0.94) 100%);
+}
+.about-banner-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(20px, 4vw, 40px);
+  z-index: 1;
+  text-align: center;
+  padding: 0 20px;
+}
+.about-banner-caption p {
+  margin: 8px 0 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 2.4vw, 28px);
+  color: #fff;
+}
+
 .about-body {
-  max-width: 760px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: clamp(20px, 3vw, 36px) clamp(20px, 5vw, 56px) clamp(40px, 6vw, 80px);
   display: flex;
   flex-direction: column;
-  gap: clamp(30px, 4vw, 48px);
+  gap: clamp(48px, 7vw, 90px);
+}
+/* Two-column story rows with a photo, alternating sides. */
+.about-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 60px);
+  align-items: center;
+}
+.about-block:nth-child(even) .about-block-media {
+  order: -1;
+}
+.about-block-media img {
+  width: 100%;
+  height: clamp(220px, 26vw, 340px);
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+.about-personal {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+.about-personal h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: clamp(22px, 2.6vw, 30px);
+  letter-spacing: -0.5px;
+  margin: 0 0 12px;
+}
+.about-personal p {
+  color: #c2c9d4;
+  font-size: clamp(15.5px, 1.35vw, 18px);
+  line-height: 1.68;
+  margin: 0 auto;
+  max-width: 680px;
 }
 .about-block h2 {
   font-family: 'Space Grotesk', sans-serif;
@@ -3839,6 +3917,13 @@ html {
 .about-block strong {
   color: #fff;
   font-weight: 700;
+}
+/* Headings were inheriting a dark colour and vanishing on the black background
+   and over the CTA photo — force them white. */
+.about-block h2,
+.about-personal h2,
+.home-final-card h2 {
+  color: #fff;
 }
 .about-facts {
   list-style: none;
@@ -3875,6 +3960,14 @@ html {
   .about-hero-photo {
     order: -1;
     max-width: 340px;
+  }
+  .about-block {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .about-block:nth-child(even) .about-block-media,
+  .about-block .about-block-media {
+    order: -1;
   }
   .about-facts {
     grid-template-columns: 1fr;
@@ -4633,18 +4726,26 @@ html {
 
 /* ---- final CTA ---- */
 .home-final {
-  padding-top: clamp(40px, 5vw, 72px);
+  max-width: none;
+  margin: 0;
+  padding: clamp(88px, 13vw, 170px) clamp(24px, 5vw, 56px);
+  position: relative;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.62) 50%, rgba(0, 0, 0, 0.78) 100%),
+    url('/images/contact-bg.webp');
+  background-size: cover;
+  background-position: center;
 }
 .home-final-card {
   position: relative;
-  overflow: hidden;
   text-align: center;
-  padding: clamp(44px, 6vw, 80px) clamp(24px, 5vw, 72px);
-  border-radius: 28px;
-  border: 1px solid rgba(0, 198, 255, 0.3);
-  background: radial-gradient(ellipse 80% 120% at 50% 0%, rgba(0, 198, 255, 0.14), transparent 60%),
-    linear-gradient(180deg, #0f1620, #090c12);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 .home-final-card h2 {
   font-family: 'Space Grotesk', sans-serif;

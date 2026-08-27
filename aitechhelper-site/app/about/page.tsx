@@ -56,41 +56,69 @@ export default function AboutPage() {
         </div>
       </header>
 
+      {/* Full-bleed Tulsa skyline band — grounds the story in the city. */}
+      <div className="about-banner">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/tulsa-skyline.webp" alt="Downtown Tulsa, Oklahoma skyline" />
+        <div className="about-banner-caption">
+          <span className="home-kicker">Based in Tulsa, Oklahoma</span>
+          <p>Born here, building here — helping Oklahoma businesses win with AI.</p>
+        </div>
+      </div>
+
       <div className="about-body">
-        <section className="about-block">
-          <h2>Where I come from</h2>
-          <p>
-            I got my start at one of the fastest-growing consulting firms in the central
-            United States, on the web-development team — pushing projects across the finish
-            line and advancing the technology that powered our systems. It taught me how
-            real businesses actually run, and how the right technology, built the right way,
-            quietly changes everything.
-          </p>
-        </section>
+        <article className="about-block">
+          <div className="about-block-text">
+            <h2>Where I come from</h2>
+            <p>
+              I got my start at one of the fastest-growing consulting firms in the central
+              United States, on the web-development team — pushing projects across the finish
+              line and advancing the technology that powered our systems. It taught me how
+              real businesses actually run, and how the right technology, built the right way,
+              quietly changes everything.
+            </p>
+          </div>
+          <div className="about-block-media">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/about-hero.webp" alt="A modern business team at work" />
+          </div>
+        </article>
 
-        <section className="about-block">
-          <h2>Why AI</h2>
-          <p>
-            I started working with AI the moment it went public, and I haven&rsquo;t stopped
-            since. I&rsquo;ve dialed in more than <strong>20 different AI products</strong> —
-            learning first-hand what genuinely moves the needle for a business and what&rsquo;s
-            just hype. That&rsquo;s the difference between buying AI and actually getting results
-            from it, and it&rsquo;s exactly what I bring to every client.
-          </p>
-        </section>
+        <article className="about-block">
+          <div className="about-block-text">
+            <h2>Why AI</h2>
+            <p>
+              I started working with AI the moment it went public, and I haven&rsquo;t stopped
+              since. I&rsquo;ve dialed in more than <strong>20 different AI products</strong> —
+              learning first-hand what genuinely moves the needle for a business and what&rsquo;s
+              just hype. That&rsquo;s the difference between buying AI and actually getting results
+              from it, and it&rsquo;s exactly what I bring to every client.
+            </p>
+          </div>
+          <div className="about-block-media">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/about-towers.webp" alt="Modern city business towers" />
+          </div>
+        </article>
 
-        <section className="about-block">
-          <h2>What I&rsquo;m building</h2>
-          <p>
-            Now I&rsquo;m building out a team called <strong>AI Tech Helper</strong> — dedicated
-            to helping local businesses grow using AI systems and tools. Voice agents that
-            never miss a call, messaging that answers in seconds, automations that handle the
-            busywork — set up for you, tuned to your business, and always improving. Big-company
-            technology, built for the shop down the street.
-          </p>
-        </section>
+        <article className="about-block">
+          <div className="about-block-text">
+            <h2>What I&rsquo;m building</h2>
+            <p>
+              Now I&rsquo;m building out a team called <strong>AI Tech Helper</strong> — dedicated
+              to helping local businesses grow using AI systems and tools. Voice agents that
+              never miss a call, messaging that answers in seconds, automations that handle the
+              busywork — set up for you, tuned to your business, and always improving. Big-company
+              technology, built for the shop down the street.
+            </p>
+          </div>
+          <div className="about-block-media">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/contact-bg.webp" alt="Downtown Tulsa, Oklahoma" />
+          </div>
+        </article>
 
-        <section className="about-block about-personal">
+        <section className="about-personal">
           <h2>Beyond the work</h2>
           <p>
             Born and raised in Oklahoma and a proud Broken Arrow High School grad, I&rsquo;m a
