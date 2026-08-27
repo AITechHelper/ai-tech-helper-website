@@ -1,4 +1,5 @@
 import ServicesCards from "@/components/home/ServicesCards";
+import ContactButton from "@/components/ContactButton";
 
 /* The services block, in two parts:
    1. A full-bleed banner — the dashboard image as the background with a dark
@@ -22,6 +23,9 @@ export default function Services() {
             Three packages, each one built on the last — start where your phone hurts
             most and grow into the rest when you&apos;re ready.
           </p>
+          <div className="svc-banner-actions">
+            <ContactButton className="btn-primary" />
+          </div>
         </div>
       </section>
 

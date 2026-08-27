@@ -23,7 +23,6 @@ export default function AiHubPage() {
         <Logo />
         <div className="nav-links">
           <a href="/#services">Services</a>
-          <NavLink href="/ai-tools">AI Tools</NavLink>
           <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>
         <ContactButton />

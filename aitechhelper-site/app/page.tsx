@@ -21,22 +21,22 @@ export default function HomePage() {
     <main className="home">
       <HomeNav />
       <Hero />
-      <ChannelHub />
+      <Services />
       <Feature
         side="right"
         kicker="Who it's for"
-        title="For the businesses that live and die by the phone"
-        body="Home services, trades, clinics, salons and contractors across Oklahoma and surrounding areas. If a missed call is a missed job, your AI agent makes sure it never happens again."
+        title="For local businesses that want AI but don't know where to start"
+        body="Home services, trades, clinics, salons and contractors across Oklahoma and surrounding areas. You know AI could save you time and win you more work — you just don't have the hours to figure out which tools, how to set them up, or where to begin. That's exactly what we handle for you."
         img="/images/AdobeStock_249711013.webp"
-        alt="A service technician taking a customer call on the job"
+        alt="A local service business owner running the day-to-day"
         bullets={[
-          "Answers while you're on the tools or on a job",
-          "Qualifies the lead and books it on your calendar",
-          "Follows up so quotes don't go cold",
-          "Works nights, weekends and holidays",
+          "We find where AI actually helps your business",
+          "No jargon and no DIY — we set the whole thing up",
+          "Start with one thing that hurts, add more as you grow",
+          "Ongoing support as the tools keep changing",
         ]}
       />
-      <Services />
+      <ChannelHub />
       <Process />
       <Feature
         side="left"

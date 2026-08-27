@@ -11,7 +11,7 @@ export default function HomeNav() {
         <Logo />
         <div className="nav-links">
           <a href="/services">Services</a>
-          <a href="/ai-tools">AI Tools</a>
+          <a href="/about">About</a>
           <a href="/ai-hub">AI Hub</a>
         </div>
         <ContactButton />

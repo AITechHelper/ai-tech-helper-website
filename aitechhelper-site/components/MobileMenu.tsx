@@ -28,8 +28,8 @@ export default function MobileMenu() {
         <a href="/services" onClick={close}>
           Services
         </a>
-        <a href="/ai-tools" onClick={close}>
-          AI Tools
+        <a href="/about" onClick={close}>
+          About
         </a>
         <a href="/ai-hub" onClick={close}>
           AI Hub

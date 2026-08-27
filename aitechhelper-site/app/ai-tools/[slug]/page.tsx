@@ -16,9 +16,9 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const tool = getTool(params.slug);
-  if (!tool) return { title: "AI Tools — AI Tech Helper" };
+  if (!tool) return { title: "Top AI Tools Today — AI Tech Helper" };
   return {
-    title: `${tool.name} — AI Tools — AI Tech Helper`,
+    title: `${tool.name} — Top AI Tools — AI Tech Helper`,
     description: tool.excerpt,
   };
 }
@@ -35,7 +35,6 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
         <Logo />
         <div className="nav-links">
           <a href="/#services">Services</a>
-          <NavLink href="/ai-tools">AI Tools</NavLink>
           <NavLink href="/ai-hub">AI Hub</NavLink>
         </div>
         <ContactButton />
@@ -49,7 +48,7 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
 
         <header className="tool-head">
           <div>
-            <span className="eyebrow">AI Tools</span>
+            <span className="eyebrow">Top AI Tools</span>
             <h1>{tool.name}</h1>
             <p className="tool-lede">{tool.excerpt}</p>
             <div className="tool-head-meta">

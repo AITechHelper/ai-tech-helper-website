@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import HomeNav from "@/components/home/HomeNav";
 import Services from "@/components/home/Services";
+import ServiceBreakdown from "@/components/home/ServiceBreakdown";
 import Process from "@/components/home/Process";
 import FAQ from "@/components/home/FAQ";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -19,6 +20,7 @@ export default function ServicesPage() {
     <main className="home">
       <HomeNav />
       <Services />
+      <ServiceBreakdown />
       <Process />
       <FAQ />
       <FinalCTA />
