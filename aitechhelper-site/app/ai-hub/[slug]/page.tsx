@@ -17,9 +17,9 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const post = getPost(params.slug);
-  if (!post) return { title: "The AI Hub — AI Tech Helper" };
+  if (!post) return { title: "The AI Hub, AI Tech Helper" };
   return {
-    title: `${post.title} — The AI Hub`,
+    title: `${post.title}, The AI Hub`,
     description: post.excerpt,
     openGraph: post.image ? { images: [{ url: post.image }] } : undefined,
   };

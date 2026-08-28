@@ -2,7 +2,7 @@ const STEPS = [
   {
     n: "01",
     title: "Quick discovery call",
-    desc: "We learn your business — the calls you get, the questions you're asked, how you book, and what a lead is worth. 20 minutes, no pressure.",
+    desc: "We learn your business, the calls you get, the questions you're asked, how you book, and what a lead is worth. 20 minutes, no pressure.",
   },
   {
     n: "02",
@@ -21,7 +21,7 @@ const STEPS = [
   },
 ];
 
-/* How it works — a plain four-step path so a first-time visitor knows exactly
+/* How it works, a plain four-step path so a first-time visitor knows exactly
    what working with us looks like. */
 export default function Process() {
   return (

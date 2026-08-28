@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AI Tech Helper",
   description:
-    "Voice agents, messaging, and automation for Oklahoma businesses — so you never miss a call, lose a lead, or chase an invoice again.",
+    "Voice agents, messaging, and automation for Oklahoma businesses, so you never miss a call, lose a lead, or chase an invoice again.",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
       <head>
         {/* Runs before first paint. When arriving from a package page's back
             button, the hero would otherwise sit on screen at full opacity
-            through HTML parse, the CDN script loads, and hydration — a visible
+            through HTML parse, the CDN script loads, and hydration, a visible
             flash before HeroCarousel can scroll to the stage and start the
             spin. Marking the document here lets CSS hide the hero from the
             very first frame. The timeout is a failsafe: if the carousel's

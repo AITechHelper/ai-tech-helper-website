@@ -16,9 +16,9 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const tool = getTool(params.slug);
-  if (!tool) return { title: "Top AI Tools Today — AI Tech Helper" };
+  if (!tool) return { title: "Top AI Tools Today, AI Tech Helper" };
   return {
-    title: `${tool.name} — Top AI Tools — AI Tech Helper`,
+    title: `${tool.name}, Top AI Tools, AI Tech Helper`,
     description: tool.excerpt,
   };
 }

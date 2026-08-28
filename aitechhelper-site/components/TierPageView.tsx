@@ -17,7 +17,7 @@ import { PHONE_DISPLAY, PHONE_NUMBER, type Tier } from "@/lib/tiers";
  * Single source of truth: each route renders this live, and the homepage
  * carousel renders the same component scaled onto its 3D card.
  *
- * `interactive` is false for the carousel preview — it drops the phone's
+ * `interactive` is false for the carousel preview, it drops the phone's
  * handlers and element ids so a scaled-down copy can't hijack a tap.
  */
 export default function TierPageView({
@@ -67,7 +67,7 @@ export default function TierPageView({
               Call {PHONE_DISPLAY}
             </a>
             <p className="cta-note">
-              Talk to us about {tier.name} — no pressure, we&rsquo;ll tell you if it&rsquo;s not a
+              Talk to us about {tier.name}, no pressure, we&rsquo;ll tell you if it&rsquo;s not a
               fit.
             </p>
           </div>
@@ -92,8 +92,8 @@ export default function TierPageView({
         </div>
       </section>
 
-      {/* The dashboard is on every tier — it's the platform the agent runs on,
-          not an upsell — so this band is identical across all three and only
+      {/* The dashboard is on every tier, it's the platform the agent runs on,
+          not an upsell, so this band is identical across all three and only
           its module list grows. */}
       <section className="tier-band">
         <h2 className="band-label">Your dashboard, included</h2>
@@ -104,7 +104,7 @@ export default function TierPageView({
         </div>
       </section>
 
-      {/* Real page only — the carousel preview renders this same component
+      {/* Real page only, the carousel preview renders this same component
           scaled onto a card and doesn't want a footer in the thumbnail. */}
       {interactive && <Footer />}
     </div>

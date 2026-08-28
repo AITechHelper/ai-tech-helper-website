@@ -8,7 +8,7 @@
  * move: a tool is a JSON file, its categories are a field on it, and filtering
  * is React state over an array. Nothing is read out of the markup.
  *
- * Same arrangement as the AI Hub — content/ai-tools/*.json, baked in at build
+ * Same arrangement as the AI Hub, content/ai-tools/*.json, baked in at build
  * time, git as the CMS. Reading those files is lib/tools.server.ts; everything
  * here is safe to import from the client.
  */
@@ -20,12 +20,12 @@ export type Tool = {
   excerpt: string;
   /** The tool's own site. */
   url: string;
-  /** Free-text, e.g. "Free" or "Free — $50/mo". */
+  /** Free-text, e.g. "Free" or "Free, $50/mo". */
   pricing?: string;
   /** Out of 5, in halves. Omit for tools that have not been rated yet. */
   rating?: number;
   image?: string | null;
-  /** Taxonomy slugs — the specific ones, e.g. "workflow-automation". */
+  /** Taxonomy slugs, the specific ones, e.g. "workflow-automation". */
   categories: string[];
   /** A few paragraphs for the tool's own page. */
   fullDescription?: string;
@@ -63,7 +63,7 @@ export function finalScore(s: Scores): number {
   return (s.easeOfUse + s.outputQuality + s.businessValue + s.reliability) / 4;
 }
 
-/** Every taxonomy slug a tool may carry — the groups plus everything under them. */
+/** Every taxonomy slug a tool may carry, the groups plus everything under them. */
 export function allCategorySlugs(): string[] {
   const out = new Set<string>();
   for (const g of CATEGORY_GROUPS) {
@@ -80,7 +80,7 @@ export function allCategorySlugs(): string[] {
  *
  * Carried over unchanged from the old site's categoryMap so existing tool
  * taxonomy still lines up. `document-management` sits under two groups on
- * purpose — it belongs to both.
+ * purpose, it belongs to both.
  */
 export const CATEGORY_GROUPS: { slug: string; label: string; children: string[] }[] = [
   {

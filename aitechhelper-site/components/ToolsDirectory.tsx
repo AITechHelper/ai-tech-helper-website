@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CATEGORY_GROUPS, labelForCategory, matchesGroup, type Tool } from "@/lib/tools";
 
-/* The old site filtered by walking the DOM — reading tool-category-* classes
+/* The old site filtered by walking the DOM, reading tool-category-* classes
    off each card and setting style.display. Here the list is just data, so the
    filter is a derived value: pick a group, type a query, and the grid is
    whatever survives. No polling for cards to exist, no hidden nodes left in
@@ -82,7 +82,7 @@ export default function ToolsDirectory({ tools }: { tools: Tool[] }) {
         </p>
       ) : (
         <div className="tool-grid">
-          {/* The card opens our review, not the vendor — the outbound link
+          {/* The card opens our review, not the vendor, the outbound link
               lives on the tool's own page, under the rating that earned it. */}
           {visible.map((tool) => (
             <Link key={tool.slug} className="tool-card" href={`/ai-tools/${tool.slug}`}>

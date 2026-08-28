@@ -11,9 +11,9 @@ import FinalCTA from "@/components/home/FinalCTA";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "AI Tech Helper — AI Phone & Messaging Agents for Oklahoma Businesses",
+  title: "AI Tech Helper, AI Phone & Messaging Agents for Oklahoma Businesses",
   description:
-    "AI voice and messaging agents for local service businesses in Oklahoma and surrounding areas. Answer every call 24/7, reply on every channel, qualify leads and book jobs — never miss a call again.",
+    "AI voice and messaging agents for local service businesses in Oklahoma and surrounding areas. Answer every call 24/7, reply on every channel, qualify leads and book jobs, never miss a call again.",
 };
 
 export default function HomePage() {
@@ -25,12 +25,12 @@ export default function HomePage() {
         side="right"
         kicker="Who it's for"
         title="For local businesses that want AI but don't know where to start"
-        body="Home services, trades, clinics, salons and contractors across Oklahoma and surrounding areas. You know AI could save you time and win you more work — you just don't have the hours to figure out which tools, how to set them up, or where to begin. That's exactly what we handle for you."
+        body="Home services, trades, clinics, salons and contractors across Oklahoma and surrounding areas. You know AI could save you time and win you more work, you just don't have the hours to figure out which tools, how to set them up, or where to begin. That's exactly what we handle for you."
         img="/images/AdobeStock_249711013.webp"
         alt="A local service business owner running the day-to-day"
         bullets={[
           "We find where AI actually helps your business",
-          "No jargon and no DIY — we set the whole thing up",
+          "No jargon and no DIY, we set the whole thing up",
           "Start with one thing that hurts, add more as you grow",
           "Ongoing support as the tools keep changing",
         ]}

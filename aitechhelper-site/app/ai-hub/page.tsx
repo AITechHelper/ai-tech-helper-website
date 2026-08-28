@@ -8,9 +8,9 @@ import Footer from "@/components/Footer";
 import { formatDate, getPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
-  title: "The AI Hub — AI Tech Helper",
+  title: "The AI Hub, AI Tech Helper",
   description:
-    "A weekly briefing on the AI news that actually matters — new tools, real launches, and what they mean, in plain English.",
+    "A weekly briefing on the AI news that actually matters, new tools, real launches, and what they mean, in plain English.",
 };
 
 export default function AiHubPage() {
@@ -33,13 +33,13 @@ export default function AiHubPage() {
         <span className="eyebrow">The AI Hub</span>
         <h1>The week in AI, in plain English</h1>
         <p className="hub-sub">
-          Every Monday we read the whole week of AI news so you don&rsquo;t have to — the real
+          Every Monday we read the whole week of AI news so you don&rsquo;t have to, the real
           launches, what changed, and why it matters. No jargon, no hype.
         </p>
       </header>
 
       {posts.length === 0 ? (
-        <p className="hub-empty">New issues are on the way — check back Monday.</p>
+        <p className="hub-empty">New issues are on the way, check back Monday.</p>
       ) : (
         <div className="hub-wrap">
           {featured && (

@@ -183,7 +183,7 @@ export default function ChannelHub() {
         <span className="chub-kicker">One inbox, every channel</span>
         <h2>However they reach out, one AI answers</h2>
         <p>
-          Phone, text, social, chat and email all flow into a single hub — your agent
+          Phone, text, social, chat and email all flow into a single hub, your agent
           replies in seconds, everywhere at once.
         </p>
       </div>

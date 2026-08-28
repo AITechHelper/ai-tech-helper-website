@@ -19,7 +19,7 @@ const addedBy = (slug: Tier["slug"]) =>
   COMPARISON.filter((row) => row.tiers[0] === slug).map((row) => row.label);
 
 /**
- * The services menu — the card the ring rests on.
+ * The services menu, the card the ring rests on.
  *
  * Three branded package cards, one per tier. Each card is the carousel's
  * navigation: HeroCarousel delegates clicks by looking for
@@ -27,7 +27,7 @@ const addedBy = (slug: Tier["slug"]) =>
  * the ring spins to. Index 0 is the menu itself, hence the +1.
  *
  * Rather than sitting beside a separate comparison matrix, each card carries
- * its own slice of it — what that tier adds — plus an explicit "everything in
+ * its own slice of it, what that tier adds, plus an explicit "everything in
  * the tier below" line, so the ladder reads down the page instead of across a
  * grid of ticks.
  */
@@ -38,7 +38,7 @@ export default function ServicesMenu() {
         <div className="eyebrow">What we build</div>
         <h1>Our services</h1>
         <p className="menu-sub">
-          Three packages, each one built on the last — start where your phone hurts most.
+          Three packages, each one built on the last, start where your phone hurts most.
         </p>
       </div>
 

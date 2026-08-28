@@ -12,7 +12,7 @@ function Check() {
 }
 
 /* The three packages shown side by side (Bronze / Silver / Gold), Silver
-   featured. Static grid — replaces the rotating carousel — so all three are
+   featured. Static grid, replaces the rotating carousel, so all three are
    visible at once. Each card links through to its full tier page.
    NB: classes are prefixed `pkg-` (not `svc-`) to avoid colliding with the
    retired carousel's `.svc-card` rules still in globals.css. */

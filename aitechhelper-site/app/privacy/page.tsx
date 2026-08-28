@@ -6,7 +6,7 @@ import NavLink from "@/components/NavLink";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — AI Tech Helper",
+  title: "Privacy Policy, AI Tech Helper",
   description: "How AI Tech Helper LLC collects, uses, and protects your information.",
 };
 
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
 
         <h2>Information We Collect</h2>
         <p>
-          We collect information you provide directly — including your name, email address, phone
+          We collect information you provide directly, including your name, email address, phone
           number, and business information when you contact us, complete an audit, or use our
           services.
         </p>

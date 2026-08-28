@@ -1,7 +1,7 @@
 import ContactButton from "@/components/ContactButton";
 import { PHONE_NUMBER, PHONE_DISPLAY } from "@/lib/tiers";
 
-/* The closing call to action — the last, clearest ask on the page. */
+/* The closing call to action, the last, clearest ask on the page. */
 export default function FinalCTA() {
   return (
     <section className="home-section home-final" id="final-cta">

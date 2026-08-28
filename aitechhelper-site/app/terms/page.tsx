@@ -6,7 +6,7 @@ import NavLink from "@/components/NavLink";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — AI Tech Helper",
+  title: "Terms of Service, AI Tech Helper",
   description: "The terms that govern use of AI Tech Helper LLC services.",
 };
 

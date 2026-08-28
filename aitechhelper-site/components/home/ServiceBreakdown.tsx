@@ -7,14 +7,14 @@ import ImgSlot from "@/components/home/ImgSlot";
 
    Images are referenced by a stable filename in /public/images. Until a file is
    dropped in, ImgSlot shows a clean labelled placeholder naming exactly which
-   image to add — so the layout is complete before the art lands. */
+   image to add, so the layout is complete before the art lands. */
 
 type Capability = {
   tier: "bronze" | "silver" | "gold";
   title: string;
   body: string;
   bullets: string[];
-  /** File under /public/images — add it to replace the placeholder. */
+  /** File under /public/images, add it to replace the placeholder. */
   img: string;
   alt: string;
 };
@@ -23,7 +23,7 @@ const CAPABILITIES: Capability[] = [
   {
     tier: "bronze",
     title: "24/7 voice agent",
-    body: "A receptionist that answers every call the instant it rings — evenings, weekends, holidays, and while you're already on a job. No voicemail, no hold music, no missed leads slipping to a competitor.",
+    body: "A receptionist that answers every call the instant it rings, evenings, weekends, holidays, and while you're already on a job. No voicemail, no hold music, no missed leads slipping to a competitor.",
     bullets: [
       "Answers in your business's voice, day or night",
       "Handles pricing, hours and service-area questions",
@@ -35,7 +35,7 @@ const CAPABILITIES: Capability[] = [
   {
     tier: "bronze",
     title: "Lead qualification & booking",
-    body: "The agent asks the right questions, works out whether a caller is a real job, and books qualified work straight onto your calendar — so you wake up to appointments, not a list of people to call back.",
+    body: "The agent asks the right questions, works out whether a caller is a real job, and books qualified work straight onto your calendar, so you wake up to appointments, not a list of people to call back.",
     bullets: [
       "Qualifies the lead before it reaches you",
       "Books straight onto your live calendar",
@@ -47,7 +47,7 @@ const CAPABILITIES: Capability[] = [
   {
     tier: "silver",
     title: "Messaging on every channel",
-    body: "One inbox for SMS, website chat, Instagram, Facebook Messenger, WhatsApp and email. Every message is answered in seconds and every conversation lands in the same place — nothing gets lost across five different apps.",
+    body: "One inbox for SMS, website chat, Instagram, Facebook Messenger, WhatsApp and email. Every message is answered in seconds and every conversation lands in the same place, nothing gets lost across five different apps.",
     bullets: [
       "SMS, chat, Instagram, Facebook, WhatsApp and email",
       "Replies in seconds, not hours",
@@ -107,7 +107,7 @@ const CAPABILITIES: Capability[] = [
   {
     tier: "gold",
     title: "Onboarding & email pipeline",
-    body: "Every new client is welcomed, prepared and reassured automatically the moment their booking confirms — and a custom email pipeline nurtures cold leads, proposals and re-engagement around your business, not a generic template.",
+    body: "Every new client is welcomed, prepared and reassured automatically the moment their booking confirms, and a custom email pipeline nurtures cold leads, proposals and re-engagement around your business, not a generic template.",
     bullets: [
       "New clients welcomed and prepared automatically",
       "Custom nurture sequences built for your business",
@@ -132,7 +132,7 @@ export default function ServiceBreakdown() {
         <h2>What your AI agent actually does</h2>
         <p>
           Each package is built from these services. Here&apos;s exactly what each one
-          handles for you — start with what hurts most and grow into the rest.
+          handles for you, start with what hurts most and grow into the rest.
         </p>
       </div>
 

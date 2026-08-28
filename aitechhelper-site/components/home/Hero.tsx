@@ -2,7 +2,7 @@ import CloudBackground from "@/components/home/CloudBackground";
 import { PHONE_NUMBER } from "@/lib/tiers";
 
 /* The hero: a living cloud mesh gradient as the backdrop, with the plain-language
-   pitch on top — what we do, who it's for, and where — plus the two primary
+   pitch on top, what we do, who it's for, and where, plus the two primary
    actions and a row of quick trust signals. */
 export default function Hero() {
   return (
@@ -11,7 +11,7 @@ export default function Hero() {
 
       {/* City glass-tower backdrop behind the living gradient and the copy.
           Darkened/masked in CSS so the headline stays readable while the
-          buildings ground the hero in something real. Decorative — no alt. */}
+          buildings ground the hero in something real. Decorative, no alt. */}
       <div className="home-hero-skyline" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/hero-buildings.webp" alt="" />
@@ -25,10 +25,8 @@ export default function Hero() {
         </h1>
 
         <p className="home-hero-sub">
-          AI Tech Helper helps local service businesses win back hours and capture
-          more revenue — voice and messaging agents that answer every call, reply on
-          every channel, and book the job for you. Serving Oklahoma and surrounding
-          areas.
+          Capture every lead, follow up in seconds, and stay on top of every client.
+          AI voice and messaging agents that work for you around the clock.
         </p>
 
         <div className="home-hero-actions">

@@ -8,9 +8,9 @@ import ToolsDirectory from "@/components/ToolsDirectory";
 import { getTools } from "@/lib/tools.server";
 
 export const metadata: Metadata = {
-  title: "Top AI Tools Today — AI Tech Helper",
+  title: "Top AI Tools Today, AI Tech Helper",
   description:
-    "The AI tools worth your time, rated and sorted by what they actually do — automation, marketing, content, support, and more.",
+    "The AI tools worth your time, rated and sorted by what they actually do, automation, marketing, content, support, and more.",
 };
 
 export default function AiToolsPage() {
@@ -33,7 +33,7 @@ export default function AiToolsPage() {
         <h1>The tools worth your time</h1>
         <p className="hub-sub">
           We try them so you don&rsquo;t have to. Every tool here is rated on what it actually
-          does for a small business — not on how good its landing page looks.
+          does for a small business, not on how good its landing page looks.
         </p>
       </header>
 

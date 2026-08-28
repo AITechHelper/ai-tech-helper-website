@@ -23,8 +23,8 @@ export type Tier = {
   /** Everything carried up from the lower tiers, listed so the value is
    *  explicit rather than implied. */
   inherits: string[];
-  /** Dashboard modules this tier unlocks. Every tier gets a dashboard — it's
-   *  the platform, not a differentiator — so this list grows rather than
+  /** Dashboard modules this tier unlocks. Every tier gets a dashboard, it's
+   *  the platform, not a differentiator, so this list grows rather than
    *  appearing only at the top tier. */
   dashboard: string[];
   /** One-line summary used on the homepage carousel card. */
@@ -42,20 +42,20 @@ export const TIERS: Tier[] = [
   {
     slug: "bronze",
     name: "Bronze",
-    eyebrow: "Bronze — Voice Agent",
+    eyebrow: "Bronze, Voice Agent",
     headline: "The receptionist that never misses a call",
     subtext:
-      "Call the number below and hear it qualify a lead, answer questions, and book an appointment — live.",
+      "Call the number below and hear it qualify a lead, answer questions, and book an appointment, live.",
     cardKicker: "Voice Agent",
     cardDesc:
-      "Answers every call, qualifies the lead, and books the appointment — 24/7, live on your calendar.",
+      "Answers every call, qualifies the lead, and books the appointment, 24/7, live on your calendar.",
     inherits: [],
     dashboard: ["Call log", "Recordings & transcripts", "Contacts", "Calendar & booking", "Pipeline"],
     features: [
       {
         icon: "phone",
         title: "Answers every call, 24/7",
-        desc: "Evenings, weekends, while you're on a job — no voicemail, no missed leads.",
+        desc: "Evenings, weekends, while you're on a job, no voicemail, no missed leads.",
       },
       {
         icon: "calendar",
@@ -65,7 +65,7 @@ export const TIERS: Tier[] = [
       {
         icon: "clock",
         title: "Handles FAQs instantly",
-        desc: "Pricing, hours, service area — whatever they usually ask.",
+        desc: "Pricing, hours, service area, whatever they usually ask.",
       },
       {
         icon: "dashboard",
@@ -77,10 +77,10 @@ export const TIERS: Tier[] = [
   {
     slug: "silver",
     name: "Silver",
-    eyebrow: "Silver — Voice + Messaging",
+    eyebrow: "Silver, Voice + Messaging",
     headline: "Every call and every message, answered in seconds",
     subtext:
-      "Bronze answers the phone. Silver answers everywhere else too — and stops the work you've already won from quietly slipping away.",
+      "Bronze answers the phone. Silver answers everywhere else too, and stops the work you've already won from quietly slipping away.",
     cardKicker: "Voice + Messaging",
     cardDesc:
       "Everything in Bronze, plus instant replies on every text channel and the follow-up that protects each booking.",
@@ -99,7 +99,7 @@ export const TIERS: Tier[] = [
       {
         icon: "message",
         title: "Replies on every channel",
-        desc: "SMS, website chat, Instagram, Facebook Messenger, WhatsApp, and email — answered in seconds, not hours.",
+        desc: "SMS, website chat, Instagram, Facebook Messenger, WhatsApp, and email, answered in seconds, not hours.",
       },
       {
         icon: "calendar",
@@ -121,13 +121,13 @@ export const TIERS: Tier[] = [
   {
     slug: "gold",
     name: "Gold",
-    eyebrow: "Gold — Complete Package",
+    eyebrow: "Gold, Complete Package",
     headline: "Your entire job lifecycle, running itself",
     subtext:
-      "Everything in Silver, plus the paperwork, the payments, and the follow-through — from booked, to signed, to paid, to reviewed, without you touching any of it.",
+      "Everything in Silver, plus the paperwork, the payments, and the follow-through, from booked, to signed, to paid, to reviewed, without you touching any of it.",
     cardKicker: "Complete Package",
     cardDesc:
-      "Everything in Silver, plus contracts, invoicing, onboarding, and custom email — the whole business behind the booking.",
+      "Everything in Silver, plus contracts, invoicing, onboarding, and custom email, the whole business behind the booking.",
     builds_on: "Silver",
     inherits: [VOICE, MESSAGING, REMINDERS, ESTIMATES, REVIEWS],
     dashboard: [
@@ -145,7 +145,7 @@ export const TIERS: Tier[] = [
       {
         icon: "contract",
         title: "Paperwork & payments",
-        desc: "Sends contracts and waivers for a legally binding e-signature the moment a job is booked, then invoices the client and chases every unpaid bill with automatic reminders — signed to paid, all hands-off.",
+        desc: "Sends contracts and waivers for a legally binding e-signature the moment a job is booked, then invoices the client and chases every unpaid bill with automatic reminders, signed to paid, all hands-off.",
       },
       {
         icon: "onboarding",
@@ -155,7 +155,7 @@ export const TIERS: Tier[] = [
       {
         icon: "mail",
         title: "Custom email pipeline",
-        desc: "A nurture sequence built around your business — cold leads, proposals, re-engagement — not a generic template.",
+        desc: "A nurture sequence built around your business, cold leads, proposals, re-engagement, not a generic template.",
       },
     ],
   },
