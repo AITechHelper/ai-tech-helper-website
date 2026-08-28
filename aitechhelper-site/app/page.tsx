@@ -21,7 +21,6 @@ export default function HomePage() {
     <main className="home">
       <HomeNav />
       <Hero />
-      <Services />
       <Feature
         side="right"
         kicker="Who it's for"
@@ -38,6 +37,7 @@ export default function HomePage() {
       />
       <ChannelHub />
       <Process />
+      <Services />
       <Feature
         side="left"
         kicker="Done for you"
