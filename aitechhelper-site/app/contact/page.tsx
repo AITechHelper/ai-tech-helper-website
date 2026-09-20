@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
-import BookingCalendar from "@/components/BookingCalendar";
 import ContactForm from "@/components/ContactForm";
+import BookMeetingButton from "@/components/BookMeetingButton";
 import { PHONE_NUMBER, PHONE_DISPLAY } from "@/lib/tiers";
 
 export const metadata: Metadata = {
-  title: "Contact, AI Tech Helper | Book a Free AI Assessment",
+  title: "Contact, AI Tech Helper | Get in Touch",
   description:
-    "Book a free AI assessment for your business in Oklahoma and surrounding areas. Pick a time on the calendar or call us, and we'll map out what to automate first.",
+    "Tell us about your business and our AI will text you to set up a free assessment, usually within minutes. Or book a meeting now, or call us. Oklahoma and surrounding areas.",
 };
 
-/* The endpoint every path on the site funnels into. Replaces the old contact
-   modal with a standalone page carrying the GoHighLevel booking calendar. */
+/* The endpoint every path on the site funnels into. Form-first: drop details and
+   our AI texts you to book. Self-booking (GHL calendar) and a phone call are the
+   secondary options. */
 export default function ContactPage() {
   return (
     <main className="home">
@@ -21,40 +22,26 @@ export default function ContactPage() {
       <section className="contact-page">
         <div className="contact-page-head home-section-head">
           <span className="home-kicker">Let&apos;s talk</span>
-          <h1>Book your free AI assessment</h1>
+          <h1>Get in touch</h1>
           <p>
-            Pick a time that works and we&apos;ll show you exactly where AI can save you hours
-            and win you more jobs. No cost, no pressure. Prefer to talk now? Call{" "}
-            <a href={`tel:${PHONE_NUMBER}`} className="contact-inline-call">
-              {PHONE_DISPLAY}
-            </a>
-            .
+            Tell us about your business and our AI will text you to set up your free
+            assessment, usually within minutes. Yes, that&rsquo;s the same system we build
+            for you.
           </p>
         </div>
 
-        <div className="contact-page-cal">
-          <BookingCalendar />
-        </div>
-
-        <div className="contact-or">
-          <span>or</span>
-        </div>
-
-        <div className="contact-page-form">
-          <div className="contact-form-head">
-            <h2>Prefer we reach out?</h2>
-            <p>
-              Drop your details and our AI will text you to set up a time, usually within
-              minutes. Yes, that&rsquo;s the same system we build for you.
-            </p>
-          </div>
+        <div className="contact-card">
           <ContactForm />
         </div>
 
         <div className="contact-page-alt">
-          <a href={`tel:${PHONE_NUMBER}`} className="btn-ghost">
-            Or call {PHONE_DISPLAY}
-          </a>
+          <span className="contact-alt-label">Rather do it yourself?</span>
+          <div className="contact-alt-actions">
+            <BookMeetingButton className="btn-ghost" />
+            <a href={`tel:${PHONE_NUMBER}`} className="btn-ghost">
+              Call {PHONE_DISPLAY}
+            </a>
+          </div>
         </div>
       </section>
 

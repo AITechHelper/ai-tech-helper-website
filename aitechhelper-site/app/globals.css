@@ -5852,3 +5852,38 @@ a.svc-cta:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- contact page, form-first layout ---- */
+.contact-card {
+  max-width: 620px;
+  margin: 6px auto 0;
+  padding: clamp(24px, 3vw, 38px);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+.contact-page-alt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+}
+.contact-alt-label {
+  color: #7f8b99;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+.contact-alt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.contact-alt-actions .btn-ghost {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 15px 30px;
+}
