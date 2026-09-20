@@ -22,6 +22,7 @@ export default function HomePage() {
     <main className="home">
       <SiteHeader />
       <Hero />
+      <ChannelHub />
       <Feature
         side="right"
         kicker="Who it's for"
@@ -36,7 +37,6 @@ export default function HomePage() {
           "One inbox for everything, synced to your CRM",
         ]}
       />
-      <ChannelHub />
       <Process />
       <Services />
       <TrustStrip />

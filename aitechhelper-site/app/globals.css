@@ -4227,10 +4227,10 @@ html {
    `.svc-card { position:absolute }` rules still present below. */
 .pkg-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   align-items: stretch;
-  max-width: 1240px;
+  max-width: 1080px;
   margin: 40px auto 0;
 }
 .pkg-card {
@@ -4336,19 +4336,13 @@ html {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(var(--glow), 0.42);
 }
-@media (max-width: 1080px) {
-  .pkg-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 760px;
-  }
-  .pkg-card.pkg-featured {
-    transform: none;
-  }
-}
-@media (max-width: 620px) {
+@media (max-width: 860px) {
   .pkg-grid {
     grid-template-columns: 1fr;
     max-width: 460px;
+  }
+  .pkg-card.pkg-featured {
+    transform: none;
   }
 }
 
@@ -4621,22 +4615,33 @@ html {
 
 /* ---- reviews ---- */
 .home-review-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(16px, 2vw, 26px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(14px, 1.6vw, 22px);
+  max-width: 1180px;
+  margin: 0 auto;
 }
 .home-review {
-  flex: 0 1 360px;
-  max-width: 420px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   margin: 0;
-  padding: clamp(26px, 2.4vw, 34px);
+  padding: clamp(20px, 1.8vw, 28px);
   border-radius: 20px;
   background: linear-gradient(180deg, #0f1218, #08090d);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+@media (max-width: 900px) {
+  .home-review-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 640px;
+  }
+}
+@media (max-width: 520px) {
+  .home-review-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+  }
 }
 .home-stars {
   display: inline-flex;
@@ -4792,8 +4797,7 @@ html {
 
 /* ---- responsive ---- */
 @media (max-width: 900px) {
-  .home-tier-grid,
-  .home-review-grid {
+  .home-tier-grid {
     grid-template-columns: 1fr;
     max-width: 480px;
     margin-left: auto;
@@ -5075,20 +5079,28 @@ a.svc-cta:hover {
 .home-hero-icons {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 14px 26px;
+  gap: clamp(12px, 1.6vw, 22px);
   margin: 26px 0 34px;
   padding: 0;
 }
 .home-hero-icons li {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  font-size: 14.5px;
+  gap: 8px;
+  font-size: clamp(12.5px, 1.1vw, 14.5px);
   font-weight: 600;
   color: #dbe6f2;
   letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .home-hero-icons {
+    flex-wrap: wrap;
+    max-width: 420px;
+    margin-inline: auto;
+  }
 }
 .home-hero-icon {
   display: inline-flex;
@@ -5137,10 +5149,11 @@ a.svc-cta:hover {
 /* ---- homepage services footer links ---- */
 .home-services-foot {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin-top: 34px;
+  gap: 12px 32px;
+  margin-top: 30px;
   text-align: center;
 }
 .home-soft-link,
@@ -5500,5 +5513,60 @@ a.svc-cta:hover {
   }
   .assess-pop .booking-cal-frame {
     height: 64vh !important;
+  }
+}
+
+/* ---- full-width Custom card (below the three plans) ---- */
+.pkg-custom-wide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  max-width: 1080px;
+  margin: 18px auto 0;
+  padding: 26px clamp(22px, 3vw, 34px);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+}
+.pkg-custom-copy {
+  flex: 1 1 360px;
+}
+.pkg-custom-wide .pkg-name {
+  margin: 4px 0 8px;
+  font-size: 26px;
+}
+.pkg-custom-wide .pkg-desc {
+  margin-bottom: 14px;
+}
+.pkg-custom-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+}
+.pkg-custom-points li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e7ebf2;
+  font-size: 14.5px;
+}
+.pkg-custom-cta {
+  margin: 0;
+  flex: 0 0 auto;
+  align-self: center;
+}
+@media (max-width: 620px) {
+  .pkg-custom-wide {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+  }
+  .pkg-custom-cta {
+    align-self: stretch;
   }
 }

@@ -16,6 +16,7 @@ function Check() {
    once. Each tier card links through to its full page. */
 export default function ServicesCards() {
   return (
+    <>
     <div className="pkg-grid">
       {TIERS.map((tier) => {
         const featured = tier.slug === FEATURED;
@@ -47,15 +48,14 @@ export default function ServicesCards() {
           </article>
         );
       })}
+    </div>
 
-      <article className="pkg-card pkg-custom">
+    <div className="pkg-custom-wide">
+      <div className="pkg-custom-copy">
         <span className="pkg-kicker">{CUSTOM.kicker}</span>
         <h3 className="pkg-name">{CUSTOM.name}</h3>
-        <p className="pkg-price">
-          <span className="pkg-price-setup">Quoted for you</span>
-        </p>
         <p className="pkg-desc">{CUSTOM.desc}</p>
-        <ul className="pkg-features">
+        <ul className="pkg-custom-points">
           {CUSTOM.points.map((p) => (
             <li key={p}>
               <Check />
@@ -63,11 +63,12 @@ export default function ServicesCards() {
             </li>
           ))}
         </ul>
-        <a href="/contact" className="pkg-cta">
-          Book a call
-          <span aria-hidden="true"> →</span>
-        </a>
-      </article>
+      </div>
+      <a href="/contact" className="pkg-cta pkg-custom-cta">
+        Book a call
+        <span aria-hidden="true"> →</span>
+      </a>
     </div>
+    </>
   );
 }

@@ -134,7 +134,7 @@ export const TIERS: Tier[] = [
     subtext:
       "Everything in Silver, plus a 24/7 AI voice agent that answers every call, qualifies the lead, and books the job, live on your calendar.",
     price: { setup: 1000, monthly: 400 },
-    cardKicker: "Voice Agent & Full Lifecycle",
+    cardKicker: "Voice + Full Lifecycle",
     cardDesc:
       "Everything in Silver, plus a 24/7 voice agent, contracts and invoicing, onboarding and a custom email pipeline.",
     builds_on: "Silver",

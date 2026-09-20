@@ -26,18 +26,6 @@ const REVIEWS = [
     business: "",
     initials: "JT",
   },
-  {
-    quote: "The man for the job!",
-    name: "Nate",
-    business: "Longwell Media",
-    initials: "N",
-  },
-  {
-    quote: "Blown away!",
-    name: "Myca Sanderson",
-    business: "",
-    initials: "MS",
-  },
 ];
 
 function Stars() {

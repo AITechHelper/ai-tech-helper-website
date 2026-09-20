@@ -11,6 +11,10 @@ const ITEMS = [
 export default function TrustStrip() {
   return (
     <section className="home-section home-trust">
+      <div className="home-section-head">
+        <span className="home-kicker">Done for you</span>
+        <h2>We set it up, you get the results</h2>
+      </div>
       <div className="home-trust-grid">
         {ITEMS.map((i) => (
           <div className="home-trust-item" key={i.t}>
