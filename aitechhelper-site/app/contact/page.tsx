@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import BookingCalendar from "@/components/BookingCalendar";
+import ContactForm from "@/components/ContactForm";
 import { PHONE_NUMBER, PHONE_DISPLAY } from "@/lib/tiers";
 
 export const metadata: Metadata = {
@@ -33,6 +34,21 @@ export default function ContactPage() {
 
         <div className="contact-page-cal">
           <BookingCalendar />
+        </div>
+
+        <div className="contact-or">
+          <span>or</span>
+        </div>
+
+        <div className="contact-page-form">
+          <div className="contact-form-head">
+            <h2>Prefer we reach out?</h2>
+            <p>
+              Drop your details and our AI will text you to set up a time, usually within
+              minutes. Yes, that&rsquo;s the same system we build for you.
+            </p>
+          </div>
+          <ContactForm />
         </div>
 
         <div className="contact-page-alt">
