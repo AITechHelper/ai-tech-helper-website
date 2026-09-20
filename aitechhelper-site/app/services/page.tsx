@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import SiteHeader from "@/components/SiteHeader";
 import ServiceBreakdown from "@/components/home/ServiceBreakdown";
 import ServicesCards from "@/components/home/ServicesCards";
-import ContactButton from "@/components/ContactButton";
 import FinalCTA from "@/components/home/FinalCTA";
 import Footer from "@/components/Footer";
 
@@ -25,9 +24,10 @@ export default function ServicesPage() {
           <span className="home-kicker">Our services</span>
           <h1>What we offer</h1>
           <p>Every service we run for you, and which plan it lives in.</p>
-          <div className="svc-page-hero-cta">
-            <ContactButton className="btn-primary" />
-          </div>
+        </div>
+        <div className="svc-page-hero-cta">
+          <a href="/contact" className="btn-primary">Book a call</a>
+          <a href="#services" className="btn-ghost">See the plans</a>
         </div>
       </section>
 

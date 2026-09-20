@@ -150,15 +150,6 @@ const TIER_LABEL: Record<Capability["tier"], string> = {
 export default function ServiceBreakdown() {
   return (
     <section className="svc-breakdown" id="breakdown">
-      <div className="home-section-head svc-breakdown-head">
-        <span className="home-kicker">Every service, in detail</span>
-        <h2>What your AI system actually does</h2>
-        <p>
-          Each plan is built from these services. Here&apos;s exactly what each one handles
-          for you, start with what hurts most and grow into the rest.
-        </p>
-      </div>
-
       <div className="svc-breakdown-list">
         {CAPABILITIES.map((cap, i) => (
           <article

@@ -5412,9 +5412,11 @@ a.svc-cta:hover {
   padding: clamp(48px, 7vw, 96px) 20px 10px;
 }
 .svc-page-hero-cta {
-  margin-top: 22px;
+  margin-top: 26px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 14px;
 }
 
 /* ---- timed assessment popup ---- */
