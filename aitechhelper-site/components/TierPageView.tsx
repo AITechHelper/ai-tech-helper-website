@@ -102,10 +102,6 @@ export default function TierPageView({
         </div>
 
         <div className="tier-stage-cta">
-          <p className="tier-price">
-            <span className="tier-price-setup">${tier.price.setup} setup</span>
-            <span className="tier-price-mo">${tier.price.monthly}/mo</span>
-          </p>
           <a href="/contact" className="call-btn">
             {Icons.calendar}
             Book a call

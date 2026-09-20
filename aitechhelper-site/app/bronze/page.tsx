@@ -5,7 +5,7 @@ import { getTier } from "@/lib/tiers";
 export const metadata: Metadata = {
   title: "AI Tech Helper, Bronze | Instant Response",
   description:
-    "Instant replies on every channel, call, text, DM, chat and email, plus missed-call text back, all in one hub synced to your CRM. $500 setup, $200/mo.",
+    "Instant replies on every channel, call, text, DM, chat and email, plus missed-call text back, all in one hub synced to your CRM.",
 };
 
 export default function BronzePage() {

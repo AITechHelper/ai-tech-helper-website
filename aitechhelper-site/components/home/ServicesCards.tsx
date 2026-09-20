@@ -28,10 +28,6 @@ export default function ServicesCards() {
             {featured && <span className="pkg-badge">Most popular</span>}
             <span className="pkg-kicker">{tier.cardKicker}</span>
             <h3 className="pkg-name">{tier.name}</h3>
-            <p className="pkg-price">
-              <span className="pkg-price-setup">${tier.price.setup} setup</span>
-              <span className="pkg-price-mo">${tier.price.monthly}/mo</span>
-            </p>
             <p className="pkg-desc">{tier.cardDesc}</p>
             <ul className="pkg-features">
               {tier.features.map((f) => (
