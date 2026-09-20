@@ -31,8 +31,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <ServiceBreakdown />
-
       <section className="home-section home-services" id="services">
         <div className="home-section-head">
           <span className="home-kicker">Ready to choose?</span>
@@ -40,6 +38,8 @@ export default function ServicesPage() {
         </div>
         <ServicesCards />
       </section>
+
+      <ServiceBreakdown />
 
       <FinalCTA />
       <Footer />
