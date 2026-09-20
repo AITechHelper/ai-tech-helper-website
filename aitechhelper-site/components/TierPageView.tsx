@@ -2,17 +2,27 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Icons } from "@/components/TierIcons";
 import TierVisual from "@/components/TierVisual";
-import { PHONE_DISPLAY, PHONE_NUMBER, type Tier } from "@/lib/tiers";
+import { PHONE_DISPLAY, PHONE_NUMBER, type Tier, type TierFeature } from "@/lib/tiers";
+
+function OrbitFeature({ f }: { f: TierFeature }) {
+  return (
+    <div className="tier-orbit-feat">
+      <div className="icon-badge">{Icons[f.icon]}</div>
+      <div className="tier-orbit-feat-text">
+        <h3>{f.title}</h3>
+        <p>{f.desc}</p>
+      </div>
+    </div>
+  );
+}
 
 /**
- * The full body of a tier page (/bronze, /silver, /gold).
+ * A tier page (/bronze, /silver, /gold), built around the phone.
  *
- * Horizontal bands: a hero with the headline, price and call-to-action, then the
- * capabilities, then the dashboard. Gold shows the live call phone (voice is the
- * point there); Bronze and Silver show a messaging thread.
- *
- * `interactive` is false for any scaled-down preview render, it drops the phone's
- * handlers and element ids so a copy can't hijack a tap.
+ * The phone is the centerpiece: headline above it, the tier's capabilities
+ * flanking it left and right, and the price + call-to-action below. Gold shows
+ * the live call phone (voice is the point); Bronze and Silver show a messaging
+ * thread.
  */
 export default function TierPageView({
   tier,
@@ -22,75 +32,74 @@ export default function TierPageView({
   interactive?: boolean;
 }) {
   const isGold = tier.slug === "gold";
+  const left = tier.features.slice(0, 2);
+  const right = tier.features.slice(2, 4);
 
   return (
-    /* The tier modifier carries the metal accent tokens (--m1/--m2/--glow),
-       so everything inside inherits the colour of the tier being read. */
+    /* The tier modifier carries the metal accent tokens (--m1/--m2/--glow). */
     <div className={`page page--${tier.slug}`}>
       <SiteHeader />
 
-      <section className="tier-hero">
-        <div className="tier-hero-copy">
-          <a href="/services" className="page-back">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            Back to services
-          </a>
+      <section className="tier-stage">
+        <a href="/services" className="page-back">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back to services
+        </a>
 
+        <div className="tier-stage-head">
           <span className="eyebrow">{tier.eyebrow}</span>
           <h1>{tier.headline}</h1>
           <p className="subtext-page">{tier.subtext}</p>
+        </div>
 
+        <div className="tier-orbit">
+          <div className="tier-orbit-side left">
+            {left.map((f) => (
+              <OrbitFeature key={f.title} f={f} />
+            ))}
+          </div>
+
+          <div className="tier-orbit-phone">
+            <TierVisual tier={tier} interactive={interactive} />
+          </div>
+
+          <div className="tier-orbit-side right">
+            {right.map((f) => (
+              <OrbitFeature key={f.title} f={f} />
+            ))}
+          </div>
+        </div>
+
+        <div className="tier-stage-cta">
           <p className="tier-price">
             <span className="tier-price-setup">${tier.price.setup} setup</span>
             <span className="tier-price-mo">${tier.price.monthly}/mo</span>
           </p>
-
-          <div className="cta-block">
-            <a href="/contact" className="call-btn">
-              {Icons.calendar}
-              Book a call
+          <a href="/contact" className="call-btn">
+            {Icons.calendar}
+            Book a call
+          </a>
+          {isGold && (
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="tier-demo-link"
+              {...(interactive ? { "data-start-call": "true" } : {})}
+            >
+              {Icons.phone}
+              Or call the live demo, {PHONE_DISPLAY}
             </a>
-            {isGold && (
-              <a
-                href={`tel:${PHONE_NUMBER}`}
-                className="tier-demo-link"
-                {...(interactive ? { "data-start-call": "true" } : {})}
-              >
-                {Icons.phone}
-                Or call the live demo, {PHONE_DISPLAY}
-              </a>
-            )}
-            <p className="cta-note">
-              Talk to us about {tier.name}, no pressure, we&rsquo;ll tell you if it&rsquo;s not a
-              fit.
-            </p>
-          </div>
-        </div>
-
-        <div className="tier-hero-visual">
-          <TierVisual tier={tier} interactive={interactive} />
+          )}
+          <p className="cta-note">
+            Talk to us about {tier.name}, no pressure, we&rsquo;ll tell you if it&rsquo;s not a
+            fit.
+          </p>
         </div>
       </section>
 
-      <section className="tier-band">
-        <h2 className="band-label">
-          {tier.builds_on ? `What ${tier.name} adds` : `What ${tier.name} does`}
-        </h2>
-        <div className="features">
-          {tier.features.map((f) => (
-            <div className="feature" key={f.title}>
-              <div className="icon-badge">{Icons[f.icon]}</div>
-              <h3>{f.title}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* The dashboard is on every tier, it's the platform the system runs on,
-          not an upsell, so this band is identical across all three and only its
-          module list grows. */}
+      {/* The dashboard is on every tier, so this band is identical across all
+          three and only its module list grows. */}
       <section className="tier-band">
         <h2 className="band-label">Your dashboard, included</h2>
         <div className="dash-chips">
@@ -100,8 +109,6 @@ export default function TierPageView({
         </div>
       </section>
 
-      {/* No dead ends: a way back to compare, plus a trust nudge to the About
-          page for anyone new to AI systems. */}
       {interactive && (
         <section className="tier-foot">
           <a href="/services" className="tier-foot-link">
