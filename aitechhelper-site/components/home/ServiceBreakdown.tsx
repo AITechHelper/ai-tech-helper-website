@@ -28,7 +28,7 @@ const CAPABILITIES: Capability[] = [
       "Replies in seconds, not hours",
       "Works while you're busy, closed, or asleep",
     ],
-    img: "/images/svc-instant.webp",
+    img: "/images/svc-messaging.webp",
     alt: "Messages from every channel getting an instant reply",
   },
   {
