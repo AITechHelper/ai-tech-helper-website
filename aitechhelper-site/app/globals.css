@@ -5476,6 +5476,29 @@ a.svc-cta:hover {
 .assess-pop-close:hover {
   background: rgba(255, 255, 255, 0.12);
 }
+/* In the popup, cap the calendar to a fixed height and let it scroll inside its
+   own frame (the !important overrides the height form_embed.js sets inline), so
+   the modal fits on screen and every day/time and the confirm button stay
+   reachable. */
 .assess-pop .booking-cal-frame {
-  min-height: 560px;
+  height: 60vh !important;
+  min-height: 380px !important;
+}
+.assess-pop-card {
+  max-height: 90vh;
+}
+@media (max-width: 560px) {
+  .assess-pop {
+    padding: 10px;
+  }
+  .assess-pop-card {
+    max-height: 94vh;
+    padding: 24px 16px 22px;
+  }
+  .assess-pop-head h2 {
+    font-size: 21px;
+  }
+  .assess-pop .booking-cal-frame {
+    height: 64vh !important;
+  }
 }

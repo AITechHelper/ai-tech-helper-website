@@ -12,7 +12,6 @@ export default function BookingCalendar() {
         src={CAL_SRC}
         title="Book a free AI assessment"
         className="booking-cal-frame"
-        scrolling="no"
         id="bdaJhv6QDSHAWZO26LiT_1789880510693"
       />
     </div>
