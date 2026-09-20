@@ -3282,7 +3282,7 @@ html {
   z-index: 1;
   max-width: 1240px;
   margin: 0 auto;
-  padding: clamp(52px, 7vw, 96px) clamp(20px, 5vw, 56px);
+  padding: clamp(40px, 5vw, 74px) clamp(20px, 5vw, 56px);
   scroll-margin-top: 88px;
 }
 .home-section-head {
