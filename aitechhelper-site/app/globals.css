@@ -5887,3 +5887,47 @@ a.svc-cta:hover {
   font-size: 15px;
   padding: 15px 30px;
 }
+
+/* ---- tier page: buttons to the other two tiers ---- */
+.tier-switch-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.tier-switch-btn {
+  flex: 1 1 260px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px 24px;
+  border-radius: 16px;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(var(--glow), 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.tier-switch-btn:hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--glow), 0.7);
+  box-shadow: 0 16px 40px rgba(var(--glow), 0.22);
+}
+.tier-switch-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--m1);
+}
+.tier-switch-price {
+  font-size: 13.5px;
+  color: #aeb6c2;
+}
+.tier-switch-go {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}

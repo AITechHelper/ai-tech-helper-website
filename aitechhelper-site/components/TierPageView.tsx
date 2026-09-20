@@ -2,7 +2,7 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Icons } from "@/components/TierIcons";
 import TierVisual from "@/components/TierVisual";
-import { PHONE_DISPLAY, PHONE_NUMBER, type Tier, type TierFeature } from "@/lib/tiers";
+import { PHONE_DISPLAY, PHONE_NUMBER, TIERS, type Tier, type TierFeature } from "@/lib/tiers";
 
 function OrbitFeature({ f }: { f: TierFeature }) {
   return (
@@ -34,6 +34,7 @@ export default function TierPageView({
   const isGold = tier.slug === "gold";
   const left = tier.features.slice(0, 2);
   const right = tier.features.slice(2, 4);
+  const others = TIERS.filter((t) => t.slug !== tier.slug);
 
   return (
     /* The tier modifier carries the metal accent tokens (--m1/--m2/--glow). */
@@ -108,6 +109,23 @@ export default function TierPageView({
           ))}
         </div>
       </section>
+
+      {interactive && (
+        <section className="tier-band tier-switch">
+          <h2 className="band-label">Compare the plans</h2>
+          <div className="tier-switch-btns">
+            {others.map((t) => (
+              <a key={t.slug} href={`/${t.slug}`} className={`tier-switch-btn tier-card--${t.slug}`}>
+                <span className="tier-switch-name">{t.name}</span>
+                <span className="tier-switch-price">
+                  ${t.price.setup} setup · ${t.price.monthly}/mo
+                </span>
+                <span className="tier-switch-go" aria-hidden="true">See {t.name} →</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       {interactive && (
         <section className="tier-foot">
