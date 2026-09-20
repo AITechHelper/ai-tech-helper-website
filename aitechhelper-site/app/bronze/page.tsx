@@ -3,9 +3,9 @@ import TierPageView from "@/components/TierPageView";
 import { getTier } from "@/lib/tiers";
 
 export const metadata: Metadata = {
-  title: "AI Tech Helper, Bronze | Voice Agent",
+  title: "AI Tech Helper, Bronze | Instant Response",
   description:
-    "A voice agent that answers every call 24/7, qualifying leads, booking appointments, and handling questions so you never lose another caller.",
+    "Instant replies on every channel, call, text, DM, chat and email, plus missed-call text back, all in one hub synced to your CRM. $500 setup, $200/mo.",
 };
 
 export default function BronzePage() {

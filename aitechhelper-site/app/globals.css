@@ -4227,10 +4227,10 @@ html {
    `.svc-card { position:absolute }` rules still present below. */
 .pkg-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
   align-items: stretch;
-  max-width: 1080px;
+  max-width: 1240px;
   margin: 40px auto 0;
 }
 .pkg-card {
@@ -4336,13 +4336,19 @@ html {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(var(--glow), 0.42);
 }
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .pkg-grid {
-    grid-template-columns: 1fr;
-    max-width: 460px;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 760px;
   }
   .pkg-card.pkg-featured {
     transform: none;
+  }
+}
+@media (max-width: 620px) {
+  .pkg-grid {
+    grid-template-columns: 1fr;
+    max-width: 460px;
   }
 }
 
@@ -5058,4 +5064,418 @@ a.svc-cta:hover {
     transform: translateZ(-320px) translateX(52%) rotateY(-20deg) scale(0.8);
     opacity: 0.28;
   }
+}
+
+/* =========================================================
+   OVERHAUL 2026-09: hero signals, pricing, trust strip, process
+   flow, message phone, contact page, booking calendar, popup
+   ========================================================= */
+
+/* ---- hero signal row ---- */
+.home-hero-icons {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 26px;
+  margin: 26px 0 34px;
+  padding: 0;
+}
+.home-hero-icons li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #dbe6f2;
+  letter-spacing: 0.2px;
+}
+.home-hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgba(0, 198, 255, 0.12);
+  border: 1px solid rgba(0, 198, 255, 0.32);
+}
+.home-hero-icon svg {
+  width: 17px;
+  height: 17px;
+  stroke: #6fe0ff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- plan card pricing + custom card ---- */
+.pkg-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 16px;
+}
+.pkg-price-setup {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: #fff;
+}
+.pkg-price-mo {
+  font-size: 14px;
+  font-weight: 600;
+  color: #aeb6c2;
+}
+.pkg-custom {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* ---- homepage services footer links ---- */
+.home-services-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 34px;
+  text-align: center;
+}
+.home-soft-link,
+.home-about-nudge {
+  color: #9fb4c9;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.home-soft-link:hover,
+.home-about-nudge:hover {
+  color: #6fe0ff;
+}
+
+/* ---- done-for-you trust strip ---- */
+.home-trust {
+  padding-top: 0;
+}
+.home-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.home-trust-item {
+  padding: 22px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.home-trust-item h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 7px;
+}
+.home-trust-item p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #c3cbd6;
+}
+@media (max-width: 900px) {
+  .home-trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 520px;
+  }
+}
+@media (max-width: 480px) {
+  .home-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- process step flow (connecting arrows) ---- */
+.home-steps--flow .home-step {
+  position: relative;
+}
+@media (min-width: 861px) {
+  .home-steps--flow .home-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 34px;
+    right: -22px;
+    width: 44px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(0, 198, 255, 0.55), rgba(0, 198, 255, 0));
+  }
+  .home-steps--flow .home-step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 30px;
+    right: -22px;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid rgba(0, 198, 255, 0.55);
+    border-right: 2px solid rgba(0, 198, 255, 0.55);
+    transform: rotate(45deg);
+    z-index: 1;
+  }
+}
+
+/* ---- message-thread phone (Bronze / Silver) ---- */
+.msg-screen {
+  padding: 0 14px 14px;
+}
+.msg-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 8px 4px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.msg-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #04141c;
+  background: linear-gradient(150deg, #fff -20%, var(--m1) 40%, var(--m2) 110%);
+  flex-shrink: 0;
+}
+.msg-head-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.msg-head-text strong {
+  color: #fff;
+  font-size: 14.5px;
+}
+.msg-head-text span {
+  color: #8b97a6;
+  font-size: 12px;
+}
+.msg-thread {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 16px 4px 0;
+  overflow: hidden;
+}
+.msg-bubble {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.msg-bubble.in {
+  align-self: flex-start;
+  background: #1c2530;
+  color: #e7ecf3;
+  border-bottom-left-radius: 5px;
+}
+.msg-bubble.out {
+  align-self: flex-end;
+  color: #04141c;
+  background: linear-gradient(140deg, var(--m1), var(--m2));
+  border-bottom-right-radius: 5px;
+}
+.msg-meta {
+  align-self: center;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: #7f8b99;
+}
+
+/* ---- tier page: price, live-demo link, footer nudges ---- */
+.tier-price {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 4px 0 18px;
+}
+.tier-price-setup {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+}
+.tier-price-mo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--m1);
+}
+.tier-demo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: #cdd6e2;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.tier-demo-link svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--m1);
+  fill: none;
+  stroke-width: 2;
+}
+.tier-demo-link:hover {
+  color: #fff;
+}
+.tier-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 60px;
+  text-align: center;
+}
+.tier-foot-link {
+  color: #9fb4c9;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.tier-foot-link:hover {
+  color: var(--m1);
+}
+
+/* ---- booking calendar embed ---- */
+.booking-cal {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.booking-cal-frame {
+  width: 100%;
+  min-height: 720px;
+  border: none;
+  border-radius: 16px;
+  background: #fff;
+  display: block;
+}
+
+/* ---- contact page ---- */
+.contact-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 80px) 20px 40px;
+}
+.contact-page-head {
+  margin-bottom: 30px;
+}
+.contact-inline-call {
+  color: #6fe0ff;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.contact-page-cal {
+  margin-top: 10px;
+}
+.contact-page-alt {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+/* ---- services page hero ---- */
+.svc-page-hero {
+  padding: clamp(48px, 7vw, 96px) 20px 10px;
+}
+.svc-page-hero-cta {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ---- timed assessment popup ---- */
+.assess-pop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.assess-pop-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 5, 10, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.assess-pop-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 620px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 30px clamp(20px, 4vw, 38px) 34px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #0b111b, #060a12);
+  border: 1px solid rgba(0, 198, 255, 0.22);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 60px rgba(0, 198, 255, 0.12);
+}
+.assess-pop-head {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.assess-pop-head h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  color: #fff;
+  margin: 8px 0 8px;
+}
+.assess-pop-head p {
+  color: #c3cbd6;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.assess-pop-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.assess-pop-close svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.assess-pop-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.assess-pop .booking-cal-frame {
+  min-height: 560px;
 }

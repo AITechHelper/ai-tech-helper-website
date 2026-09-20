@@ -1,38 +1,39 @@
 const STEPS = [
   {
     n: "01",
-    title: "Quick discovery call",
-    desc: "We learn your business, the calls you get, the questions you're asked, how you book, and what a lead is worth. 20 minutes, no pressure.",
+    title: "Reach Out",
+    desc: "Book a free assessment or give us a call. We learn your business, your busiest channels, and what a lead is actually worth to you.",
   },
   {
     n: "02",
-    title: "We build & train your agent",
-    desc: "We set up your voice and messaging agent on your number and channels, trained on your services, pricing, hours and service area. You review it before it goes live.",
+    title: "Find Your Plan",
+    desc: "We point you to the tier that fits, Bronze, Silver or Gold, based on where you're losing time and leads right now.",
   },
   {
     n: "03",
-    title: "Go live in days, not months",
-    desc: "Your agent starts answering every call and message 24/7, qualifying leads and booking straight onto your calendar. Nothing for you to install.",
+    title: "We Build It",
+    desc: "We set the whole thing up on your existing number and channels, trained on your services and pricing. You review it before it goes live.",
   },
   {
     n: "04",
-    title: "We tune it as you grow",
-    desc: "We watch the transcripts, sharpen the answers, and add reminders, follow-up, reviews and invoicing as you move up the packages. You just get the results.",
+    title: "Grow",
+    desc: "Your system runs day and night, capturing leads and following up. We tune it every month as you scale.",
   },
 ];
 
 /* How it works, a plain four-step path so a first-time visitor knows exactly
-   what working with us looks like. */
+   what working with us looks like. The connecting line/arrows are drawn in CSS
+   (.home-steps) so the steps read as a sequence, not four identical cards. */
 export default function Process() {
   return (
     <section className="home-section home-process" id="process">
       <div className="home-section-head">
         <span className="home-kicker">How it works</span>
         <h2>Live in days, hands-off from there</h2>
-        <p>We do the building and the tuning. You get an assistant that never clocks out.</p>
+        <p>We do the building and the tuning. You get a system that never clocks out.</p>
       </div>
 
-      <ol className="home-steps">
+      <ol className="home-steps home-steps--flow">
         {STEPS.map((s) => (
           <li className="home-step" key={s.n}>
             <span className="home-step-n">{s.n}</span>
@@ -43,8 +44,8 @@ export default function Process() {
       </ol>
 
       <div className="home-process-cta">
-        <a href="#final-cta" className="btn-primary">
-          Book your discovery call
+        <a href="/contact" className="btn-primary">
+          Book a call
         </a>
       </div>
     </section>

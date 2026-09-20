@@ -1,24 +1,18 @@
-import Logo from "@/components/Logo";
-import ContactButton from "@/components/ContactButton";
-import MobileMenu from "@/components/MobileMenu";
+import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Icons } from "@/components/TierIcons";
 import TierVisual from "@/components/TierVisual";
 import { PHONE_DISPLAY, PHONE_NUMBER, type Tier } from "@/lib/tiers";
 
 /**
- * The full body of a package page (/bronze, /silver, /gold).
+ * The full body of a tier page (/bronze, /silver, /gold).
  *
- * Laid out as three horizontal bands rather than one tall column: a hero that
- * carries the headline and the call-to-action above the fold, then the
- * capabilities, then the dashboard. Stacking all of it in the left column
- * left the right side half empty and made the page feel cramped.
+ * Horizontal bands: a hero with the headline, price and call-to-action, then the
+ * capabilities, then the dashboard. Gold shows the live call phone (voice is the
+ * point there); Bronze and Silver show a messaging thread.
  *
- * Single source of truth: each route renders this live, and the homepage
- * carousel renders the same component scaled onto its 3D card.
- *
- * `interactive` is false for the carousel preview, it drops the phone's
- * handlers and element ids so a scaled-down copy can't hijack a tap.
+ * `interactive` is false for any scaled-down preview render, it drops the phone's
+ * handlers and element ids so a copy can't hijack a tap.
  */
 export default function TierPageView({
   tier,
@@ -27,26 +21,17 @@ export default function TierPageView({
   tier: Tier;
   interactive?: boolean;
 }) {
+  const isGold = tier.slug === "gold";
+
   return (
     /* The tier modifier carries the metal accent tokens (--m1/--m2/--glow),
-       so everything inside inherits the colour of the package being read
-       rather than the brand cyan. */
+       so everything inside inherits the colour of the tier being read. */
     <div className={`page page--${tier.slug}`}>
-      <nav className="nav">
-        <Logo />
-        <div className="nav-links">
-          <a href="/#services">Services</a>
-          <a href="/ai-hub">AI Hub</a>
-        </div>
-        <ContactButton />
-        <MobileMenu />
-      </nav>
+      <SiteHeader />
 
       <section className="tier-hero">
         <div className="tier-hero-copy">
-          {/* `from` tells the carousel which card to park on so it can play
-              the zoom-out-and-spin back to the menu on arrival. */}
-          <a href={`/?from=${tier.slug}#services`} className="page-back">
+          <a href="/services" className="page-back">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -57,15 +42,26 @@ export default function TierPageView({
           <h1>{tier.headline}</h1>
           <p className="subtext-page">{tier.subtext}</p>
 
+          <p className="tier-price">
+            <span className="tier-price-setup">${tier.price.setup} setup</span>
+            <span className="tier-price-mo">${tier.price.monthly}/mo</span>
+          </p>
+
           <div className="cta-block">
-            <a
-              href={`tel:${PHONE_NUMBER}`}
-              className="call-btn"
-              {...(interactive ? { "data-start-call": "true" } : {})}
-            >
-              {Icons.phone}
-              Call {PHONE_DISPLAY}
+            <a href="/contact" className="call-btn">
+              {Icons.calendar}
+              Book a call
             </a>
+            {isGold && (
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="tier-demo-link"
+                {...(interactive ? { "data-start-call": "true" } : {})}
+              >
+                {Icons.phone}
+                Or call the live demo, {PHONE_DISPLAY}
+              </a>
+            )}
             <p className="cta-note">
               Talk to us about {tier.name}, no pressure, we&rsquo;ll tell you if it&rsquo;s not a
               fit.
@@ -92,9 +88,9 @@ export default function TierPageView({
         </div>
       </section>
 
-      {/* The dashboard is on every tier, it's the platform the agent runs on,
-          not an upsell, so this band is identical across all three and only
-          its module list grows. */}
+      {/* The dashboard is on every tier, it's the platform the system runs on,
+          not an upsell, so this band is identical across all three and only its
+          module list grows. */}
       <section className="tier-band">
         <h2 className="band-label">Your dashboard, included</h2>
         <div className="dash-chips">
@@ -104,8 +100,21 @@ export default function TierPageView({
         </div>
       </section>
 
-      {/* Real page only, the carousel preview renders this same component
-          scaled onto a card and doesn't want a footer in the thumbnail. */}
+      {/* No dead ends: a way back to compare, plus a trust nudge to the About
+          page for anyone new to AI systems. */}
+      {interactive && (
+        <section className="tier-foot">
+          <a href="/services" className="tier-foot-link">
+            Not sure this is your fit? Compare every plan
+            <span aria-hidden="true"> →</span>
+          </a>
+          <a href="/about" className="tier-foot-link">
+            New to AI systems? Meet the person behind AI Tech Helper
+            <span aria-hidden="true"> →</span>
+          </a>
+        </section>
+      )}
+
       {interactive && <Footer />}
     </div>
   );

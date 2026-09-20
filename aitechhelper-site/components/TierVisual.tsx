@@ -1,9 +1,10 @@
 import ReceptionistPhone from "@/components/ReceptionistPhone";
-import TierStackPanel from "@/components/TierStackPanel";
+import MessagePhone from "@/components/MessagePhone";
 import type { Tier } from "@/lib/tiers";
 
-/** Bronze leads with the live demo phone, since "call it yourself" is its
- *  whole pitch. The upper tiers lead with what they stack up instead. */
+/** Gold leads with the live call phone, since the 24/7 voice agent is its whole
+ *  pitch. Bronze and Silver are messaging based, so they show a text/DM thread
+ *  instead of a call screen. */
 export default function TierVisual({
   tier,
   interactive,
@@ -11,6 +12,6 @@ export default function TierVisual({
   tier: Tier;
   interactive: boolean;
 }) {
-  if (tier.slug === "bronze") return <ReceptionistPhone interactive={interactive} />;
-  return <TierStackPanel tier={tier} />;
+  if (tier.slug === "gold") return <ReceptionistPhone interactive={interactive} />;
+  return <MessagePhone tier={tier} />;
 }

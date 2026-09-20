@@ -1,15 +1,10 @@
-"use client";
-
-/* The "Contact Us" pill in the nav. Opens the global ContactModal (mounted in
-   the root layout) rather than linking anywhere. */
+/* The "Contact Us" button/pill. Links to the /contact page (which carries the
+   booking calendar). Kept as a component so every CTA across the site funnels
+   to the same endpoint with consistent styling. */
 export default function ContactButton({ className = "cta-pill" }: { className?: string }) {
   return (
-    <button
-      type="button"
-      className={className}
-      onClick={() => window.dispatchEvent(new Event("open-contact"))}
-    >
+    <a href="/contact" className={className}>
       Contact Us
-    </button>
+    </a>
   );
 }

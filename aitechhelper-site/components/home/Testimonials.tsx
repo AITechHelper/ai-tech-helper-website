@@ -1,10 +1,42 @@
+/* Real 5-star Google reviews. Only the ones with written text are shown. */
 const REVIEWS = [
   {
     quote:
-      "AI Tech Helper has helped me a ton with implementing AI into our company systems. I would highly recommend their team to anyone.",
-    name: "Will H",
+      "This software company has been a HUGE help! I would recommend to anyone in need of their services!",
+    name: "Cooper",
     business: "",
-    initials: "WH",
+    initials: "C",
+  },
+  {
+    quote:
+      "I'm thoroughly impressed with the functionality of this app. It's helped solve many problems, I highly suggest it.",
+    name: "Buddy James",
+    business: "",
+    initials: "BJ",
+  },
+  {
+    quote: "Amazing! Great service to work with! Extremely reliable and super fast help!",
+    name: "Fernanda Zelaya",
+    business: "",
+    initials: "FZ",
+  },
+  {
+    quote: "Will is super knowledgeable and will be a great help to getting you set up!",
+    name: "Jesse T.",
+    business: "",
+    initials: "JT",
+  },
+  {
+    quote: "The man for the job!",
+    name: "Nate",
+    business: "Longwell Media",
+    initials: "N",
+  },
+  {
+    quote: "Blown away!",
+    name: "Myca Sanderson",
+    business: "",
+    initials: "MS",
   },
 ];
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TIERS, type Tier } from "@/lib/tiers";
+import { TIERS, CUSTOM, type Tier } from "@/lib/tiers";
 
 const FEATURED: Tier["slug"] = "silver";
 
@@ -11,11 +11,9 @@ function Check() {
   );
 }
 
-/* The three packages shown side by side (Bronze / Silver / Gold), Silver
-   featured. Static grid, replaces the rotating carousel, so all three are
-   visible at once. Each card links through to its full tier page.
-   NB: classes are prefixed `pkg-` (not `svc-`) to avoid colliding with the
-   retired carousel's `.svc-card` rules still in globals.css. */
+/* The plans shown side by side (Bronze / Silver / Gold, Silver featured), plus a
+   Custom card that routes to booking a call. Static grid so all are visible at
+   once. Each tier card links through to its full page. */
 export default function ServicesCards() {
   return (
     <div className="pkg-grid">
@@ -29,6 +27,10 @@ export default function ServicesCards() {
             {featured && <span className="pkg-badge">Most popular</span>}
             <span className="pkg-kicker">{tier.cardKicker}</span>
             <h3 className="pkg-name">{tier.name}</h3>
+            <p className="pkg-price">
+              <span className="pkg-price-setup">${tier.price.setup} setup</span>
+              <span className="pkg-price-mo">${tier.price.monthly}/mo</span>
+            </p>
             <p className="pkg-desc">{tier.cardDesc}</p>
             <ul className="pkg-features">
               {tier.features.map((f) => (
@@ -45,6 +47,27 @@ export default function ServicesCards() {
           </article>
         );
       })}
+
+      <article className="pkg-card pkg-custom">
+        <span className="pkg-kicker">{CUSTOM.kicker}</span>
+        <h3 className="pkg-name">{CUSTOM.name}</h3>
+        <p className="pkg-price">
+          <span className="pkg-price-setup">Quoted for you</span>
+        </p>
+        <p className="pkg-desc">{CUSTOM.desc}</p>
+        <ul className="pkg-features">
+          {CUSTOM.points.map((p) => (
+            <li key={p}>
+              <Check />
+              {p}
+            </li>
+          ))}
+        </ul>
+        <a href="/contact" className="pkg-cta">
+          Book a call
+          <span aria-hidden="true"> →</span>
+        </a>
+      </article>
     </div>
   );
 }

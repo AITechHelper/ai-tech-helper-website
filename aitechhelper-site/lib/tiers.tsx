@@ -9,6 +9,11 @@ export type TierFeature = {
   desc: string;
 };
 
+export type TierPrice = {
+  setup: number;
+  monthly: number;
+};
+
 export type Tier = {
   slug: "bronze" | "silver" | "gold";
   name: string;
@@ -16,160 +21,175 @@ export type Tier = {
   eyebrow: string;
   headline: string;
   subtext: string;
-  /** The four headline capabilities this tier adds over the one below it. */
+  price: TierPrice;
+  /** The headline capabilities this tier adds over the one below it. */
   features: TierFeature[];
   /** Name of the tier this one builds on, if any. */
   builds_on?: string;
   /** Everything carried up from the lower tiers, listed so the value is
    *  explicit rather than implied. */
   inherits: string[];
-  /** Dashboard modules this tier unlocks. Every tier gets a dashboard, it's
-   *  the platform, not a differentiator, so this list grows rather than
-   *  appearing only at the top tier. */
+  /** Dashboard modules this tier unlocks. */
   dashboard: string[];
-  /** One-line summary used on the homepage carousel card. */
+  /** One-line summary used on the homepage cards. */
   cardDesc: string;
   cardKicker: string;
 };
 
-const VOICE = "Voice agent answering every call 24/7";
-const MESSAGING = "Messaging agent across SMS, chat, Instagram, Facebook, WhatsApp and email";
-const REMINDERS = "Appointment reminders";
-const ESTIMATES = "Estimate follow-up";
-const REVIEWS = "Review & referral requests";
+/* Cumulative capability labels, defined once so tiers can't drift apart. */
+const INSTANT = "Instant response on every channel (call, text, DM, chat, email)";
+const MISSED = "Missed-call text back";
+const HUB = "One hub for every conversation, synced to your CRM";
+const FOLLOWUP = "Automated follow-up on every quote";
+const REVIEWS = "Google review and referral requests";
+const REMINDERS = "Appointment reminders and check-ins";
 
 export const TIERS: Tier[] = [
   {
     slug: "bronze",
     name: "Bronze",
-    eyebrow: "Bronze, Voice Agent",
-    headline: "The receptionist that never misses a call",
+    eyebrow: "Bronze, Instant Response",
+    headline: "Never let a lead go cold",
     subtext:
-      "Call the number below and hear it qualify a lead, answer questions, and book an appointment, live.",
-    cardKicker: "Voice Agent",
+      "Every call, text, DM, chat and email gets an instant reply, and anyone you miss gets a text right back. All of it lands in one hub wired to your CRM.",
+    price: { setup: 500, monthly: 200 },
+    cardKicker: "Instant Response",
     cardDesc:
-      "Answers every call, qualifies the lead, and books the appointment, 24/7, live on your calendar.",
+      "Answers every channel the second someone reaches out, texts back missed calls, and keeps every lead in one place.",
     inherits: [],
-    dashboard: ["Call log", "Recordings & transcripts", "Contacts", "Calendar & booking", "Pipeline"],
+    dashboard: ["Unified inbox", "Contacts", "Missed-call log", "Pipeline", "CRM sync"],
     features: [
       {
+        icon: "message",
+        title: "Instant response, every channel",
+        desc: "Call, text, DM, website chat and email all get answered right away, day or night.",
+      },
+      {
         icon: "phone",
-        title: "Answers every call, 24/7",
-        desc: "Evenings, weekends, while you're on a job, no voicemail, no missed leads.",
-      },
-      {
-        icon: "calendar",
-        title: "Qualifies & books automatically",
-        desc: "Asks the right questions, then puts it straight on your calendar.",
-      },
-      {
-        icon: "clock",
-        title: "Handles FAQs instantly",
-        desc: "Pricing, hours, service area, whatever they usually ask.",
+        title: "Missed-call text back",
+        desc: "Can't pick up? The caller gets a friendly text in seconds, so the lead stays warm.",
       },
       {
         icon: "dashboard",
-        title: "Every call in your dashboard",
-        desc: "Recorded, transcribed, and logged the moment it ends.",
+        title: "One hub, synced to your CRM",
+        desc: "Every conversation lands in one place and syncs straight to your CRM.",
+      },
+      {
+        icon: "clock",
+        title: "Nothing slips through",
+        desc: "Every lead captured and organized, so none get lost across five different apps.",
       },
     ],
   },
   {
     slug: "silver",
     name: "Silver",
-    eyebrow: "Silver, Voice + Messaging",
-    headline: "Every call and every message, answered in seconds",
+    eyebrow: "Silver, Follow-Up & Reviews",
+    headline: "Win back the work that slips away",
     subtext:
-      "Bronze answers the phone. Silver answers everywhere else too, and stops the work you've already won from quietly slipping away.",
-    cardKicker: "Voice + Messaging",
+      "Everything in Bronze, plus the follow-up that turns quiet quotes into booked jobs and happy clients into reviews and referrals.",
+    price: { setup: 750, monthly: 300 },
+    cardKicker: "Follow-Up & Reviews",
     cardDesc:
-      "Everything in Bronze, plus instant replies on every text channel and the follow-up that protects each booking.",
+      "Everything in Bronze, plus automatic quote follow-up, review and referral requests, reminders and check-ins.",
     builds_on: "Bronze",
-    inherits: [VOICE],
+    inherits: [INSTANT, MISSED, HUB],
     dashboard: [
-      "Call log",
-      "Recordings & transcripts",
-      "Contacts",
-      "Calendar & booking",
-      "Pipeline",
       "Unified inbox",
+      "Contacts",
+      "Missed-call log",
+      "Pipeline",
+      "CRM sync",
+      "Follow-up sequences",
       "Reviews & reputation",
     ],
     features: [
       {
-        icon: "message",
-        title: "Replies on every channel",
-        desc: "SMS, website chat, Instagram, Facebook Messenger, WhatsApp, and email, answered in seconds, not hours.",
+        icon: "clock",
+        title: "Automated quote follow-up",
+        desc: "Every estimate that goes quiet gets chased on its own, until it's a yes or a clear no.",
+      },
+      {
+        icon: "star",
+        title: "Reviews and referrals",
+        desc: "Asks for a Google review and a referral right when the client is happiest.",
       },
       {
         icon: "calendar",
         title: "Appointment reminders",
-        desc: "Automatic SMS and email reminders before every job, so the slot you booked doesn't turn into a no-show.",
+        desc: "Automatic reminders before every job, so the slot you booked doesn't turn into a no-show.",
       },
       {
-        icon: "clock",
-        title: "Estimate follow-up",
-        desc: "Chases every quote that went quiet, so pending estimates turn into confirmed work.",
-      },
-      {
-        icon: "star",
-        title: "Review & referral requests",
-        desc: "Asks for a Google review and a referral the moment a job is finished and the client is happiest.",
+        icon: "message",
+        title: "Client check-ins",
+        desc: "Stays in touch after the job, so customers come back and send you referrals.",
       },
     ],
   },
   {
     slug: "gold",
     name: "Gold",
-    eyebrow: "Gold, Complete Package",
-    headline: "Your entire job lifecycle, running itself",
+    eyebrow: "Gold, Voice Agent",
+    headline: "The receptionist that never misses a call",
     subtext:
-      "Everything in Silver, plus the paperwork, the payments, and the follow-through, from booked, to signed, to paid, to reviewed, without you touching any of it.",
-    cardKicker: "Complete Package",
+      "Everything in Silver, plus a 24/7 AI voice agent that answers every call, qualifies the lead, and books the job, live on your calendar.",
+    price: { setup: 1000, monthly: 400 },
+    cardKicker: "Voice Agent",
     cardDesc:
-      "Everything in Silver, plus contracts, invoicing, onboarding, and custom email, the whole business behind the booking.",
+      "Everything in Silver, plus a 24/7 AI voice agent that answers, qualifies and books every call.",
     builds_on: "Silver",
-    inherits: [VOICE, MESSAGING, REMINDERS, ESTIMATES, REVIEWS],
+    inherits: [INSTANT, MISSED, HUB, FOLLOWUP, REVIEWS, REMINDERS],
     dashboard: [
+      "Unified inbox",
+      "Contacts",
+      "Missed-call log",
+      "Pipeline",
+      "CRM sync",
+      "Follow-up sequences",
+      "Reviews & reputation",
       "Call log",
       "Recordings & transcripts",
-      "Contacts",
       "Calendar & booking",
-      "Pipeline",
-      "Unified inbox",
-      "Reviews & reputation",
-      "Contracts & e-sign",
-      "Invoicing & payments",
     ],
     features: [
       {
-        icon: "contract",
-        title: "Paperwork & payments",
-        desc: "Sends contracts and waivers for a legally binding e-signature the moment a job is booked, then invoices the client and chases every unpaid bill with automatic reminders, signed to paid, all hands-off.",
+        icon: "phone",
+        title: "Answers every call, 24/7",
+        desc: "Evenings, weekends, while you're on a job. No voicemail, no missed leads.",
       },
       {
-        icon: "onboarding",
-        title: "New client onboarding",
-        desc: "Every new client gets welcomed, prepared, and reassured automatically the moment their booking confirms.",
+        icon: "calendar",
+        title: "Qualifies and books by voice",
+        desc: "Asks the right questions, then puts the job straight on your calendar.",
       },
       {
-        icon: "mail",
-        title: "Custom email pipeline",
-        desc: "A nurture sequence built around your business, cold leads, proposals, re-engagement, not a generic template.",
+        icon: "clock",
+        title: "Handles questions instantly",
+        desc: "Pricing, hours, service area, whatever callers usually ask.",
+      },
+      {
+        icon: "dashboard",
+        title: "Every call recorded",
+        desc: "Recorded, transcribed and logged the moment it ends.",
       },
     ],
   },
 ];
 
+/** The Custom option shown after the three tiers. Not a full tier page, it
+ *  routes straight to booking a call for an individual quote. */
+export const CUSTOM = {
+  name: "Custom",
+  kicker: "Built around you",
+  desc: "Something bigger or more specific? We'll scope it and quote it for your business.",
+  points: ["Tailored to your workflow", "Priced to what you need", "Book a call to scope it"],
+};
+
 export const getTier = (slug: Tier["slug"]) => TIERS.find((t) => t.slug === slug)!;
 
 /**
- * The at-a-glance comparison shown on the homepage services menu.
- *
- * Written out explicitly rather than derived from each tier's `features` and
- * `inherits`: those are marketing copy shaped for their own page, whereas this
- * needs short, parallel labels that read cleanly down a column. Keeping it
- * separate means editing a headline can't silently reshape the matrix.
+ * The at-a-glance comparison. Written out explicitly rather than derived, so a
+ * marketing headline edit can't silently reshape the matrix.
  */
 export type ComparisonRow = {
   label: string;
@@ -181,15 +201,13 @@ const FROM_SILVER: Tier["slug"][] = ["silver", "gold"];
 const GOLD_ONLY: Tier["slug"][] = ["gold"];
 
 export const COMPARISON: ComparisonRow[] = [
-  { label: "Voice agent, answering 24/7", tiers: ALL },
-  { label: "Qualifies leads & books jobs", tiers: ALL },
-  { label: "Recordings & transcripts", tiers: ALL },
-  { label: "Your dashboard", tiers: ALL },
-  { label: "Messaging on every channel", tiers: FROM_SILVER },
-  { label: "Appointment reminders", tiers: FROM_SILVER },
-  { label: "Estimate follow-up", tiers: FROM_SILVER },
+  { label: "Instant response on every channel", tiers: ALL },
+  { label: "Missed-call text back", tiers: ALL },
+  { label: "One hub synced to your CRM", tiers: ALL },
+  { label: "Automated quote follow-up", tiers: FROM_SILVER },
   { label: "Review & referral requests", tiers: FROM_SILVER },
-  { label: "Contracts, e-sign & invoicing", tiers: GOLD_ONLY },
-  { label: "New client onboarding", tiers: GOLD_ONLY },
-  { label: "Custom email pipeline", tiers: GOLD_ONLY },
+  { label: "Appointment reminders & check-ins", tiers: FROM_SILVER },
+  { label: "24/7 AI voice agent", tiers: GOLD_ONLY },
+  { label: "Voice lead qualification & booking", tiers: GOLD_ONLY },
+  { label: "Call recordings & transcripts", tiers: GOLD_ONLY },
 ];

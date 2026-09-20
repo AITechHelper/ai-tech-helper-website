@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Logo from "@/components/Logo";
-import ContactButton from "@/components/ContactButton";
-import MobileMenu from "@/components/MobileMenu";
-import NavLink from "@/components/NavLink";
+import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { getTool, getTools } from "@/lib/tools.server";
 import { finalScore, labelForCategory, SCORE_CRITERIA } from "@/lib/tools";
@@ -31,15 +28,7 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="page hub">
-      <nav className="nav">
-        <Logo />
-        <div className="nav-links">
-          <a href="/#services">Services</a>
-          <NavLink href="/ai-hub">AI Hub</NavLink>
-        </div>
-        <ContactButton />
-        <MobileMenu />
-      </nav>
+      <SiteHeader />
 
       <div className="tool-page">
         <Link href="/ai-tools" className="tool-back">

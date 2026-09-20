@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Logo from "@/components/Logo";
-import ContactButton from "@/components/ContactButton";
-import MobileMenu from "@/components/MobileMenu";
-import NavLink from "@/components/NavLink";
+import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { formatDate, getPosts } from "@/lib/posts";
 
@@ -19,15 +16,7 @@ export default function AiHubPage() {
 
   return (
     <div className="page hub">
-      <nav className="nav">
-        <Logo />
-        <div className="nav-links">
-          <a href="/#services">Services</a>
-          <NavLink href="/ai-hub">AI Hub</NavLink>
-        </div>
-        <ContactButton />
-        <MobileMenu />
-      </nav>
+      <SiteHeader />
 
       <header className="hub-head">
         <span className="eyebrow">The AI Hub</span>

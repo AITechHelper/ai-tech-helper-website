@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Logo from "@/components/Logo";
+import SiteHeader from "@/components/SiteHeader";
 import ContactButton from "@/components/ContactButton";
-import MobileMenu from "@/components/MobileMenu";
-import NavLink from "@/components/NavLink";
 import Footer from "@/components/Footer";
 import ImgSlot from "@/components/home/ImgSlot";
 import { PHONE_NUMBER, PHONE_DISPLAY } from "@/lib/tiers";
@@ -16,16 +14,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="page about">
-      <nav className="nav">
-        <Logo />
-        <div className="nav-links">
-          <a href="/#services">Services</a>
-          <NavLink href="/about">About</NavLink>
-          <NavLink href="/ai-hub">AI Hub</NavLink>
-        </div>
-        <ContactButton />
-        <MobileMenu />
-      </nav>
+      <SiteHeader />
 
       <header className="about-hero">
         <div className="about-hero-copy">

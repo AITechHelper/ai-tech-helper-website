@@ -31,19 +31,9 @@ export default function MobileMenu() {
         <a href="/about" onClick={close}>
           About
         </a>
-        <a href="/ai-hub" onClick={close}>
-          AI Hub
-        </a>
-        <button
-          type="button"
-          className="mobile-menu-cta"
-          onClick={() => {
-            close();
-            window.dispatchEvent(new Event("open-contact"));
-          }}
-        >
+        <a href="/contact" className="mobile-menu-cta" onClick={close}>
           Contact Us
-        </button>
+        </a>
       </div>
     </div>
   );

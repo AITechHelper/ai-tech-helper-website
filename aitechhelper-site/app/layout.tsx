@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContactModal from "@/components/ContactModal";
+import AssessmentPopup from "@/components/AssessmentPopup";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        <ContactModal />
+        <AssessmentPopup />
       </body>
     </html>
   );

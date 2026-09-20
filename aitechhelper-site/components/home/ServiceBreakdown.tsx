@@ -1,13 +1,12 @@
 import ImgSlot from "@/components/home/ImgSlot";
 
-/* A per-capability breakdown for the Services page: every individual service
-   the agent performs, laid out as alternating image/copy bands so each one gets
-   room to breathe. Grouped by the tier it belongs to (Bronze / Silver / Gold),
-   with a tier chip so a visitor can see where each capability lives.
+/* A per-capability breakdown for the Services page: every service the system
+   performs, laid out as alternating image/copy bands, grouped by the tier it
+   belongs to (Bronze / Silver / Gold) with a tier chip.
 
    Images are referenced by a stable filename in /public/images. Until a file is
-   dropped in, ImgSlot shows a clean labelled placeholder naming exactly which
-   image to add, so the layout is complete before the art lands. */
+   dropped in, ImgSlot shows a labelled placeholder naming exactly which image to
+   add, so the layout is complete before the art lands. */
 
 type Capability = {
   tier: "bronze" | "silver" | "gold";
@@ -22,56 +21,44 @@ type Capability = {
 const CAPABILITIES: Capability[] = [
   {
     tier: "bronze",
-    title: "24/7 voice agent",
-    body: "A receptionist that answers every call the instant it rings, evenings, weekends, holidays, and while you're already on a job. No voicemail, no hold music, no missed leads slipping to a competitor.",
+    title: "Instant response, every channel",
+    body: "Every call, text, DM, website chat and email gets answered the second it comes in, day or night. No one waits, and no lead cools off while you're on a job.",
     bullets: [
-      "Answers in your business's voice, day or night",
-      "Handles pricing, hours and service-area questions",
-      "Every call recorded, transcribed and logged",
+      "Call, text, DM, chat and email all covered",
+      "Replies in seconds, not hours",
+      "Works while you're busy, closed, or asleep",
     ],
-    img: "/images/svc-voice-agent.webp",
-    alt: "An AI voice agent answering an incoming call and logging the details",
+    img: "/images/svc-instant.webp",
+    alt: "Messages from every channel getting an instant reply",
   },
   {
     tier: "bronze",
-    title: "Lead qualification & booking",
-    body: "The agent asks the right questions, works out whether a caller is a real job, and books qualified work straight onto your calendar, so you wake up to appointments, not a list of people to call back.",
+    title: "Missed-call text back",
+    body: "When you can't pick up, the caller gets a friendly text right away asking how you can help. The lead stays warm instead of calling the next name on the list.",
     bullets: [
-      "Qualifies the lead before it reaches you",
-      "Books straight onto your live calendar",
-      "Captures the job details you need up front",
+      "Automatic text the moment a call is missed",
+      "Keeps the conversation going in one thread",
+      "Turns missed calls into booked jobs",
     ],
-    img: "/images/svc-booking.webp",
-    alt: "A booking being qualified and placed onto a calendar automatically",
+    img: "/images/svc-missed-call.webp",
+    alt: "A missed call triggering an automatic text back to the caller",
+  },
+  {
+    tier: "bronze",
+    title: "One hub, synced to your CRM",
+    body: "Every conversation from every channel lands in one place and syncs straight to your CRM, so nothing gets lost across five different apps and every lead is organized.",
+    bullets: [
+      "One unified inbox for everything",
+      "Syncs contacts and conversations to your CRM",
+      "Every lead captured and organized",
+    ],
+    img: "/images/svc-hub.webp",
+    alt: "Every channel flowing into a single hub synced to a CRM",
   },
   {
     tier: "silver",
-    title: "Messaging on every channel",
-    body: "One inbox for SMS, website chat, Instagram, Facebook Messenger, WhatsApp and email. Every message is answered in seconds and every conversation lands in the same place, nothing gets lost across five different apps.",
-    bullets: [
-      "SMS, chat, Instagram, Facebook, WhatsApp and email",
-      "Replies in seconds, not hours",
-      "Every thread in one unified inbox",
-    ],
-    img: "/images/svc-messaging.webp",
-    alt: "Messages from every channel flowing into a single unified inbox",
-  },
-  {
-    tier: "silver",
-    title: "Appointment reminders",
-    body: "Automatic SMS and email reminders go out before every job, so the slot you booked doesn't quietly turn into a no-show. Fewer empty windows, more completed work.",
-    bullets: [
-      "Automatic SMS and email reminders",
-      "Cuts no-shows and last-minute cancellations",
-      "Timed around each appointment automatically",
-    ],
-    img: "/images/svc-reminders.webp",
-    alt: "Automatic appointment reminders being sent before a scheduled job",
-  },
-  {
-    tier: "silver",
-    title: "Estimate & quote follow-up",
-    body: "Every quote that went quiet gets chased on its own, at the right moment, until it's a yes or a clear no. Pending estimates turn into confirmed work instead of sitting in limbo.",
+    title: "Automated quote follow-up",
+    body: "Every estimate that goes quiet gets chased on its own, at the right moment, until it's a yes or a clear no. Pending quotes turn into confirmed work instead of sitting in limbo.",
     bullets: [
       "Follows up on every estimate automatically",
       "Nudges at the right time, not just once",
@@ -82,8 +69,8 @@ const CAPABILITIES: Capability[] = [
   },
   {
     tier: "silver",
-    title: "Reviews & referrals",
-    body: "The moment a job wraps and the client is happiest, the agent asks for a Google review and a referral. Your reputation compounds automatically, and new leads arrive from the ones you already served.",
+    title: "Reviews and referrals",
+    body: "The moment a job wraps and the client is happiest, the system asks for a Google review and a referral. Your reputation compounds, and new leads come from the ones you already served.",
     bullets: [
       "Asks for a Google review at the perfect moment",
       "Requests referrals from happy customers",
@@ -93,28 +80,40 @@ const CAPABILITIES: Capability[] = [
     alt: "Review and referral requests boosting a business's Google rating",
   },
   {
-    tier: "gold",
-    title: "Contracts, e-sign & invoicing",
-    body: "Contracts and waivers go out for a legally binding e-signature the moment a job is booked, then the client is invoiced and every unpaid bill is chased with automatic reminders. Signed to paid, entirely hands-off.",
+    tier: "silver",
+    title: "Reminders and check-ins",
+    body: "Automatic reminders go out before every job so booked slots don't turn into no-shows, and check-ins after the job keep customers coming back and sending referrals.",
     bullets: [
-      "Contracts and waivers sent for e-signature",
-      "Invoices raised and delivered automatically",
-      "Unpaid bills chased until they're settled",
+      "Automatic reminders before every appointment",
+      "Cuts no-shows and last-minute cancellations",
+      "Post-job check-ins that bring customers back",
     ],
-    img: "/images/svc-paperwork.webp",
-    alt: "A paperwork pipeline moving from contract to signature to paid invoice",
+    img: "/images/svc-reminders.webp",
+    alt: "Automatic appointment reminders and follow-up check-ins being sent",
   },
   {
     tier: "gold",
-    title: "Onboarding & email pipeline",
-    body: "Every new client is welcomed, prepared and reassured automatically the moment their booking confirms, and a custom email pipeline nurtures cold leads, proposals and re-engagement around your business, not a generic template.",
+    title: "24/7 AI voice agent",
+    body: "A receptionist that answers every call the instant it rings, evenings, weekends, holidays, and while you're already on a job. No voicemail, no hold music, no missed leads slipping to a competitor.",
     bullets: [
-      "New clients welcomed and prepared automatically",
-      "Custom nurture sequences built for your business",
-      "Cold leads and old customers re-engaged",
+      "Answers in your business's voice, day or night",
+      "Handles pricing, hours and service-area questions",
+      "Every call recorded, transcribed and logged",
     ],
-    img: "/images/svc-onboarding.webp",
-    alt: "A new-client onboarding and email nurture pipeline running automatically",
+    img: "/images/svc-voice-agent.webp",
+    alt: "An AI voice agent answering an incoming call and logging the details",
+  },
+  {
+    tier: "gold",
+    title: "Voice lead qualification & booking",
+    body: "The voice agent asks the right questions, works out whether a caller is a real job, and books qualified work straight onto your calendar, so you wake up to appointments, not a list of people to call back.",
+    bullets: [
+      "Qualifies the lead before it reaches you",
+      "Books straight onto your live calendar",
+      "Captures the job details you need up front",
+    ],
+    img: "/images/svc-booking.webp",
+    alt: "A booking being qualified and placed onto a calendar automatically",
   },
 ];
 
@@ -129,10 +128,10 @@ export default function ServiceBreakdown() {
     <section className="svc-breakdown" id="breakdown">
       <div className="home-section-head svc-breakdown-head">
         <span className="home-kicker">Every service, in detail</span>
-        <h2>What your AI agent actually does</h2>
+        <h2>What your AI system actually does</h2>
         <p>
-          Each package is built from these services. Here&apos;s exactly what each one
-          handles for you, start with what hurts most and grow into the rest.
+          Each plan is built from these services. Here&apos;s exactly what each one handles
+          for you, start with what hurts most and grow into the rest.
         </p>
       </div>
 
