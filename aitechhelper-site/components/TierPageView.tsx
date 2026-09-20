@@ -34,6 +34,7 @@ export default function TierPageView({
   const isGold = tier.slug === "gold";
   const left = tier.features.slice(0, 2);
   const right = tier.features.slice(2, 4);
+  const here = TIERS.findIndex((t) => t.slug === tier.slug);
   const others = TIERS.filter((t) => t.slug !== tier.slug);
 
   return (
@@ -42,12 +43,39 @@ export default function TierPageView({
       <SiteHeader />
 
       <section className="tier-stage">
-        <a href="/services" className="page-back">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back to services
-        </a>
+        <div className="tier-topbar">
+          <a href="/services" className="page-back">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back to services
+          </a>
+
+          <div className="tier-nav">
+            {others.map((t) => {
+              const isUpgrade = TIERS.findIndex((x) => x.slug === t.slug) > here;
+              return (
+                <a
+                  key={t.slug}
+                  href={`/${t.slug}`}
+                  className={`tier-nav-btn tier-card--${t.slug}`}
+                >
+                  {!isUpgrade && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                  )}
+                  {t.name}
+                  {isUpgrade && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        </div>
 
         <div className="tier-stage-head">
           <span className="eyebrow">{tier.eyebrow}</span>
@@ -109,23 +137,6 @@ export default function TierPageView({
           ))}
         </div>
       </section>
-
-      {interactive && (
-        <section className="tier-band tier-switch">
-          <h2 className="band-label">Compare the plans</h2>
-          <div className="tier-switch-btns">
-            {others.map((t) => (
-              <a key={t.slug} href={`/${t.slug}`} className={`tier-switch-btn tier-card--${t.slug}`}>
-                <span className="tier-switch-name">{t.name}</span>
-                <span className="tier-switch-price">
-                  ${t.price.setup} setup · ${t.price.monthly}/mo
-                </span>
-                <span className="tier-switch-go" aria-hidden="true">See {t.name} →</span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
 
       {interactive && (
         <section className="tier-foot">
