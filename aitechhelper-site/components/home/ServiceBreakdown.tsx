@@ -115,6 +115,30 @@ const CAPABILITIES: Capability[] = [
     img: "/images/svc-booking.webp",
     alt: "A booking being qualified and placed onto a calendar automatically",
   },
+  {
+    tier: "gold",
+    title: "Contracts, e-sign & invoicing",
+    body: "Contracts and waivers go out for a legally binding e-signature the moment a job is booked, then the client is invoiced and every unpaid bill is chased with automatic reminders. Signed to paid, entirely hands-off.",
+    bullets: [
+      "Contracts and waivers sent for e-signature",
+      "Invoices raised and delivered automatically",
+      "Unpaid bills chased until they're settled",
+    ],
+    img: "/images/svc-paperwork.webp",
+    alt: "A paperwork pipeline moving from contract to signature to paid invoice",
+  },
+  {
+    tier: "gold",
+    title: "Onboarding & email pipeline",
+    body: "Every new client is welcomed, prepared and reassured automatically the moment their booking confirms, and a custom email pipeline nurtures cold leads, proposals and re-engagement around your business, not a generic template.",
+    bullets: [
+      "New clients welcomed and prepared automatically",
+      "Custom nurture sequences built for your business",
+      "Cold leads and old customers re-engaged",
+    ],
+    img: "/images/svc-onboarding.webp",
+    alt: "A new-client onboarding and email nurture pipeline running automatically",
+  },
 ];
 
 const TIER_LABEL: Record<Capability["tier"], string> = {

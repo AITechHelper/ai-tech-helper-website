@@ -134,9 +134,9 @@ export const TIERS: Tier[] = [
     subtext:
       "Everything in Silver, plus a 24/7 AI voice agent that answers every call, qualifies the lead, and books the job, live on your calendar.",
     price: { setup: 1000, monthly: 400 },
-    cardKicker: "Voice Agent",
+    cardKicker: "Voice Agent & Full Lifecycle",
     cardDesc:
-      "Everything in Silver, plus a 24/7 AI voice agent that answers, qualifies and books every call.",
+      "Everything in Silver, plus a 24/7 voice agent, contracts and invoicing, onboarding and a custom email pipeline.",
     builds_on: "Silver",
     inherits: [INSTANT, MISSED, HUB, FOLLOWUP, REVIEWS, REMINDERS],
     dashboard: [
@@ -150,6 +150,8 @@ export const TIERS: Tier[] = [
       "Call log",
       "Recordings & transcripts",
       "Calendar & booking",
+      "Contracts & e-sign",
+      "Invoicing & payments",
     ],
     features: [
       {
@@ -163,14 +165,14 @@ export const TIERS: Tier[] = [
         desc: "Asks the right questions, then puts the job straight on your calendar.",
       },
       {
-        icon: "clock",
-        title: "Handles questions instantly",
-        desc: "Pricing, hours, service area, whatever callers usually ask.",
+        icon: "contract",
+        title: "Contracts, e-sign & invoicing",
+        desc: "Sends contracts for e-signature, invoices the client, and chases unpaid bills automatically.",
       },
       {
-        icon: "dashboard",
-        title: "Every call recorded",
-        desc: "Recorded, transcribed and logged the moment it ends.",
+        icon: "onboarding",
+        title: "Onboarding & email pipeline",
+        desc: "Welcomes every new client and runs a custom email pipeline built around your business.",
       },
     ],
   },
@@ -210,4 +212,6 @@ export const COMPARISON: ComparisonRow[] = [
   { label: "24/7 AI voice agent", tiers: GOLD_ONLY },
   { label: "Voice lead qualification & booking", tiers: GOLD_ONLY },
   { label: "Call recordings & transcripts", tiers: GOLD_ONLY },
+  { label: "Contracts, e-sign & invoicing", tiers: GOLD_ONLY },
+  { label: "Onboarding & email pipeline", tiers: GOLD_ONLY },
 ];

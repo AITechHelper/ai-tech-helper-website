@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import AssessmentPopup from "@/components/AssessmentPopup";
 import "./globals.css";
 
@@ -39,6 +40,10 @@ export default function RootLayout({
       <body>
         {children}
         <AssessmentPopup />
+        {/* GoHighLevel booking-calendar auto-resize. Loaded once, globally, so
+            its resize listener is active before the calendar appears anywhere
+            (contact page or the timed popup). */}
+        <Script src="https://link.msgsndr.com/js/form_embed.js" strategy="afterInteractive" />
       </body>
     </html>
   );

@@ -1,10 +1,8 @@
-"use client";
-
-import Script from "next/script";
-
 /* Embeds the GoHighLevel booking calendar. Used on the /contact page and in the
    timed assessment popup, so booking behaves identically everywhere. The
-   form_embed.js script auto-sizes the iframe by posting its height back. */
+   auto-resize script (form_embed.js) is loaded once, globally, in the root
+   layout, so its resize listener is always active before this iframe appears
+   (otherwise the calendar can render collapsed inside the popup). */
 const CAL_SRC = "https://api.leadconnectorhq.com/widget/booking/bdaJhv6QDSHAWZO26LiT";
 
 export default function BookingCalendar() {
@@ -16,10 +14,6 @@ export default function BookingCalendar() {
         className="booking-cal-frame"
         scrolling="no"
         id="bdaJhv6QDSHAWZO26LiT_1789880510693"
-      />
-      <Script
-        src="https://link.msgsndr.com/js/form_embed.js"
-        strategy="afterInteractive"
       />
     </div>
   );
